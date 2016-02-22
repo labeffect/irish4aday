@@ -446,13 +446,13 @@ $menu .= '
 			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
 		</span>
 	</a>
-	<a data-toggle="tooltip" data-placement="bottom"  title="SDZC Fan Page" target="_blank" href="https://www.facebook.com/SanDiegoZombieCrawl/">
+	<a data-toggle="tooltip" data-placement="bottom"  title="Irish4ADay Fan Page" target="_blank" href="https://www.facebook.com/Irish4ADay">
 	 	<span class="fa-stack">
 			<i class="fa fa-circle fa-stack-2x"></i>
 			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
 		</span>
 	</a>
-	<a data-toggle="tooltip" data-placement="bottom"  title="SDZC Event Page" target="_blank" href="https://www.facebook.com/events/864704556917325/">
+<a data-toggle="tooltip" data-placement="bottom" title="" target="_blank" href="https://www.facebook.com/events/153516065007215/" data-original-title="SDZC Event Page">
 		<span class="fa-stack">
 			<i class="fa fa-circle fa-stack-2x"></i>
 			<i class="fa fa-calendar fa-stack-1x fa-inverse"></i>

@@ -3582,7 +3582,7 @@ function mtheme_contact($atts, $content = null)
                 $out .= '<div class="col-md-6">';
                     $out .= '<div class="social-buttons-container">';
                         $out.='<div class="social-buttons-title">';
-                        $out.='<h4>San Diego Zombie Crawl</h4>';
+                        $out.='<h4>Irish 4 A Day</h4>';
                         $out.='</div>';
                         $out.='<div class="social-buttons-links">';
                             $out .= '<ul class="social-buttons">';
