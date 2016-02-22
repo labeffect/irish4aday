@@ -4806,6 +4806,7 @@ ul.legals li:last-child::after {
 }
 
 @media screen and (max-width:767px){
+
 	body {
 		font-size: 12.5px;
 	}
@@ -4916,6 +4917,11 @@ ul.legals li:last-child::after {
 	}
 	.sidebar {
 		padding-top: 6%;
+	}
+	.navbar-brand img{
+		max-height:33px;
+		max-width:none;
+		width:auto;
 	}
 }
 
