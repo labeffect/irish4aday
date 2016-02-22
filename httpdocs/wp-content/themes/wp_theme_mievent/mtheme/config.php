@@ -234,88 +234,88 @@ $config = array (
 		),
 		
 		/*User Header Scripts*/
-		'user_header_scripts' => array(					
-			
+		'user_header_scripts' => array(
+			/*jquery*/
+			array(
+				'name' => 'jquery-js',
+				'uri' => CHILD_URI.'site/js/jquery-1.11.0.min.js'
+			)
 		),
 		/*User Footer Scripts*/
 		'user_footer_scripts' => array(
-			/*jquery*/
-			array(	
-				'name' => 'jquery-js',
-				'uri' => CHILD_URI.'site/js/jquery-1.11.0.min.js'
-			),
-			array(	
+
+			array(
 				'name' => 'jquery-min-js',
 				'uri' => CHILD_URI.'site/js/jquery-ui-1.10.4.min.js'
 			),
-			array(	
+			array(
 				'name' => 'classie-js',
 				'uri' => CHILD_URI.'site/js/classie.js'
-			),	
-			array(	
+			),
+			array(
 				'name' => 'hammer.min-js',
 				'uri' => CHILD_URI.'site/js/hammer.min.js'
-			),			
-			array(	
+			),
+			array(
 				'name' => 'venobox-js',
 				'uri' => CHILD_URI.'site/js/venobox.js'
-			),			
-			array(	
+			),
+			array(
 				'name' => 'html5shiv-js',
 				'uri' => CHILD_URI.'site/js/html5shiv.js'
 			),
-			array(	
+			array(
 				'name' => 'respond.min-js',
 				'uri' => CHILD_URI.'site/js/respond.min.js'
 			),
-			array(	
+			array(
 				'name' => 'modalEffects-js',
 				'uri' => CHILD_URI.'site/js/modalEffects.js'
 			),
-			array(	
+			array(
 				'name' => 'bootstrap.min-js',
 				'uri' => CHILD_URI.'site/js/bootstrap.min.js'
 			),
-			array(	
+			array(
 				'name' => 'jquery.flexslider-js',
 				'uri' => CHILD_URI.'site/js/jquery.flexslider.js'
 			),
-			array(	
+			array(
 				'name' => 'modernizr-js',
 				'uri' => CHILD_URI.'site/js/modernizr.js'
 			),
-			array(	
+			array(
 				'name' => 'smooth-scroll-js',
 				'uri' => CHILD_URI.'site/js/smooth-scroll.js'
-			),array(	
+			),array(
 				'name' => 'jquery.nicescroll-js',
 				'uri' => CHILD_URI.'site/js/jquery.nicescroll.js'
 			),
-			array(	
+			array(
 				'name' => 'notifyMe-js',
 				'uri' => CHILD_URI.'site/js/notifyMe.js'
 			),
-			array(	
+			array(
 				'name' => 'jquery.placeholder-js',
 				'uri' => CHILD_URI.'site/js/jquery.placeholder.js'
 			),
-			array(	
+			array(
 				'name' => 'jquery.plugin-js',
 				'uri' => CHILD_URI.'site/js/jquery.plugin.js'
 			),
-			array(	
+			array(
 				'name' => 'jquery.countdown-js',
 				'uri' => CHILD_URI.'site/js/jquery.countdown.js'
-			),			
-			array(	
+			),
+			array(
 				'name' => 'wow.min-js',
 				'uri' => CHILD_URI.'site/js/wow.min.js'
 			),
-			array(	
+			array(
 				'name' => 'init-js',
 				'uri' => CHILD_URI.'site/js/init.js'
 			),
-			array(	
+			array(
 				'name' => 'onkeypressvalidation-js',
 				'uri' => CHILD_URI.'site/js/onkeypressvalidation.js'
 			),
