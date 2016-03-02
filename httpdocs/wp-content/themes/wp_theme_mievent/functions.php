@@ -26,7 +26,7 @@ define('MTHEME_JS', THEME_URI.'mtheme/assets/js/');
 define('MTHEME_IMAGES', THEME_URI.'mtheme/assets/images/');
 define('MTHEME_PREFIX', 'mtheme_');
 define('WP_ALLOW_REPAIR', true);
-
+define('WP_MEMORY_LIMIT', '64M');
 function custom_colors() {
    echo '<style type="text/css">
            #adminmenu div.wp-menu-image{ background:none;}

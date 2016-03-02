@@ -6,6 +6,7 @@
  * @param string $sep
  * @return string
 */
+define('WP_MEMORY_LIMIT', '64M');
 add_filter( 'wp_title', 'mtheme_wp_title', 10, 2 );
 function mtheme_wp_title( $title, $sep ="|") {
   

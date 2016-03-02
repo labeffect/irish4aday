@@ -227,7 +227,7 @@ if(!empty($event_id))
 		$menuContent=$outContent='';
 		$temp_link=MthemeCore::getPostMeta($event_id,$post_pre.'blog_link',SITE_URL);
 		$heading=MthemeCore::getPostMeta($event_id,$post_pre.'blog_head','blog');
-		$menuContent='<li><a href="'.$temp_link.'">'.$heading.'</a></li>';				
+		$menuContent='<li><a target="_blank" href="'.$temp_link.'">'.$heading.'</a></li>';				
 		$menuOrder=MthemeCore::getPostMeta($event_id,$post_pre.'blog_order','15');
 		
 		$contentArray[10]= array($menuOrder,$menuContent,$outContent);
@@ -452,7 +452,7 @@ $menu .= '
 			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
 		</span>
 	</a>
-<a data-toggle="tooltip" data-placement="bottom" title="" target="_blank" href="https://www.facebook.com/events/153516065007215/" data-original-title="SDZC Event Page">
+<a data-toggle="tooltip" data-placement="bottom" title="" target="_blank" href="https://www.facebook.com/events/153516065007215/" data-original-title="Irish4ADay Event Page">
 		<span class="fa-stack">
 			<i class="fa fa-circle fa-stack-2x"></i>
 			<i class="fa fa-calendar fa-stack-1x fa-inverse"></i>

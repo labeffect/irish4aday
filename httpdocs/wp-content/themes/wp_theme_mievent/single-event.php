@@ -233,7 +233,7 @@ if ( have_posts() ) {
 				$menuContent=$outContent='';
 				$temp_link=MthemeCore::getPostMeta($event_id,$post_pre.'blog_link',SITE_URL);
 				$heading=MthemeCore::getPostMeta($event_id,$post_pre.'blog_head','blog');
-				$menuContent='<li><a href="'.$temp_link.'">'.$heading.'</a></li>';				
+				$menuContent='<li><a target="_blank" href="'.$temp_link.'">'.$heading.'</a></li>';				
 				$menuOrder=MthemeCore::getPostMeta($event_id,$post_pre.'blog_order','15');
 				
 				$contentArray[10]= array($menuOrder,$menuContent,$outContent);

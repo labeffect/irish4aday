@@ -3594,7 +3594,7 @@ function mtheme_contact($atts, $content = null)
                             }
                             if (!empty($contact_fb)) {
                                 $out .= '<li><a href="' . esc_url($contact_fb) . '" class="social-btn social-btn-' . esc_attr($social_background) . '" target="_blank"><i class="fa fa-facebook"></i></a></li>';
-                                $out.='<li><a href="https://www.facebook.com/events/864704556917325/" class="social-btn social-btn-circle"><i class="fa fa-calendar"></i></a></li>';
+                                $out.='<li><a href="https://www.facebook.com/events/153516065007215/" class="social-btn social-btn-circle"><i class="fa fa-calendar"></i></a></li>';
                             }
                             if (!empty($contact_skype)) {
                                 $out .= '<li><a href="' . esc_url($contact_skype) . '" class="social-btn social-btn-' . esc_attr($social_background) . '" target="_blank"><i class="fa fa-skype"></i></a></li>';
