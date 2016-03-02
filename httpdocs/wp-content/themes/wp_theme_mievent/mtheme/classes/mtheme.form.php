@@ -553,7 +553,7 @@ class MthemeForm {
 						'send_welcome'      => false,
 					));
 					if($result["email"] == $email) {     
-						MthemeInterface::$messages[]='Congrats! You are in list.';
+						MthemeInterface::$messages[]='Thank you for subscribing!';
 						MthemeInterface::renderMessages(true);
 					} else {					
 						MthemeInterface::$messages[]="Oops. Looks like something went wrong. Please try again later.";
