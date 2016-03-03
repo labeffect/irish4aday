@@ -229,7 +229,8 @@ if(!empty($event_id))
 		$heading=MthemeCore::getPostMeta($event_id,$post_pre.'blog_head','blog');
 		$menuContent='<li><a target="_blank" href="'.$temp_link.'">'.$heading.'</a></li>';				
 		$menuOrder=MthemeCore::getPostMeta($event_id,$post_pre.'blog_order','15');
-		
+
+
 		$contentArray[10]= array($menuOrder,$menuContent,$outContent);
 	}
 	if(MthemeCore::getPostMeta($event_id, $post_pre.'ext_link_1_display','false')=='true')
@@ -259,6 +260,10 @@ if(!empty($event_id))
 		$outContent.=do_shortcode('[event_sponsors category="'.$category.'"]');break;
 		}
 		$outContent.='</div>';
+		$menuContent='<li><a target="_blank" href="/gallery">Gallery</a></li>';
+		$menuOrder=MthemeCore::getPostMeta($event_id,$post_pre.'blog_order','15');
+
+		$contentArray[10]= array($menuOrder,$menuContent,$outContent);
 		
 		
 		$contentArray[11]= array($menuOrder,$menuContent,$outContent);
