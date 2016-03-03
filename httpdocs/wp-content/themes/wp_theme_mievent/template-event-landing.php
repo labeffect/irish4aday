@@ -262,9 +262,6 @@ if(!empty($event_id))
 		$outContent.='</div>';
 		$menuContent='<li><a target="_blank" href="/gallery">Gallery</a></li>';
 		$menuOrder=MthemeCore::getPostMeta($event_id,$post_pre.'blog_order','15');
-
-		$contentArray[10]= array($menuOrder,$menuContent,$outContent);
-		
 		
 		$contentArray[11]= array($menuOrder,$menuContent,$outContent);
 	}
