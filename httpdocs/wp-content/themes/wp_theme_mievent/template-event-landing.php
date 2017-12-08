@@ -440,8 +440,6 @@ foreach($events['external_link'] as $ID => $event) {
 	}
 }
 $facebookEvent=get_the_title(994);
-dump($facebookEvent);
-die;
 //social
 $menu .= "
 <li class='social-icons'>
@@ -460,7 +458,7 @@ href='https://www.facebook.com/Irish4ADay'>
 		</span>
 	</a>
 <a data-toggle='tooltip' data-placement='bottom' title=''' target='_blank'
-href='$facebookEvent' data-original-title='Irish4ADay Event Page'>
+href=$facebookEvent data-original-title='Irish4ADay Event Page'>
 		<span class='fa-stack'>
 			<i class='fa fa-circle fa-stack-2x'></i>
 			<i class='fa fa-calendar fa-stack-1x fa-inverse'></i>
