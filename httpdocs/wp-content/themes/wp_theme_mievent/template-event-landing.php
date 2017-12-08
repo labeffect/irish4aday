@@ -440,6 +440,8 @@ foreach($events['external_link'] as $ID => $event) {
 	}
 }
 $facebookEvent=get_the_title(994);
+dump($facebookEvent);
+die;
 //social
 $menu .= "
 <li class='social-icons'>
