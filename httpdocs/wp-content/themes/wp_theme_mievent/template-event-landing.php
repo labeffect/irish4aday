@@ -439,6 +439,7 @@ foreach($events['external_link'] as $ID => $event) {
 		$menu.='<li><a href="'.$event['el_link_url'].'" target="_blank">'.$event['el_link_title'].'</a></li>';
 	}
 }
+$facebookEvent=get_the_title(994);
 //social
 $menu .= '
 <li class="social-icons">
@@ -454,7 +455,8 @@ $menu .= '
 			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
 		</span>
 	</a>
-<a data-toggle="tooltip" data-placement="bottom" title="" target="_blank" href="https://www.facebook.com/events/107245576485968/" data-original-title="Irish4ADay Event Page">
+<a data-toggle="tooltip" data-placement="bottom" title="" target="_blank"
+href="$facebookEvent" data-original-title="Irish4ADay Event Page">
 		<span class="fa-stack">
 			<i class="fa fa-circle fa-stack-2x"></i>
 			<i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
