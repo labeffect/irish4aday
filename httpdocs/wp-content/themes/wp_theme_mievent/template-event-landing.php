@@ -441,29 +441,31 @@ foreach($events['external_link'] as $ID => $event) {
 }
 $facebookEvent=get_the_title(994);
 //social
-$menu .= '
-<li class="social-icons">
-	<a data-toggle="tooltip" data-placement="bottom"  title="Club VIP SD" target="_blank" href="https://www.facebook.com/ClubVIPSD/">
-		<span class="fa-stack">
-			<i class="fa fa-circle fa-stack-2x"></i>
-			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+$menu .= "
+<li class='social-icons'>
+	<a data-toggle='tooltip' data-placement='bottom'  title='Club VIP SD' target='_blank'
+	href='https://www.facebook.com/ClubVIPSD/'>
+		<span class='fa-stack'>
+			<i class='fa fa-circle fa-stack-2x'></i>
+			<i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
 		</span>
 	</a>
-	<a data-toggle="tooltip" data-placement="bottom"  title="Irish4ADay Fan Page" target="_blank" href="https://www.facebook.com/Irish4ADay">
-	 	<span class="fa-stack">
-			<i class="fa fa-circle fa-stack-2x"></i>
-			<i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+	<a data-toggle='tooltip' data-placement='bottom'  title='Irish4ADay Fan Page' target='_blank'
+href='https://www.facebook.com/Irish4ADay'>
+	 	<span class='fa-stack'>
+			<i class='fa fa-circle fa-stack-2x'></i>
+			<i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
 		</span>
 	</a>
-<a data-toggle="tooltip" data-placement="bottom" title="" target="_blank"
-href="$facebookEvent" data-original-title="Irish4ADay Event Page">
-		<span class="fa-stack">
-			<i class="fa fa-circle fa-stack-2x"></i>
-			<i class="fa fa-calendar fa-stack-1x fa-inverse"></i>
+<a data-toggle='tooltip' data-placement='bottom' title=''' target='_blank'
+href='$facebookEvent' data-original-title='Irish4ADay Event Page'>
+		<span class='fa-stack'>
+			<i class='fa fa-circle fa-stack-2x'></i>
+			<i class='fa fa-calendar fa-stack-1x fa-inverse'></i>
 		</span>
 	</a>
 </li>
-';
+";
 if(!empty($event_slider) && $menu!=''){
 	$menu.='<li class="hidden"><a href="#home_slider">Home</a></li>';	
 }
