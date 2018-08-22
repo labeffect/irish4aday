@@ -76,7 +76,7 @@ var player, OKEvents, options;
 				return '<iframe src="//player.vimeo.com/video/' + base.options.video.id + '?api=1&title=0&byline=0&portrait=0&playbar=0&loop=' + base.options.loop + '&autoplay=' + (base.options.autoplay === 1 ? 1 : 0) + '&player_id=okplayer" frameborder="0" style="' + $(this).attr('style') + 'visibility:hidden;background-color:black;" id="' + $(this).attr('id') + '"></iframe>';
 			});
 			base.insertJS('//player.vimeo.com/api/player.js', function(){
-				vimeoPlayerReady(base);
+				vimeoPlayerReady();
 			});
 		};
 		base.insertJS = function(src, callback){
@@ -163,13 +163,11 @@ var player, OKEvents, options;
 
 })(jQuery);
 
-function vimeoPlayerReady(base) {
+function vimeoPlayerReady() {
 	options = jQuery(window).data('okoptions');
 
 	var iframe = jQuery('#okplayer')[0];
-	player = new Vimeo.Player(iframe, {
-		autoplay: (base.options.autoplay === 1 ? true : false)
-	});
+	player = new Vimeo.Player(iframe);
 
 	window.setTimeout(function(){
 		jQuery('#okplayer').css('visibility', 'visible');
