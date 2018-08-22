@@ -167,13 +167,13 @@ function vimeoPlayerReady() {
 	options = jQuery(window).data('okoptions');
 
 	var iframe = jQuery('#okplayer')[0];
-	player = new Vimeo.Player(iframe);;
+	player = new Vimeo.Player(iframe);
 
 	window.setTimeout(function(){
 		jQuery('#okplayer').css('visibility', 'visible');
 	}, 2000);
 
-	player.on('ready', function () {
+	player.ready.then(function () {
 		OKEvents.v.onReady();
 
 		if (OKEvents.utils.isMobile()) {
@@ -181,7 +181,7 @@ function vimeoPlayerReady() {
 		}else {
 			player.on('play', OKEvents.v.onPlay);
 			player.on('pause', OKEvents.v.onPause);
-			player.on('finish', OKEvents.v.onFinish);
+			player.on('ended', OKEvents.v.onFinish);
 		}
         player.play().catch(function(error) {
             console.error('error playing the video:', error.name);
