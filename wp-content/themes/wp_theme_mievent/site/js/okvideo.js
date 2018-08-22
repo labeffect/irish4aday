@@ -173,7 +173,7 @@ function vimeoPlayerReady() {
 		jQuery('#okplayer').css('visibility', 'visible');
 	}, 2000);
 
-	player.ready.then(function () {
+	player.ready().then(function () {
 		OKEvents.v.onReady();
 
 		if (OKEvents.utils.isMobile()) {
