@@ -167,7 +167,7 @@ function vimeoPlayerReady() {
 	options = jQuery(window).data('okoptions');
 
 	var iframe = jQuery('#okplayer')[0];
-	player = $f(iframe);
+	player = new Vimeo.Player(iframe);;
 
 	window.setTimeout(function(){
 		jQuery('#okplayer').css('visibility', 'visible');
@@ -179,11 +179,13 @@ function vimeoPlayerReady() {
 		if (OKEvents.utils.isMobile()) {
 			OKEvents.v.onPlay();
 		}else {
-			player.addEvent('play', OKEvents.v.onPlay);
-			player.addEvent('pause', OKEvents.v.onPause);
-			player.addEvent('finish', OKEvents.v.onFinish);
+			player.on('play', OKEvents.v.onPlay);
+			player.on('pause', OKEvents.v.onPause);
+			player.on('finish', OKEvents.v.onFinish);
 		}
-		player.api('play');
+        player.play().catch(function(error) {
+            console.error('error playing the video:', error.name);
+        });
 	});
 }
 
