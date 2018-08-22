@@ -265,7 +265,13 @@ OKEvents = {
 			OKEvents.utils.isFunction(options.onReady) && options.onReady();
 		},
 		onPlay: function(){
-			if (!OKEvents.utils.isMobile()) player.api('setVolume', options.volume);
+			if (!OKEvents.utils.isMobile()){
+                player.setVolume(options.volume).then(function(volume){
+                	console.log('volume set to: ', volume);
+                }).catch(function(error){
+                    console.error('error setting volume:', error.name);
+                });
+			}
 			OKEvents.utils.isFunction(options.onPlay) && options.onPlay();
 		},
 		onPause: function(){
