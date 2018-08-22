@@ -1,2 +1,0 @@
-# sdzc
-sandiegozombiecrawl.com
