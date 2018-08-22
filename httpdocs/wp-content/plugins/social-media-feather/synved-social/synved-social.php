@@ -3,7 +3,7 @@
 Module Name: Synved Social
 Description: Social sharing and following tools
 Author: Synved
-Version: 1.7.9
+Version: 1.7.16
 Author URI: http://synved.com/
 License: GPLv2
 
@@ -18,8 +18,8 @@ In no event shall Synved Ltd. be liable to you or any third party for any direct
 
 
 define('SYNVED_SOCIAL_LOADED', true);
-define('SYNVED_SOCIAL_VERSION', 100070009);
-define('SYNVED_SOCIAL_VERSION_STRING', '1.7.9');
+define('SYNVED_SOCIAL_VERSION', 100070016);
+define('SYNVED_SOCIAL_VERSION_STRING', '1.7.16');
 
 define('SYNVED_SOCIAL_ADDON_PATH', str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, dirname(__FILE__) . '/addons'));
 
@@ -216,7 +216,7 @@ function synved_social_service_provider_list($context, $raw = false)
 				'title' => __('Share on Facebook')
 			),
 			'twitter' => array(
-				'link' => 'http://twitter.com/share?url=%%url%%&text=%%message%%',
+				'link' => 'https://twitter.com/intent/tweet?url=%%url%%&text=%%message%%',
 				'title' => __('Share on Twitter'),
 			),
 			'google_plus' => array(
@@ -250,11 +250,11 @@ function synved_social_service_provider_list($context, $raw = false)
 	{
 		$provider_list = array(
 			'facebook' => array(
-				'link' => 'http://www.facebook.com/MyAvatarName',
+				'link' => 'https://www.facebook.com/facebook',
 				'title' => __('Follow us on Facebook'),
 			),
 			'twitter' => array(
-				'link' => 'http://twitter.com/MyAvatarName',
+				'link' => 'https://twitter.com/twitter',
 				'title' => __('Follow us on Twitter'),
 			),
 			'google_plus' => array(
@@ -608,7 +608,7 @@ function synved_social_icon_skin_get_image_list($skin, $name_list, $forced_size 
 
 function synved_social_button_list_shortcode($atts, $content = null, $code = '', $context = null)
 {
-	$vars_def = array('url' => null, 'image' => null, 'title' => null);
+	$vars_def = array('url' => null, 'image' => null, 'title' => null, 'message' => null);
 	$params_def = array('skin' => null, 'size' => null, 'spacing' => null, 'container' => null, 'container_type' => null, 'class' => null, 'show' => null, 'hide' => null, 'prompt' => null, 'custom1' => null, 'custom2' => null, 'custom3' => null);
 	$vars = shortcode_atts($vars_def, $atts, 'feather_' . $context);
 	$params = shortcode_atts($params_def, $atts, 'feather_' . $context);
@@ -1199,7 +1199,7 @@ function synved_social_button_list_markup($context, $vars = null, $buttons = nul
 				'child-list' => array(
 					array(
 						'tag' => 'img',
-						'alt' => $button_key,
+						'alt' => $button_key == 'facebook' ? 'Facebook' : $button_key,
 						'title' => $title,
 						'class' => 'synved-share-image synved-social-image synved-social-image-' . $context,
 						'width' => $size,

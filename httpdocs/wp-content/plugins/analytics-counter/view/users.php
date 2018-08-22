@@ -1,6 +1,9 @@
-<?php 
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 $start_date = date("Y-m-d", strtotime("-30 day"));
 $end_date = date("Y-m-d", strtotime("-1 day"));
+
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'error_no_data.php';
 
 ?>
 
@@ -8,19 +11,19 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
 
 
 <div style="float: left; padding-right: 30px; margin-bottom: 20px;">
-    <div style="font-weight: bold;">Date range</div>
+    <div style="font-weight: bold;"><?php _e('Date range', 'analytics-counter');?></div>
     <div id="reportrange" class="pull-left">
         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
         <span></span> <b class="caret"></b>
     </div>
 </div>
 <div style="float: left; padding-right: 30px; margin-bottom: 20px;">
-    <div style="font-weight: bold;">Group statistics data by</div>
+    <div style="font-weight: bold;"><?php  _e('Group statistics data by', 'analytics-counter');?></div>
     <div class="btn-group" role="group" aria-label="...">
-        <button class="group_by btn btn-default" onclick="changeGroupBy('dateHour', this)">Hour</button>
-        <button class="group_by active_group_by btn btn-default" onclick="changeGroupBy('date', this)">Day</button>
-        <button class="group_by btn btn-default" onclick="changeGroupBy('yearWeek', this)">Week</button>
-        <button class="group_by btn btn-default" onclick="changeGroupBy('yearMonth', this)">Month</button>
+        <button class="group_by btn btn-default" onclick="changeGroupBy('dateHour', this)"><?php _e('Hour', 'analytics-counter');?></button>
+        <button class="group_by active_group_by btn btn-default" onclick="changeGroupBy('date', this)"><?php _e('Day', 'analytics-counter');?></button>
+        <button class="group_by btn btn-default" onclick="changeGroupBy('yearWeek', this)"><?php _e('Week', 'analytics-counter');?></button>
+        <button class="group_by btn btn-default" onclick="changeGroupBy('yearMonth', this)"><?php _e('Month', 'analytics-counter');?></button>
     </div>
 </div>
 
@@ -28,12 +31,12 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
 <div style="float: left; padding-right: 50px; margin-bottom: 20px;">
 
     <br>
-    If you have any suggestions or wishes  <a class="btn btn-info thickbox" href="#TB_inline?width=650&height=550&inlineId=wpadm-ga-support_container" style="margin-right: 0px;" onclick="wpadm_ga_supportFormNormalize()">Contact us</a>
+    <?php _e('If you have any suggestions or wishes', 'analytics-counter');?>  <a class="btn btn-info thickbox" href="#TB_inline?width=650&height=550&inlineId=wpadm-ga-support_container" style="margin-right: 0px;" onclick="wpadm_ga_supportFormNormalize()"><?php _e('Contact us', 'analytics-counter');?></a>
 
 </div>
 <div style="float:left; margin-bottom: 20px;">
     <br>
-    <a class="btn btn-info thickbox" href="<?php echo admin_url() . 'options-general.php?page=wpadm-ga-menu-settings&modal&TB_iframe=true&height=370'; ?>">Settings</a>
+    <a class="btn btn-info thickbox" href="<?php echo admin_url() . 'options-general.php?page=wpadm-ga-menu-settings&modal&TB_iframe=true&height=470'; ?>"><?php _e('Settings', 'analytics-counter');?></a>
 
 </div>
 
@@ -44,21 +47,21 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
 
 <div class="panel panel-default report report-data" id="data-users-container">
     <!-- Default panel contents -->
-    <div class="panel-heading">Users<div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('Users', 'analytics-counter');?><div class="report-loader"></div></div>
     
     <div class="report-result"></div>
 
 </div>
 
 <div class="panel panel-default report report-data" id="data-newUsers-container">
-    <div class="panel-heading">New users<div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('New users', 'analytics-counter');?><div class="report-loader"></div></div>
     
     <div class="report-result"></div>
 </div>
 <div class="clear"></div>
 
 <div class="panel panel-default report report-groupable" id="chart-1-container">
-    <div class="panel-heading">All unique users and new users<div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('All unique users and new users', 'analytics-counter');?><div class="report-loader"></div></div>
     
     <div class="report-result"></div>
 </div>
@@ -67,14 +70,14 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
     <div class="row">
         <div class="col-md-3">
             <div class="panel panel-default report" id="table-country-container">
-                <div class="panel-heading">Top countries by users<div class="report-loader"></div></div>
+                <div class="panel-heading"><?php _e('Top countries by users', 'analytics-counter');?><div class="report-loader"></div></div>
                 
                 <div class="report-result report-result-table"></div>
             </div>
         </div>
         <div class="col-md-9">
             <div class="panel panel-default report" id="chart-country-container">
-                <div class="panel-heading">Geo statistics data by users<div class="report-loader"></div></div>
+                <div class="panel-heading"><?php _e('Geo statistics data by users', 'analytics-counter');?><div class="report-loader"></div></div>
                 <div class="report-result"></div>
             </div>
         </div>        
@@ -86,21 +89,21 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
     <div class="row">
         <div class="col-md-4">
             <div class="panel panel-default report" id="pie-browser-container">
-                <div class="panel-heading">Top browsers<div class="report-loader"></div></div>
+                <div class="panel-heading"><?php _e('Top browsers', 'analytics-counter');?><div class="report-loader"></div></div>
                 
                 <div class="report-result"></div>
             </div>
         </div> 
         <div class="col-md-4">
             <div class="panel panel-default report" id="pie-os-container">
-                <div class="panel-heading">Top operating systems<div class="report-loader"></div></div>
+                <div class="panel-heading"><?php _e('Top operating systems', 'analytics-counter');?><div class="report-loader"></div></div>
                 
                 <div class="report-result"></div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="panel panel-default report" id="pie-screenResolution-container">
-                <div class="panel-heading">Top screen resolutions<div class="report-loader"></div></div>
+                <div class="panel-heading"><?php _e('Top screen resolutions', 'analytics-counter');?><div class="report-loader"></div></div>
                 
                 <div class="report-result"></div>
             </div>
@@ -113,7 +116,7 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
 	<div class="row">
 		<div class="col-md-3">
 			<div class="panel panel-default report" id="table-city-container">
-				<div class="panel-heading">Top cities by users<div class="report-loader"></div></div>
+				<div class="panel-heading"><?php _e('Top cities by users', 'analytics-counter');?><div class="report-loader"></div></div>
 
 				<div class="report-result report-result-table"></div>
 			</div>
@@ -202,10 +205,12 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
         });
 
         function wpadmExecute() {
-            this.on('success', function(result) {
-                wpadm_ga_setCache(result, 'success');
-            })
-            wpadm_ga_getCache(this);
+            try {
+                this.on('success', function (result) {
+                    wpadm_ga_setCache(result, 'success');
+                })
+                wpadm_ga_getCache(this);
+            } catch(e) {}
         }
 
         gapi.analytics.googleCharts.DataChart.prototype.wpadmExecute = wpadmExecute;
@@ -389,6 +394,11 @@ $end_date = date("Y-m-d", strtotime("-1 day"));
             setStatusError('data-newUsers-container', result.error.message);
         })
         data1.on('success', function(result) {
+            if (!result.hasOwnProperty('rows')) {
+                jQuery('#btn_modal_error_no_data').click();
+                ga_setTitleNoDataWindow();
+                return;
+            }
             setStatusSuccess('data-users-container', result.rows[0][0]);
             setStatusSuccess('data-newUsers-container', (((result.rows[0][1]-0)/((result.rows[0][0]-0)/100)).toFixed(2))+'%');
         })

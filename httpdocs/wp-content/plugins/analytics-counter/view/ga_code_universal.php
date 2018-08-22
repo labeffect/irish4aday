@@ -5,6 +5,8 @@
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', '<?php echo WPAdm_GA_Options::getGAWebPropertyId(); ?>', 'auto');
+
+    <?php  if (WPAdm_GA_Options::getGAWebPropertyId()):?>ga('set', 'anonymizeIp', true);<?php endif;?>
     ga('send', 'pageview');
 
 </script>

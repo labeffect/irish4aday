@@ -58,6 +58,30 @@ class SocialSharing_Shares_Module extends SocialSharing_Core_BaseModule
         return call_user_func_array($callableHandler, array($request));
     }
 
+    public function checkWhetherNeedToSaveShare($projectID)
+    {
+        $shareModel = $this->getModelsFactory()->get('shares');
+
+        if (! $shareModel->getIsEnableOption($projectID) || ! $shareModel->getSharesLogOption($projectID))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function checkWhetherNeedToSaveShows($projectID)
+    {
+        $shareModel = $this->getModelsFactory()->get('shares');
+
+        if (! $shareModel->getIsEnableOption($projectID) || ! $shareModel->getViewsLogOption($projectID))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Saves view to the database.
      * @param SocialSharing_Projects_Project $project
@@ -71,19 +95,22 @@ class SocialSharing_Shares_Module extends SocialSharing_Core_BaseModule
         /** @var SocialSharing_Shares_Model_Views $views */
         $views = $this->getController()->getModelsFactory()->get('views', 'shares');
 
-        try {
-            $views->add($projectId, $postId);
-        } catch (Exception $e) {
-            $logger = new Rsc_Logger(__DIR__ . '/' . 'logs');
+        if ($this->checkWhetherNeedToSaveShows($projectId))
+        {
+            try {
+                $views->add($projectId, $postId);
+            } catch (Exception $e) {
+                $logger = new Rsc_Logger(__DIR__ . '/' . 'logs');
 
-            $logger->error(
-                $this->translate(
-                    sprintf(
-                        'Failed to add current share to the statistic: %s',
-                        $e->getMessage()
+                $logger->error(
+                    $this->translate(
+                        sprintf(
+                            'Failed to add current share to the statistic: %s',
+                            $e->getMessage()
+                        )
                     )
-                )
-            );
+                );
+            }
         }
 
         return $project;
@@ -125,8 +152,8 @@ class SocialSharing_Shares_Module extends SocialSharing_Core_BaseModule
             } else if ($projectShares == 'post') {
                 $schema = is_ssl() ? 'https://' : 'http://';
                 $currentUrl = strtolower(trailingslashit($schema . $_SERVER['HTTP_HOST'] . '/' . $_SERVER['REQUEST_URI']));
-                $baseUrl = strtolower(trailingslashit(get_bloginfo('wpurl')));
-                $postId = $currentUrl === $baseUrl ? null : get_the_ID();
+                $baseUrl = strtolower(trailingslashit(home_url()));
+                $postId = get_the_ID();
 
                 $sharesList = $shares->getListProjectPageShares($project->getId(), $networksId, $postId);
             }
@@ -170,6 +197,11 @@ class SocialSharing_Shares_Module extends SocialSharing_Core_BaseModule
     {
         $hookName = 'admin_enqueue_scripts';
 
+		$ui->addAsset(
+			$ui->create('script', 'jquery-ui-dialog')
+				->setHookName('admin_enqueue_scripts')
+		);
+
         $ui->addAsset(
             $ui->create('script', 'sss-chartjs')
                 ->setHookName($hookName)
@@ -181,6 +213,7 @@ class SocialSharing_Shares_Module extends SocialSharing_Core_BaseModule
             $ui->create('script', 'sss-shares-statistic')
                 ->setHookName($hookName)
                 ->setModuleSource($this, 'js/shares.statistic.js')
+				->addDependency('jquery-ui-dialog')
         );
 
         $ui->addAsset(

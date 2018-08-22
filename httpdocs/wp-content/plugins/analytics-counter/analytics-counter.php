@@ -3,13 +3,15 @@
 Plugin Name: Google Analytics Counter Tracker
 
 Description: Google analytics counter tracker - analyse the visitors hits on you website and display it graphically
-Version: 3.1.1
+Version: 3.5.7
 Author: WPAdm
+Domain Path: /languages
+Text Domain: analytics-counter
 Author URI: http://www.wpadm.com
 Plugin URI: http://www.wpadm.com
 License: GPLv2 or later
 */
-
+if ( ! defined( 'ABSPATH' ) ) exit;
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 $plugins = get_plugins('/analytics-counter-pro');
 
@@ -37,6 +39,9 @@ define( 'WPADM_GA__SSERVER', 'https://secure.wpadm.com/');
 define( 'WPADM_GA__MENU_PREFIX', 'wpadm-ga-menu-' );
 define( 'WPADM_GA__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'WPADM_GA__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
+load_theme_textdomain( 'analytics-counter', dirname(__FILE__) . '/languages' );
+
 define( 'WPADM_GA__VIEW_DIR', plugin_dir_path( __FILE__ ) . 'view' . DIRECTORY_SEPARATOR );
 define( 'WPADM_GA__VIEW_LAYOUT', WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'layout.php');
 
@@ -64,7 +69,5 @@ add_action( 'wp_ajax_sendSupport', array('Wpadm_GA', 'sendSupport') );
 add_action( 'wp_ajax_stopNotice5Stars', array('Wpadm_GA', 'stopNotice5Stars') );
 
 add_action( 'wp_ajax_hideGetProDescription', array('Wpadm_GA', 'hideGetProDescription') );
-
-
 
 require_once( WPADM_GA__PLUGIN_DIR . 'class.wpadm-ga.php' );

@@ -22,7 +22,7 @@ function wpadm_form_validate() {
     if (wpadm_e('wpadm_username').value == '') {
         alert('Please enter e-mail');
         wpadm_e('wpadm_username').focus();
-        return false;
+        return false;                                       
     }    
     if (wpadm_e('wpadm_password').value == '') {
         alert('Please enter password');
@@ -146,21 +146,28 @@ function wpadm_ga_formatError(error) {
 
 
 function wpadm_ga_getCache(gapi_object) {
-    
+
     try {
-        if (!gapi_object.wc) {
+        //if (!gapi_object.wc || !gapi_object.wc.chart || !gapi_object.wc.chart.container || !gapi_object.wc.chart.container.innerHTML) {
+        if (
+            !gapi_object.hasOwnProperty('Ka') ||
+            !gapi_object.Ka.hasOwnProperty('chart') ||
+            !gapi_object.Ka.chart.hasOwnProperty('container') ||
+            undefined == gapi_object.Ka.chart.container.innerHTML
+        ) {
             gapi_object.execute();
             return;
         }
 
-        var query = gapi_object.wc.query;
-        var object_type = (undefined !== gapi_object.wc.chart) ? 'chart' : 'data';
+        var query = gapi_object.Ka.query;
+        var object_type = (undefined !== gapi_object.Ka.chart) ? 'chart' : 'data';
 
         query['start-index'] = (undefined == query['start-index']) ? 1 : query['start-index'];
         query['max-results'] = (undefined == query['max-results']) ? 1000 : query['max-results'];
 
         var data = {
             'action': 'getCache',
+            'security': jQuery('#wpadm_ga_cache_security').val(),
 
             'query': query,
             'request_type': 'success',
@@ -174,7 +181,7 @@ function wpadm_ga_getCache(gapi_object) {
                 if (res && res.status == 'success') {
                     if (object_type == 'chart') {
                         if (res.html) {
-                            gapi_object.wc.chart.container.innerHTML = '<div class="gapi-analytics-data-chart">' + res.html + '</div>';
+                            gapi_object.Ka.chart.container.innerHTML = '<div class="gapi-analytics-data-chart">' + res.html + '</div>';
                         }
                     }
 
@@ -203,12 +210,20 @@ function wpadm_ga_getCache(gapi_object) {
 }
 
 function wpadm_ga_setCache(result, type) {
-    if(undefined !== result.query) {
+    //if(undefined !== result.query) {
+    var query;
+    if(result.hasOwnProperty('query')) {
         var query = result.query;
         var html = '';
         var object_type = 'data';
     }
-    if (undefined == query && undefined !== result.response && undefined !== result.response.query) {
+    if (!result.hasOwnProperty('query') &&
+        result.hasOwnProperty('response') &&
+        result.response.hasOwnProperty('query') &&
+        result.hasOwnProperty('chart') &&
+        result.chart.hasOwnProperty('ma') &&
+        result.chart.ma.hasOwnProperty('innerHTML'))
+    {
         var query = result.response.query;
         var html = result.chart.ma.innerHTML;
         var object_type = 'chart';
@@ -217,6 +232,7 @@ function wpadm_ga_setCache(result, type) {
     if (undefined !== query ) {
         var data = {
             'action': 'setCache',
+            'security': jQuery('#wpadm_ga_cache_security').val(),
 
             'query': query,
             'html': html,
@@ -235,28 +251,27 @@ function wpadm_ga_setCache(result, type) {
 
         });
     } else {
-        console.log('empty query');
-        console.dir(result);
+//        console.log('empty query');
+//        console.dir(result);
     }
 }
 
 function wpadm_ga_sendSupportText() {
 
     if(jQuery('#wpadm-ga_support_text').val().trim() == '') {
+        alert('Please, describe your suggestion or issue and then click "Send" button.');
         return;
     }
 
     var data = {
         'action': 'sendSupport',
-
+        'security': jQuery('#wpadm-ga_support_security').val(),
         'message': jQuery('#wpadm-ga_support_text').val()
     }
 
     jQuery.post(ajaxurl, data, function (response) {
         try {
-            console.dir(response)
             var res = jQuery.parseJSON(response);
-            console.dir(res);
             if (res) {
                 jQuery('#wpadm-ga_support_text_container').hide();
                 jQuery('#wpadm-ga-support_send_button').hide();
@@ -288,7 +303,7 @@ function wpadm_ga_stopNotice5Stars() {
     jQuery('.wpadm-ga-notice-5stars-content').hide( "slow" );
     var data = {
         'action': 'stopNotice5Stars',
-
+        'security': jQuery('#wpadm_ga_stopNotice5Stars_security').val(),
         'stop': 1
     }
     jQuery.post(ajaxurl, data, function (response) {
@@ -301,6 +316,7 @@ function wpadm_ga_hideGetProDescription() {
     
     var data = {
         'action': 'hideGetProDescription',
+        'security': jQuery('#wpadm_ga_GetProDescription_security').val(),
         'hide': 1
     }
     jQuery.post(ajaxurl, data, function (response) {
@@ -313,6 +329,7 @@ function wpadm_ga_showGetProDescription() {
 
     var data = {
         'action': 'hideGetProDescription',
+        'security': jQuery('#wpadm_ga_GetProDescription_security').val(),
         'hide': 0
     }
     jQuery.post(ajaxurl, data, function (response) {

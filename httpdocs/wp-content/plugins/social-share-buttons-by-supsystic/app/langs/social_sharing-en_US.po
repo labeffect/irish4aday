@@ -178,10 +178,10 @@ msgstr ""
 msgid "Hide on mobile devices"
 msgstr ""
 
-msgid "When page load"
+msgid "When page loads"
 msgstr ""
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr ""
 
 msgid "Select network"

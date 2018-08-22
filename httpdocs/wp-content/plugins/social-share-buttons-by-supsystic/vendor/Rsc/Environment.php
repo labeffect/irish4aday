@@ -14,6 +14,8 @@ class Rsc_Environment
         'environment' => self::ENV_PRODUCTION,
     );
 
+    protected $isWPInit = false;
+
     /**
      * @var string
      */
@@ -74,6 +76,10 @@ class Rsc_Environment
      */
     protected $dispatcher;
 
+	protected $adminAreaMenus = array();
+	
+	protected $baseModInited = false;
+
     /**
      * Constructor
      * @param string $pluginName Plugin name.
@@ -104,7 +110,17 @@ class Rsc_Environment
 
         /* Dispatcher */
         $this->dispatcher = new Rsc_Dispatcher($this);
+
+        add_action('init', array($this, 'wpInitCallback'));
     }
+
+	public function setBaseModInited( $newVal ) {
+		$this->baseModInited = $newVal;
+	}
+	
+	public function getBaseModInited() {
+		return $this->baseModInited;
+	}
 
     /**
      * Configure plugin environment
@@ -185,8 +201,8 @@ class Rsc_Environment
                 sprintf('%s_before_menu_register', $this->pluginName),
                 $this->menu
             );
-
-            $this->menu->register();
+			// moved to extend() method
+            //$this->menu->register();
         }
 
         $this->twig->addGlobal('environment', $this);
@@ -203,6 +219,13 @@ class Rsc_Environment
         add_action('plugins_loaded', array($this, 'extend'));
     }
 
+	public function setAdminAreaMenus( $menus ) {
+		$this->adminAreaMenus = $menus;
+	}
+	public function getAdminAreaMenus() {
+		return $this->adminAreaMenus;
+	}
+
     /**
      * Registers activation hook
      */
@@ -218,6 +241,10 @@ class Rsc_Environment
         do_action($this->pluginName . '_plugin_loaded', $this);
 
         $this->resolver->init();
+		
+		if($this->menu) {
+			$this->menu->register();
+		}
     }
 
     public function isPro()
@@ -344,7 +371,7 @@ class Rsc_Environment
      * @param array $parameters An associative array of the parameters
      * @return string
      */
-    public function generateUrl($module, $action = 'index', array $parameters = array())
+    public function generateUrl($module, $action = 'index', array $parameters = array(), $hash = '')
     {
         $url = $this->getUrl() . '&module=' . strtolower($module);
 
@@ -355,6 +382,10 @@ class Rsc_Environment
         if (!empty($parameters)) {
             $url .= '&' . http_build_query($parameters);
         }
+
+		if(!empty($hash)) {
+			$url .= '#'. $hash;
+		}
 
         return $url;
     }
@@ -530,6 +561,16 @@ class Rsc_Environment
         return $this->pluginPath;
     }
 
+    public function wpInitCallback()
+    {
+        $this->isWPInit = true;
+    }
+
+    public function isWPInit()
+    {
+        return $this->isWPInit;
+    }
+
     /**
      * Sets the plugin path.
      *
@@ -578,4 +619,11 @@ class Rsc_Environment
             $this->getPluginName()
         )->myPluginApiCall($def, $action, $args);
     }
+	public function getLangCode2Letter() {
+		$langCode = $this->getLangCode();
+		return strlen($langCode) > 2 ? substr($langCode, 0, 2) : $langCode;
+}
+	public function getLangCode() {
+		return get_locale();
+	}
 }

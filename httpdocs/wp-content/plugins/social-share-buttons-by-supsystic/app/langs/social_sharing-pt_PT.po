@@ -270,10 +270,10 @@ msgstr "Mostrar/ocultar botão de navegação para o modo da barra lateral. Perm
 msgid "Allows user to display all networks in popup"
 msgstr "Permite o utilizador apresentar todas redes no popup"
 
-msgid "Allows you to lock content elements by class name before user share this page with any network"
+msgid "Allows you to lock content elements by class name before user shares this page with any network"
 msgstr "Permite-lhe bloquear elementos do conteúdo pelo nome da classe antes do utilizador partilhar esta página com qualquer rede"
 
-msgid "Choose pages you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
+msgid "Choose pages on which you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
 msgstr "Escolha páginas que desejar mostrar o popup. Poderá escolher \"Todas páginas\" ou artigos específicos, páginas ou URLs."
 
 msgid "Choose this option if you don't want to display icons on mobile devices"
@@ -483,10 +483,10 @@ msgstr "Todas páginas"
 msgid "Hide on mobile devices"
 msgstr "Ocultar nos equipamentos móveis"
 
-msgid "When page load"
+msgid "When page loads"
 msgstr "Quando a página carrega"
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr "Utilizador clica na página"
 
 msgid "Select network"

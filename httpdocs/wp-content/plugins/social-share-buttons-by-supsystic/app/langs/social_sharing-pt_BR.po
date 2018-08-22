@@ -318,7 +318,7 @@ msgstr ""
 "usuário compartilhar esta página com qualquer rede"
 
 msgid ""
-"Choose pages you want to show popup. You can choose \"All Pages\" or specify "
+"Choose pages you want to show buttons. You can choose \"All Pages\" or specify "
 "posts, pages or URLs"
 msgstr ""
 "Escolha as páginas que você deseja mostrar no Popup. Você pode escolher "
@@ -548,10 +548,10 @@ msgstr "Todas as Páginas"
 msgid "Hide on mobile devices"
 msgstr "Esconder em aparelhos móveis"
 
-msgid "When page load"
+msgid "When page loads"
 msgstr "Quando a página carregar"
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr "Clique na página do usuário"
 
 msgid "Select network"

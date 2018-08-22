@@ -1,4 +1,4 @@
-{% macro show() %}
+{% macro show(options) %}
     <div class="supsystic-item">
         <!-- /.container-fluid -->
         <div class="container-fluid">
@@ -72,6 +72,35 @@
                     <tbody></tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="row options-wp" style="margin-top: 20px;">
+          <h2 style="margin-left: 14px;">{{ environment.translate('Options') }}</h2>
+
+          <div class="option">
+                <input type="checkbox" name="settings[enable_disable_statistic]" {% if options.isEnable %} checked {% endif %}>
+                <span class="option-title">{{ environment.translate('Enable / Disable statistics') }}</span>
+          </div>
+
+          <div class="option option-list-container">
+              <span class="option-title">{{ environment.translate('What to write in Statistics:') }}</span>
+
+              <div class="option-item">
+                  <input type="checkbox" name="settings[shares_log_statistic]" {% if options.sharesLog %} checked {% endif %}>
+                  <span class="option-title">{{ environment.translate('Shares') }}</span>
+              </div>
+              <div class="option-item">
+                  <input type="checkbox" name="settings[views_log_statistic]" {% if options.viewsLog %} checked {% endif %}>
+                  <span class="option-title">{{ environment.translate('Views') }}</span>
+              </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+            <button class="button pull-right" id="clearStatisticData">
+                <i class="fa fa-sticky-note-o"></i>
+                Сlear data
+            </button>
         </div>
     </div>
     <!-- /.supsystic-item -->

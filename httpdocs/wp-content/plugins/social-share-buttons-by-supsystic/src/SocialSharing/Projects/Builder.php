@@ -8,6 +8,13 @@ abstract class SocialSharing_Projects_Builder
     const COUNTER_RIGHT_ARROWED = 'white-arrowed';
 
     /**
+     * @var bool
+     */
+    private $isHomepage;
+
+    private $isHomepageSet = false;
+
+    /**
      * @var Rsc_Environment
      */
     private $environment;
@@ -26,6 +33,24 @@ abstract class SocialSharing_Projects_Builder
     {
         $this->project = $project;
         $this->environment = $environment;
+    }
+
+    public function setWPInit($isInit)
+    {
+        if ($isInit) {
+            $this->isHomepage = is_home() || is_front_page();
+            $this->isHomepageSet = true;
+        } else {
+            add_action('template_redirect', array($this, 'wpInitOption'), 1, 0);
+        }
+    }
+
+    public function wpInitOption()
+    {
+        if (!$this->isHomepageSet) {
+            $this->isHomepage = is_home() || is_front_page();
+            $this->isHomepageSet = true;
+        }
     }
 
     /**
@@ -228,7 +253,7 @@ abstract class SocialSharing_Projects_Builder
             }
         } else {
             $classes[] = 'supsystic-social-sharing-content';
-            $alignInContent = $this->project->getAlignTypeInContent();
+            $alignInContent = $this->project->isShowAtShortcode() ? $this->project->getAlignTypeInCode() : $this->project->getAlignTypeInContent();
             switch($alignInContent){
                 case 'left':
                     $classes[] = 'supsystic-social-sharing-content-align-left';
@@ -280,6 +305,10 @@ abstract class SocialSharing_Projects_Builder
             $builder->createAttribute(
                 'class',
                 $this->getContainerClasses()
+            ),
+            $builder->createAttribute(
+                'data-text',
+               $this->project->get('text_after_buttons')
             )
         );
     }
@@ -290,10 +319,6 @@ abstract class SocialSharing_Projects_Builder
      */
     public function isHomepage()
     {
-        $schema = is_ssl() ? 'https://' : 'http://';
-        $currentUrl = strtolower(trailingslashit($schema . $_SERVER['HTTP_HOST'] . '/' . $_SERVER['REQUEST_URI']));
-        $baseUrl = strtolower(trailingslashit(get_bloginfo('wpurl')));
-
-        return $currentUrl === $baseUrl;
+        return $this->isHomepage;
     }
 }

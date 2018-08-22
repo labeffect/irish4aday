@@ -116,6 +116,8 @@
                 days: 30
             });
 
+        table.find('tbody').html('');
+
         request.done(function (response) {
 
             if (!response.stats.length) {
@@ -157,6 +159,8 @@
                 project_id: app.getParameterByName('id'),
                 days: 30
             });
+
+        table.find('tbody').html('');
 
         request.done(function (response) {
 
@@ -251,6 +255,67 @@
             }
 
             $(this).attr('data-shown', true);
+        });
+
+        $('#clearStatisticData').on('click', function (e) {
+            app.request({
+                module: 'shares',
+                action: 'clearData'
+            }, {project_id: app.getParameterByName('id')}).done(function (response) {
+                totalShares();
+                last30();
+                popular5Pages();
+
+                totalViews();
+                popular5PagesViews();
+            });
+
+            e.preventDefault();
+        });
+
+        var $optionEnDisStat = $('.options-wp input[name="settings[enable_disable_statistic]"]')
+        ,   $optionSharesLog = $('.options-wp input[name="settings[shares_log_statistic]"]')
+        ,   $optionViewsLog = $('.options-wp input[name="settings[views_log_statistic]"]');
+
+        $optionEnDisStat.on('ifChanged', function (event) {
+            var isChecked = ! $(this).parents('.icheckbox_minimal').hasClass('checked');
+
+            app.request({
+                module: 'shares',
+                action: 'setOptionEnableStat'
+            }, {
+                isEnable: isChecked ? 1 : 0
+            });
+        });
+
+        $optionSharesLog.on('ifChanged', function () {
+            var isChecked = ! $(this).parents('.icheckbox_minimal').hasClass('checked');
+
+            app.request({
+                module: 'shares',
+                action: 'setOptionSharesLog'
+            }, {
+                isEnable: isChecked ? 1 : 0
+            });
+
+            if (! isChecked && ! $optionViewsLog.parents('.icheckbox_minimal').hasClass('checked')) {
+                $optionEnDisStat.iCheck('uncheck');
+            }
+        });
+
+        $optionViewsLog.on('ifChanged', function () {
+            var isChecked = ! $(this).parents('.icheckbox_minimal').hasClass('checked');
+
+            app.request({
+                module: 'shares',
+                action: 'setOptionViewsLog'
+            }, {
+                isEnable: isChecked ? 1 : 0
+            });
+
+            if (! isChecked && ! $optionSharesLog.parents('.icheckbox_minimal').hasClass('checked')) {
+                $optionEnDisStat.iCheck('uncheck');
+            }
         });
 
         ssbShowReviewNotice();

@@ -5,6 +5,7 @@ class SrizonFBDB {
 		$optvar                     = array();
 		$optvar['loadlightbox']     = $_POST['loadlightbox'];
 		$optvar['lightboxattrib']   = $_POST['lightboxattrib'];
+		$optvar['albumtxt'] 		= $_POST['albumtxt'];
 		$optvar['backtogallerytxt'] = $_POST['backtogallerytxt'];
 		$optvar['jumptoarea']       = $_POST['jumptoarea'];
 		$optvar['srzfbappid']       = $_POST['srzfbappid'];
@@ -24,6 +25,9 @@ class SrizonFBDB {
 	static function GetCommonOpt() {
 		$optvar = get_option( 'srzfbcomm' );
 		if ( ! empty( $optvar ) ) {
+			if ( ! isset( $optvar['albumtxt'] ) ) {
+				$optvar['albumtxt'] = 'Album';
+			}
 			if ( ! isset( $optvar['backtogallerytxt'] ) ) {
 				$optvar['backtogallerytxt'] = '[Back To Gallery]';
 			}
@@ -42,6 +46,7 @@ class SrizonFBDB {
 			$optvardef                     = array();
 			$optvardef['loadlightbox']     = 'mp';
 			$optvardef['jumptoarea']       = 'false';
+			$optvardef['albumtxt']		   = 'Album';
 			$optvardef['backtogallerytxt'] = '[Back To Gallery]';
 			$optvardef['lightboxattrib']   = 'class="lightbox" rel="lightbox"';
 			$optvardef['srzfbappid']       = '137232439715277';
@@ -64,7 +69,7 @@ class SrizonFBDB {
 				$_POST['options']['longtoken'] = false;
 			}
 		}
-		$table           = $wpdb->base_prefix . 'srzfb_albums';
+		$table           = $wpdb->prefix . 'srzfb_albums';
 		$data['title']   = $_POST['title'];
 		$data['albumid'] = $_POST['albumid'];
 		$data['options'] = serialize( $_POST['options'] );
@@ -90,7 +95,7 @@ class SrizonFBDB {
 				$_POST['options']['longtoken'] = false;
 			}
 		}
-		$table           = $wpdb->base_prefix . 'srzfb_galleries';
+		$table           = $wpdb->prefix . 'srzfb_galleries';
 		$data['title']   = $_POST['title'];
 		$data['pageid']  = trim( $_POST['pageid'] );
 		$data['options'] = serialize( $_POST['options'] );
@@ -107,7 +112,7 @@ class SrizonFBDB {
 
 	static function GetAlbum( $id ) {
 		global $wpdb;
-		$table = $wpdb->base_prefix . 'srzfb_albums';
+		$table = $wpdb->prefix . 'srzfb_albums';
 		$q     = $wpdb->prepare( "SELECT * FROM $table WHERE id = %d", $id );
 		$album = $wpdb->get_row( $q );
 		if ( ! $album ) {
@@ -161,7 +166,7 @@ class SrizonFBDB {
 
 	static function GetGallery( $id ) {
 		global $wpdb;
-		$table = $wpdb->base_prefix . 'srzfb_galleries';
+		$table = $wpdb->prefix . 'srzfb_galleries';
 		$q     = $wpdb->prepare( "SELECT * FROM $table WHERE id = %d", $id );
 		$album = $wpdb->get_row( $q );
 		if ( ! $album ) {
@@ -212,7 +217,7 @@ class SrizonFBDB {
 
 	static function GetAllAlbums() {
 		global $wpdb;
-		$table  = $wpdb->base_prefix . 'srzfb_albums';
+		$table  = $wpdb->prefix . 'srzfb_albums';
 		$albums = $wpdb->get_results( "SELECT id, title FROM $table" );
 
 		return $albums;
@@ -220,7 +225,7 @@ class SrizonFBDB {
 
 	static function GetAllGalleries() {
 		global $wpdb;
-		$table  = $wpdb->base_prefix . 'srzfb_galleries';
+		$table  = $wpdb->prefix . 'srzfb_galleries';
 		$albums = $wpdb->get_results( "SELECT id, title FROM $table" );
 
 		return $albums;
@@ -228,16 +233,18 @@ class SrizonFBDB {
 
 	static function DeleteAlbum( $id ) {
 		global $wpdb;
-		$table = $wpdb->base_prefix . 'srzfb_albums';
+		$table = $wpdb->prefix . 'srzfb_albums';
 		$q     = $wpdb->prepare( "delete from $table where id = %d", $id );
 		$wpdb->query( $q );
 	}
 
 	static function SyncAlbum( $id ) {
+		global $wpdb;
 		$album = SrizonFBDB::GetAlbum( $id );
 		$ids   = SrizonFBDB::srz_fb_extract_ids( $album['albumid'] );
 		foreach ( $ids as $albumid ) {
-			$filename = JPATH_CACHE . '/fbalbum/' . md5( $albumid );
+			$cachekey = $wpdb->prefix.'multi'.$albumid;
+			$filename = JPATH_CACHE . '/fbalbum/' . md5( $cachekey );
 			if ( is_file( $filename ) ) {
 				unlink( $filename );
 			}
@@ -246,8 +253,9 @@ class SrizonFBDB {
 	}
 
 	static function SyncGallery( $id ) {
-		$page     = SrizonFBDB::GetGallery( $id );
-		$filename = JPATH_CACHE . '/fbalbum/' . md5( $id );
+		global $wpdb;
+		$cachekey = $wpdb->prefix.'multi'.$id;
+		$filename = JPATH_CACHE . '/fbalbum/' . md5( $cachekey );
 		if ( ! is_file( $filename ) ) {
 			return;
 		}
@@ -255,14 +263,15 @@ class SrizonFBDB {
 		$imgs     = json_decode( $contents );
 		if ( is_array( $imgs ) ) {
 			foreach ( $imgs as $obj ) {
-				$filename = JPATH_CACHE . '/fbalbum/' . md5( $obj->id );
+				$cachekey_album = $wpdb->prefix.'multi'.$obj->id;
+				$filename = JPATH_CACHE . '/fbalbum/' . md5( $cachekey_album );
 				if ( is_file( $filename ) ) {
 					unlink( $filename );
 				}
 //				delete_transient($filename);
 			}
 		}
-		$filename = JPATH_CACHE . '/fbalbum/' . md5( $id );
+		$filename = JPATH_CACHE . '/fbalbum/' . md5( $cachekey );
 		if ( is_file( $filename ) ) {
 			unlink( $filename );
 		}
@@ -294,15 +303,15 @@ class SrizonFBDB {
 
 	static function DeleteGallery( $id ) {
 		global $wpdb;
-		$table = $wpdb->base_prefix . 'srzfb_galleries';
+		$table = $wpdb->prefix . 'srzfb_galleries';
 		$q     = $wpdb->prepare( "delete from $table where id = %d", $id );
 		$wpdb->query( $q );
 	}
 
 	static function CreateDBTables() {
 		global $wpdb;
-		$t_albums    = $wpdb->base_prefix . 'srzfb_albums';
-		$t_galleries = $wpdb->base_prefix . 'srzfb_galleries';
+		$t_albums    = $wpdb->prefix . 'srzfb_albums';
+		$t_galleries = $wpdb->prefix . 'srzfb_galleries';
 		$sql         = '
 CREATE TABLE ' . $t_albums . ' (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -325,8 +334,8 @@ CREATE TABLE ' . $t_galleries . ' (
 
 	static function DeleteDBTables() {
 		global $wpdb;
-		$t_albums    = $wpdb->base_prefix . 'srzfb_albums';
-		$t_galleries = $wpdb->base_prefix . 'srzfb_galleries';
+		$t_albums    = $wpdb->prefix . 'srzfb_albums';
+		$t_galleries = $wpdb->prefix . 'srzfb_galleries';
 		$sql         = 'drop table ' . $t_albums . ', ' . $t_galleries . ';';
 		$wpdb->query( $sql );
 	}

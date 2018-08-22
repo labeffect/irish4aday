@@ -23,6 +23,7 @@ a.trigger-popup {
   top: 50%;
   width: 320px;
   z-index: 1001;
+  transform: translate(-50%,-50%);
 }
 .supsystic-social-sharing-popup a {
   display: inline-block !important;

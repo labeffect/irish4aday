@@ -1,5 +1,6 @@
 .fbalbum img, .srizon-yt-container img{
     max-width: 100%;
+    margin: 0 !important;
 }
 /* + fullsize image*/
 .full-size-image{

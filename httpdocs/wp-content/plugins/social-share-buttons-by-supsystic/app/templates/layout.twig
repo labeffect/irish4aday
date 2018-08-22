@@ -36,6 +36,12 @@
                                 </a>
                             </li>
                         {% endif %}
+						 <li class="{% if request.query.module == 'featuredplugins' %}active{% endif %}" data-menu-item-title="Featured Plugins">
+                            <a href="{{ environment.generateUrl('featuredplugins') }}">
+								<i class="fa fa-fw fa-heart"></i>
+								{{ environment.translate('Featured Plugins') }}
+                            </a>
+                        </li>
                         {#<li>#}
                             {#<a href="#">#}
                                 {#<i class="fa fa-fw fa-cogs"></i>#}

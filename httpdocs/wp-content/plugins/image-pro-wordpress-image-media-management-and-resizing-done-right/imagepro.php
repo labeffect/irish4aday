@@ -4,7 +4,7 @@ Plugin Name: Image Pro
 Plugin URI: http://www.mihaivalentin.com/image-pro-wordpress-image-management/
 Description: WordPress media & images management done right!
 Author: Mihai Valentin
-Version: 0.35
+Version: 0.36
 Author URI: http://www.mihaivalentin.com/
 */
 

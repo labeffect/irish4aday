@@ -62,6 +62,20 @@ class Rsc_Dispatcher
     }
 
     /**
+     * Applies filters (not ref-array).
+     *
+     * @param string $action Action name
+     * @param array $arg1 First filtered parameter.
+     * @return mixed
+     */
+	public function applyFilters($action, $arg1)
+	{
+		$args = func_get_args();
+		$args[ 0 ] = $this->appendPrefix($args[ 0 ]);
+		return call_user_func_array('apply_filters', $args);
+	}
+	
+    /**
      * Applies filters.
      *
      * @param string $action Action name
@@ -74,6 +88,30 @@ class Rsc_Dispatcher
             $this->appendPrefix($action),
             $parameters
         );
+    }
+	
+	/**
+	 * Add filter
+	 * 
+	 * @param type $action
+	 * @param type $function
+	 * @param type $priority
+	 * @param type $args
+	 * @return \Rsc_Dispatcher
+	 * @throws InvalidArgumentException
+	 */
+	public function filter($action, $function, $priority = 10, $args = 1)
+    {
+        if (!is_callable($function)) {
+            throw new InvalidArgumentException(sprintf(
+                'Argument 2 passed to Rsc_Dispatcher::filter() must be a callable, %s given.',
+                gettype($function)
+            ));
+        }
+
+        add_filter($this->appendPrefix($action), $function, $priority, $args);
+
+        return $this;
     }
 
     /**

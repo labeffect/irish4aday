@@ -173,7 +173,7 @@ button.active_group_by {
     cursor: pointer; 
     padding: 5px 10px; 
     border: 1px solid #ccc; 
-    width: 300px;
+    width: 310px;
 }
 
 .wpadm-gapi-analytics-data-chart-styles-table-tr-odd {
@@ -243,7 +243,7 @@ ul.wpadm_ga_notice_pro_features li {
 .wpadm-ga-btn-get-pro {
     background: linear-gradient(to bottom, #5cb85c 5%, #1F701F 100%);
     border: 1px solid #1F701F;
-    text-shadow: 0px 1px 0px #283966
+    text-shadow: 0px 1px 0px #283966;
     -webkit-border-radius: 3px;
     border-radius: 3px;
     display: inline-block;
@@ -258,4 +258,40 @@ ul.wpadm_ga_notice_pro_features li {
 
 .wpadm-ga-btn-get-pro:hover {
     background: linear-gradient(to bottom, #1F701F 5%, #5cb85c 100%);
+}
+
+.wpadm_ga_code_tab_btn, .wpadm_ga_code_tab_btn_active {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    color: gray;
+    border: 1px solid #b4b4b4;
+}
+
+.wpadm_ga_code_tab_btn_active {
+    background-color: #EDEDED;
+    color: black;
+}
+
+.wpadm_ga_code_tab {
+    padding: 20px;
+    background-color: #EDEDED;
+    border: 1px solid #b4b4b4;
+    border-top: none;
+}
+
+#wpadm_ga_manual_tracking_code {
+    border: 1px solid #b4b4b4;
+    color: black;
+}
+
+#wpadm_ga_submit_code_btn {
+    background-color: #9acfea;
+}
+
+#wpadm_ga_submit_code_btn:hover {
+    background-color: #0088cc;
+    color: white;
 }

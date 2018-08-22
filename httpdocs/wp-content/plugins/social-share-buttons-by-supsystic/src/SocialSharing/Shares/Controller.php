@@ -17,20 +17,64 @@ class SocialSharing_Shares_Controller extends SocialSharing_Core_BaseController
         /** @var SocialSharing_Shares_Model_Shares $shares */
         $shares = $this->modelsFactory->get('shares');
 
-        try {
-            $shares->add($projectId, $networkId, $postId);
-        } catch (Exception $e) {
-            return $this->ajaxError(
-                $this->translate(
-                    sprintf(
-                        'Failed to add current share to the statistic: %s',
-                        $e->getMessage()
+        if ($this->getEnvironment()->getModule('shares')->checkWhetherNeedToSaveShare($projectId))
+        {
+            try {
+                $shares->add($projectId, $networkId, $postId);
+            } catch (Exception $e) {
+                return $this->ajaxError(
+                    $this->translate(
+                        sprintf(
+                            'Failed to add current share to the statistic: %s',
+                            $e->getMessage()
+                        )
                     )
-                )
-            );
+                );
+            }
         }
 
         return $this->ajaxSuccess();
+    }
+
+    public function setOptionEnableStatAction(Rsc_Http_Request $request)
+    {
+        $isEnable = (bool) $request->post->get('isEnable');
+
+        $shares = $this->modelsFactory->get('shares');
+
+        $shares->setIsEnableOption($isEnable);
+
+        return $this->ajaxSuccess();
+    }
+
+    public function setOptionViewsLogAction(Rsc_Http_Request $request)
+    {
+        $shares = $this->modelsFactory->get('shares');
+
+        $shares->setViewsLogOption($request->post->get('isEnable'));
+
+        return $this->ajaxSuccess();
+    }
+
+    public function setOptionSharesLogAction(Rsc_Http_Request $request)
+    {
+        $shares = $this->modelsFactory->get('shares');
+
+        $shares->setSharesLogOption($request->post->get('isEnable'));
+
+        return $this->ajaxSuccess();
+    }
+
+    public function clearDataAction(Rsc_Http_Request $request)
+    {
+        $projectId = $request->post->get('project_id');
+        $shares = $this->modelsFactory->get('shares');
+        $views = $this->modelsFactory->get('views', 'shares');
+
+        $shares->removeDataByProjectID($projectId);
+        $views->removeDataByProjectID($projectId);
+
+        return $this->ajaxSuccess(array('clearStatus' => 1));
     }
 
     public function statisticAction(Rsc_Http_Request $request)
@@ -208,12 +252,12 @@ class SocialSharing_Shares_Controller extends SocialSharing_Core_BaseController
 	}
 
 	public function sendUsageStat($state) {
-		$apiUrl = 'http://54.68.191.217';
+		$apiUrl = 'http://updates.supsystic.com';
 
 		$reqUrl = $apiUrl . '?mod=options&action=saveUsageStat&pl=rcs';
 		$res = wp_remote_post($reqUrl, array(
 			'body' => array(
-				'site_url' => get_bloginfo('wpurl'),
+				'site_url' => home_url(),
 				'site_name' => get_bloginfo('name'),
 				'plugin_code' => 'ssb',
 				'all_stat' => array('views' => 'review', 'code' => $state),

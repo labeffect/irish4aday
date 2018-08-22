@@ -26,17 +26,18 @@ function srz_fb_galleries() {
 			}
 		}
 		echo '<h2>' . __( 'Galleries', 'srizon-facebook-album' ) . '<a href="admin.php?page=SrzFb-Galleries&srzf=edit" class="add-new-h2">' . __( 'Add New', 'srizon-facebook-album' ) . '</a></h2>';
-		$galleries = SrizonFBDB::GetAllGalleries();
+		$galleries = stripslashes_deep( SrizonFBDB::GetAllGalleries() );
 		include( 'tables/gallery-table.php' );
 	}
 	SrizonFBUI::PageWrapEnd();
 }
 
 function srz_fb_galleries_edit() {
-	$optvar = SrizonFBDB::GetCommonOpt();
+	$optvar = stripslashes_deep( SrizonFBDB::GetCommonOpt() );
 	if ( isset( $_REQUEST['id'] ) ) {
 		echo '<div id="icon-edit-pages" class="icon32 icon32-posts-page"><br></div><h2>' . __( 'Edit Gallery', 'srizon-facebook-album' ) . '</h2>';
 		$value_arr = SrizonFBDB::GetGallery( $_GET['id'] );
+		$value_arr = stripslashes_deep( $value_arr );
 	} else {
 		echo '<div id="icon-edit-pages" class="icon32 icon32-posts-page"><br></div><h2>' . __( 'Add New Gallery', 'srizon-facebook-album' ) . '</h2>';
 		$value_arr = array(
@@ -44,6 +45,8 @@ function srz_fb_galleries_edit() {
 			'pageid'                => '',
 			'excludeids'            => '',
 			'include_exclude'       => 'exclude',
+			'albumtxt'				=> '',
+			'backtogallerytxt'		=> '',
 			'updatefeed'            => '600',
 			'image_sorting'         => 'default',
 			'album_sorting'         => 'default',
@@ -63,6 +66,7 @@ function srz_fb_galleries_edit() {
 			'app_id'                => $optvar['srzfbappid'],
 			'app_secret'            => $optvar['srzfbappsecret'],
 		);
+		$value_arr = stripslashes_deep( $value_arr );
 	}
 	SrizonFBUI::OptionWrapperStart();
 	SrizonFBUI::RightColStart();

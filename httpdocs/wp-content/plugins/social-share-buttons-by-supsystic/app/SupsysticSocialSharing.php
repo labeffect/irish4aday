@@ -18,7 +18,7 @@ class SupsysticSocialSharing
         $pluginName = 'sss';
         $pluginTitleName = 'Social Share by Supsystic';
         $pluginSlug = 'supsystic-social-sharing';
-        $environment = new Rsc_Environment($pluginName, '1.5.9', $pluginPath);
+        $environment = new Rsc_Environment($pluginName, '1.9.1', $pluginPath);
 
         /* Configure */
         $environment->configure(
@@ -56,9 +56,10 @@ class SupsysticSocialSharing
                 'uploads_rw'       => true,
                 'jpeg_quality'     => 95,
                 'plugin_db_update' => true,
-                'revision'         => 288,
+                'revision'         => 322,
                 'welcome_page_was_showed' => get_option($pluginName . '_welcome_page_was_showed'),
-                'promo_controller' => 'SocialSharing_Promo_Controller'
+                'promo_controller' => 'SocialSharing_Promo_Controller',
+	            'pro_button_option_prefix'=>'pro_button_option_',
             )
         );
 
@@ -68,14 +69,14 @@ class SupsysticSocialSharing
 	public function getEnvironment() {
 		return $this->environment;
 	}
-	
+
     public function run()
     {
-        /*if (isset($_GET['sharing_install_db'])) {
-            $this->createSchema();
-        }
+        // if (isset($_GET['sharing_install_db'])) {
+        //     $this->createSchema();
+        // }
 
-        if (isset($_GET['sharing_reinstall_db'])) {
+        /*if (isset($_GET['sharing_reinstall_db'])) {
             $this->dropSchema();
             $this->createSchema();
         }*/
@@ -85,13 +86,105 @@ class SupsysticSocialSharing
 
     public function activate($bootstrap)
     {
-        register_activation_hook($bootstrap, array($this, 'createSchema'));
-        
-        if(get_option($this->environment->getPluginName().'_updated') < 289) {    
-            register_activation_hook($bootstrap, array($this, 'updateDb'));
-            update_option($this->environment->getPluginName().'_updated', $this->environment->getConfig()->get('revision'));
+        //if is multisite mode
+        if (function_exists('is_multisite') && is_multisite()) {
+            global $wpdb;
+            
+            $orig_id = $wpdb->blogid;
+            $blog_id = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+            
+            foreach ($blog_id as $id) {
+                if (switch_to_blog($id)) {
+                    $this->createSchema();
+
+                    $this->installUpdate();
+                } 
+            }
+
+            switch_to_blog($orig_id);
+        } else {
+            $this->createSchema();
+
+            $this->installUpdate();
         }
     }
+
+	public function installUpdate()
+	{
+    	$currentOptionRevision = (int)get_option($this->environment->getPluginName().'_updated');
+    	$configRevision = (int)$this->environment->getConfig()->get('revision');
+		$updatePath = dirname(__FILE__) . '/configs/';
+
+    	if($currentOptionRevision < $configRevision) {
+		    for ($i = $currentOptionRevision; $i <= $configRevision; $i++) {
+			    $file = $updatePath . 'rev-'.$i.'.sql';
+
+			    if (!file_exists($file)) {
+				    continue;
+			    }
+			    try {
+				    $this->updateFromFile($file);
+			    } catch (Exception $e) {
+				    if (!$this->environment->isPluginPage()) {
+					    return;
+				    }
+				    wp_die(
+					    sprintf(
+						    'Failed to update plugin database. Reason: %s',
+						    $e->getMessage()
+					    )
+				    );
+			    }
+		    }
+		    update_option($this->environment->getPluginName().'_updated', $configRevision);
+	    }
+	}
+
+	/**
+	 * Loads updates from the file and update the database.
+	 * @param string $file Path to updates file.
+	 */
+	private function updateFromFile($file)
+	{
+		if (!is_readable($file)) {
+			throw new RuntimeException(
+				sprintf('File "%s" is not readable.', $file)
+			);
+		}
+
+		if (false === $content = file_get_contents($file)) {
+			throw new RuntimeException(
+				sprintf('Failed to read file "%s".', $file)
+			);
+		}
+		$this->update($content);
+	}
+
+	/**
+	 * Updates the database.
+	 * @param string $data
+	 */
+	private function update($data)
+	{
+		global $wpdb;
+		if (!function_exists('dbDelta')) {
+			require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+		}
+
+		$prefix = $wpdb->prefix . $this->environment->getConfig()->get('db_prefix');
+		$data = str_replace('%prefix%', $prefix, $data);
+
+		if ('delete' === substr(strtolower($data), 0, 6)) {
+			foreach(explode(';',$data) as $q){
+				$wpdb->query($q);
+			}
+			return;
+		}
+		// CREATE and INSERT only. No ALTER - dbDella modifies tables itself
+		dbDelta('SET FOREIGN_KEY_CHECKS=0');
+		dbDelta($data);
+		dbDelta('SET FOREIGN_KEY_CHECKS=1');
+	}
 
     public function updateDb() {
         global $wpdb;
@@ -116,30 +209,41 @@ class SupsysticSocialSharing
         }
 
         $sql = str_replace('%prefix%', $prefix, file_get_contents($networks));
-
+        
         dbDelta('SET FOREIGN_KEY_CHECKS=0');
         dbDelta($sql);
         dbDelta('SET FOREIGN_KEY_CHECKS=1');
     }
 
+
     public function createSchema()
     {
         global $wpdb;
+
+	    if(get_option($this->environment->getPluginName().'_installed'))
+	    	return;
 
         if (is_file($schema = dirname(__FILE__) . '/configs/dbschema.sql')) {
             $prefix = $wpdb->prefix . $this->environment
                     ->getConfig()
                     ->get('db_prefix');
-
+            
             $sql = str_replace('%prefix%', $prefix, file_get_contents($schema));
 
             if (!function_exists('dbDelta')) {
                 require_once(ABSPATH.'wp-admin/includes/upgrade.php');
             }
 
-            dbDelta('SET FOREIGN_KEY_CHECKS=0');
-            dbDelta($sql);
-            dbDelta('SET FOREIGN_KEY_CHECKS=1');
+            $queryList = array_map('trim', explode(';', $sql));
+            
+            $wpdb->show_errors = false;
+
+            foreach ($queryList as $query) {
+				if(empty($query)) continue;
+				$wpdb->query($query);
+			}
+
+            $wpdb->show_errors = true;
 
             update_option($this->environment->getPluginName().'_installed', 1);
         }

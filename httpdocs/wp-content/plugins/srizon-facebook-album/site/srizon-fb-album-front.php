@@ -4,6 +4,7 @@ function srz_fb_album_shortcode($atts) {
 	$srz_albumid = $atts['id'];
 	$srz_album = SrizonFBDB::GetAlbum($srz_albumid);
 	if (!$srz_album) return 'Album Not found';
+	$srz_album = stripslashes_deep($srz_album);
 	srz_fb_set_debug_msg('Album Details:', $srz_album);
 	if (!isset($GLOBALS['imggroup'])) $GLOBALS['imggroup'] = 1;
 	else $GLOBALS['imggroup']++;
@@ -16,6 +17,7 @@ function srz_fb_album_shortcode($atts) {
 	$srz_images_all = array_slice($srz_images_all,0,$srz_album['totalimg']);
 
 	$srz_common_options = SrizonFBDB::GetCommonOpt();
+	$srz_common_options = stripslashes_deep($srz_common_options);
 	if ($srz_common_options['loadlightbox'] == 'mp') {
 		$lightbox_attribute = 'class="aimg"';
 	} else {

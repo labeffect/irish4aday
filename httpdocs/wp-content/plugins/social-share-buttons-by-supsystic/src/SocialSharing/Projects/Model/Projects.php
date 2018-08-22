@@ -17,12 +17,24 @@ class SocialSharing_Projects_Model_Projects extends SocialSharing_Core_BaseModel
     {
         $title = htmlspecialchars($title);
         $design = htmlspecialchars($this->isButtonDesignAvailable($design)) . '-1';
-        $design = 's:6:"design";s:' . strlen($design) . ':"' . $design . '";';
+        // $design = 's:6:"design";s:' . strlen($design) . ':"' . $design . '";';
+
+        $settings = array(
+            'views_log_statistic' => 'on',
+            'shares_log_statistic' => 'on',
+            'enable_disable_statistic' => 'on',
+            'hide_in_home' => false,
+            'where_to_show' => 'sidebar',
+            'where_to_show_extra' => 'left',
+            'show_at' => 'everywhere',
+            'when_show' => 'load',
+            'design' => $design
+        );
 
         $query = $this->getQueryBuilder()
             ->insertInto($this->getTable())
             ->fields('title', 'created_at', 'settings')
-            ->values($title, date('Y-m-d'), 'a:6:{s:12:"hide_in_home";b:0;s:13:"where_to_show";s:7:"sidebar";s:19:"where_to_show_extra";s:4:"left";s:7:"show_at";s:10:"everywhere";s:9:"when_show";s:4:"load";' . $design . '}');
+            ->values($title, date('Y-m-d'), serialize($settings));
 
         $this->db->query($query->build());
 
@@ -50,15 +62,15 @@ class SocialSharing_Projects_Model_Projects extends SocialSharing_Core_BaseModel
             ->where('id', '=', (int)$id);
 
         $project = $this->db->get_row($query->build());
-
+        
         if (!$project) {
             return null;
         }
-
+        
         return $this->applyFilters($project);
     }
 
-    public function searchByPopupId($like)
+    public function searchByElementId($like)
     {
         $query = $this->getQueryBuilder()
             ->select('*')
@@ -73,6 +85,11 @@ class SocialSharing_Projects_Model_Projects extends SocialSharing_Core_BaseModel
         }
 
         return $this->applyFilters($project);
+    }
+
+    public function count(){
+        $query = $this->getQueryBuilder()->from($this->getTable())->select("count(*)");
+        return $this->db->get_var($query);
     }
 
     /**
@@ -231,12 +248,15 @@ class SocialSharing_Projects_Model_Projects extends SocialSharing_Core_BaseModel
     public function filterGetProject($project)
     {
         $project->networks = $this->db->get_results(
-            'SELECT n.*, pn.title, pn.text, pn.tooltip, pn.text_format, pn.use_short_url FROM `' . $this->getTable(
-            ) . '` AS p LEFT JOIN `' . $this->getTable(
-                'project_networks'
-            ) . '` AS pn ON p.id = pn.project_id LEFT JOIN `' . $this->getTable(
-                'networks'
-            ) . '` AS n ON pn.network_id = n.id WHERE p.id = ' . $project->id . ' ORDER BY pn.position ASC'
+            'SELECT
+                n.*, pn.title, pn.text, pn.tooltip, pn.text_format, pn.use_short_url, pn.icon_image, pn.profile_name
+            FROM `' . $this->getTable() . '` AS p 
+            LEFT JOIN `' . $this->getTable('project_networks') . '`  AS pn 
+                ON p.id = pn.project_id 
+            LEFT JOIN `' . $this->getTable('networks') . '` AS n 
+                ON pn.network_id = n.id 
+            WHERE p.id = ' . $project->id . ' 
+            ORDER BY pn.position ASC'
         );
 
         if (count($project->networks) === 1 && !$project->networks[0]->id) {
@@ -244,7 +264,7 @@ class SocialSharing_Projects_Model_Projects extends SocialSharing_Core_BaseModel
         }
 
         $project->settings = unserialize($project->settings);
-
+        
         return $project;
     }
 
@@ -299,6 +319,12 @@ class SocialSharing_Projects_Model_Projects extends SocialSharing_Core_BaseModel
                 'design' => 'livejournal',
                 'free' => false,
             ),
+            array(
+                'title' => $e->translate('Strict'),
+                'img_url' => $url . 'strict_icons.png',
+                'design' => 'strict',
+                'free' => false,
+            ),
 //            array(
 //                'title' => $e->translate('Various'),
 //                'img_url' => $url . 'various_icons.png',
@@ -312,4 +338,18 @@ class SocialSharing_Projects_Model_Projects extends SocialSharing_Core_BaseModel
             array($previews)
         );
     }
+
+	public function getPosts() {
+		global $wpdb;
+		$postList = $this->db->get_results("SELECT ID, post_title  FROM " . $wpdb->posts
+			. " WHERE post_type = 'post' AND post_status = 'publish' ORDER BY ID DESC");
+		return $postList;
+	}
+
+	public function getPages() {
+		global $wpdb;
+		$pagesSelect = $this->db->get_results("SELECT ID, post_title  FROM " . $wpdb->posts
+			. " WHERE post_type = 'page' AND post_status ='publish' ORDER BY ID DESC");
+		return $pagesSelect;
+	}
 }

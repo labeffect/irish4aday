@@ -197,10 +197,10 @@ msgstr "Все страницы"
 msgid "Hide on mobile devices"
 msgstr "Скрыть на мобильных устройствах"
 
-msgid "When page load"
+msgid "When page loads"
 msgstr "При загрузке страницы"
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr "Пользователь нажмает на странице"
 
 msgid "Select network"

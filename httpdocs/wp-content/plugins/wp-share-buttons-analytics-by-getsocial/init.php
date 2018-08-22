@@ -11,6 +11,9 @@ if (get_option('gs-popup-showed')  != "showed") {
         <div class="large">
             <?php if(get_option('gs-api-key') == ''): ?>
                 <div class="account-info gs-form gs-small">
+                    <span id="error-type-3" class="gs-error">
+                        <p>Invalid E-mail!</p>
+                    </span>
                     <div class="form-content">
                         <div class="field-group">
                             <div class="field-label no-desc">
@@ -24,13 +27,11 @@ if (get_option('gs-popup-showed')  != "showed") {
                             <div class="field-label no-desc">
                                 <label for="site-name">Email</label>
                             </div>
-                            <div class="field-input">
-                                <?php echo wp_get_current_user()->data->user_email ?>
-                            </div>
+                            <input type="email" class="field-input" id="gs-user-email" value="<?php echo wp_get_current_user()->data->user_email ?>">
                         </div>
                     </div>
                     <div class="form-button-group">
-                        <a href="<?php echo $GS->gs_account() ?>/api/v1/sites/create?source=wordpress&amp;email=<?php echo wp_get_current_user()->data->user_email ?>&amp;url=<?php echo get_option('siteurl') ?>" class="gs-button gs-big gs-success create-gs-account"><i class="fa fa-check"></i> Activate your account</a>
+                        <a href="<?php echo $GS->gs_account() ?>/api/v1/sites/create" class="gs-button gs-big gs-success create-gs-account"><i class="fa fa-check"></i> Activate your account</a>
                         <span class="loading-create gs-button gs-success trans border gs-big hide">
                             <i class="fa fa-refresh fa-spin"></i> Activating Account...
                         </span>
@@ -42,20 +43,20 @@ if (get_option('gs-popup-showed')  != "showed") {
                         <?php settings_fields( 'getsocial-gs-settings' ); ?>
                         <?php do_settings_sections( 'getsocial-gs-settings' ); ?>
                         <div class="form-content">
+                            <input type="hidden" name="gs-user-email" value="">
                             <div class="field-clean">
                                 <div class="field-input">
                                     <span id="error-type-1" class="hidden">
-                                        <p>It seems this URL has already been registered. Please <a href="mailto:support@getsocial.io">contact</a> our support if you are the website owner.</p>
+                                        <p>It seems this URL has already been registered. Please <a class="uservoice-contact" href="mailto:support@getsocial.io">contact</a> our support if you are the website owner.</p>
                                     </span>
                                     <span id="error-type-2" class="hidden">
                                         <p>Please go to your <a href="https://getsocial.io/redirect/site-options" target="_blank">Getsocial Account</a> and get your API KEY in the site options page.</p>
                                         <p>If you can't find it request it <a id="request_api_key" href="#">here</a></p><br>
                                         <input id="gs-api-key" type="text" name="gs-api-key" size="60" value="" maxlength="20"/>
                                         <p>Need help?
-                                            <a href="#" id="contact_us">Contact us</a>
+                                            <a href="#" class="uservoice-contact" id="contact_us">Contact us</a>
                                         </p>
                                     </span>
-                                    
                                 </div>
                             </div>
                         </div>
@@ -88,7 +89,7 @@ if (get_option('gs-popup-showed')  != "showed") {
     <div id="settings-modal" class="modal-wrapper hide">
         <div class="gs-modal">
             <div class="modal-title">
-                <p class="title">Settings</p>
+                <p class="title">Plugin Settings</p>
             </div>
             <form id="config-form" method="post" action="options.php" class="gs-form">
                 <?php settings_fields( 'getsocial-gs-settings' ); ?>
@@ -160,7 +161,7 @@ if (get_option('gs-popup-showed')  != "showed") {
         <div class="modal-cover modal-close"></div>
     </div>
     <!-- Install Google Analytics Modal -->
-    <div id="install-ga-analytics-modal" class="modal-wrapper hide">
+    <div id="install-ga_integration-modal" class="modal-wrapper hide">
         <div class="gs-modal small text-center">
             <div class="text-block">
                 <div class="modal-title">
@@ -178,7 +179,7 @@ if (get_option('gs-popup-showed')  != "showed") {
             </div>
             <div class="form-button-group">
                 <a href="<?php echo $GS->gs_account() ?>/sites/gs-wordpress/billing/select_tier?api_key=<?php echo $GS->api_key ?>&amp;source=wordpress<?php echo $GS->utms('pro_header') ?>" target="_blank" class="gs-button gs-success plan-two">
-                    Upgrade to Starter
+                    Upgrade to Tools
                 </a>
                 <a href="javascript:void(0)" class="gs-button gs-error trans modal-close">Cancel</a>
             </div>
@@ -204,7 +205,7 @@ if (get_option('gs-popup-showed')  != "showed") {
             </div>
             <div class="form-button-group">
                 <a href="<?php echo $GS->gs_account() ?>/sites/gs-wordpress/billing/select_tier?api_key=<?php echo $GS->api_key ?>&amp;source=wordpress<?php echo $GS->utms('pro_header') ?>" target="_blank" class="gs-button gs-success plan-two">
-                    Upgrade to Starter
+                    Upgrade to Tools
                 </a>
                 <a href="javascript:void(0)" class="gs-button gs-error trans modal-close">Cancel</a>
             </div>
@@ -219,7 +220,7 @@ if (get_option('gs-popup-showed')  != "showed") {
                     <p class="title">MailChimp Integration</p>
                 </div>
                 <p class="text-center">
-                    Real-time integration with MailChimp. Connect our Subscriber Bar & Price Alert features to the world’s #1 e-mail marketing tool.
+                    Real-time integration with MailChimp. Connect our Subscriber Bar features to the world’s #1 e-mail marketing tool.
                 </p>
                 <div class="clearfix text-center" style="margin-top: 30px">
                     <div class="col-16" style="margin-top: 30px">
@@ -229,63 +230,7 @@ if (get_option('gs-popup-showed')  != "showed") {
             </div> 
             <div class="form-button-group">
                 <a href="<?php echo $GS->gs_account() ?>/sites/gs-wordpress/billing/select_tier?api_key=<?php echo $GS->api_key ?>&amp;source=wordpress<?php echo $GS->utms('pro_header') ?>" target="_blank" class="gs-button gs-success plan-two">
-                    Upgrade to Starter
-                </a>
-                <a href="javascript:void(0)" class="gs-button gs-error trans modal-close">Cancel</a>
-            </div>
-        </div>
-        <div class="modal-cover modal-close"></div>
-    </div>
-    <!-- Install Bitly Modal -->
-    <div id="install-bitly-modal" class="modal-wrapper hide">
-        <div class="gs-modal small text-center">
-            <div class="text-block">
-                <div class="modal-title">
-                    <p class="title">Bitly Integration</p>
-                </div>
-                <p class="text-center">
-                    Activating our Bitly integration will allow your readers to share using your Bitly account. Easy, no code required!
-                </p>
-                <br>
-                <div class="before-after">
-                    <div>
-                        <strong>Before</strong>
-                        <img src="<?php echo plugins_url( '/img/modals/bitly_via_before.png', __FILE__ ) ?>" alt="">
-                    </div>
-                    <div>
-                        <strong>After</strong>
-                        <img src="<?php echo plugins_url( '/img/modals/bitly_via_after.png', __FILE__ ) ?>" alt="">
-                    </div>
-                </div>
-            </div>
-            <div class="form-button-group">
-                <a href="<?php echo $GS->gs_account() ?>/sites/gs-wordpress/billing/select_tier?api_key=<?php echo $GS->api_key ?>&amp;source=wordpress<?php echo $GS->utms('pro_header') ?>" target="_blank" class="gs-button gs-success plan-two">
-                    Upgrade to Starter
-                </a>
-                <a href="javascript:void(0)" class="gs-button gs-error trans modal-close">Cancel</a>
-            </div>
-        </div>
-        <div class="modal-cover modal-close"></div>
-    </div>
-    <!-- Install InfusionSoft Modal -->
-    <div id="install-infusionsoft-modal" class="modal-wrapper hide">
-        <div class="gs-modal small text-center">
-            <div class="text-block">
-                <div class="modal-title">
-                    <p class="title">InfusionSoft Integration</p>
-                </div>
-                <p class="text-center">
-                    By linking your InfusionSoft account, you'll be able to automatically send all emails captured on Subscriber Bar & Hello Buddy features.
-                </p>
-                <div class="clearfix text-center" style="margin-top: 30px">
-                    <div class="col-16" style="margin-bottom: 30px">
-                        <img src="<?php echo plugins_url( '/img/modals/infusionsoft.png', __FILE__ ) ?>" alt="">
-                    </div>
-                </div>
-            </div>
-            <div class="form-button-group">
-                <a href="<?php echo $GS->gs_account() ?>/sites/gs-wordpress/billing/select_tier?api_key=<?php echo $GS->api_key ?>&amp;source=wordpress<?php echo $GS->utms('pro_header') ?>" target="_blank" class="gs-button gs-success plan-two">
-                    Upgrade to Starter
+                    Upgrade to Tools
                 </a>
                 <a href="javascript:void(0)" class="gs-button gs-error trans modal-close">Cancel</a>
             </div>
@@ -308,29 +253,14 @@ if (get_option('gs-popup-showed')  != "showed") {
         <div class="modal-cover modal-close"></div>
     </div>
 </div>
-
+<?php if(get_option('gs-pro')) { ?>
 <script>
-// Include the UserVoice JavaScript SDK (only needed once on a page)
-UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/hizF2VOh3oNKSWQxuKYjg.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
-
-// Set colors
-UserVoice.push(['set', {
-    accent_color: '#448dd6',
-    trigger_color: 'white',
-    trigger_background_color: '#e2753a'
-}]);
-
-// Identify the user and pass traits
-// To enable, replace sample data with actual user traits and uncomment the line
-UserVoice.push(['identify', {
-    email: '<?php echo get_option('admin_email') ?>'
-}]);
-
-// Add default trigger to the bottom-right corner of the window:
-UserVoice.push(['addTrigger', '#help', { mode: 'contact' }]);
-
-if (document.getElementById('contact_us')) {
-    UserVoice.push(['addTrigger', '#contact_us', { mode: 'contact' }]);
-}
-
+/* Intercom Settings */
+window.intercomSettings = {
+    app_id: 'b33e7fd1',
+    email: '<?php echo get_option('gs-user-email') ?>',
+    url: '<?php echo get_option('siteurl') ?>'
+};
+(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/b33e7fd1';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
 </script>
+<?php } ?>

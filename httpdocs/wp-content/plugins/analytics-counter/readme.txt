@@ -1,14 +1,14 @@
 === Google Analytics Counter Tracker ===
 Plugin Name: Google Analytics Counter Tracker
-Version: 3.1.1
-Tags: Google Analytics, Analytics, Statistics, Analytics dashboard, Reports, Charts, Stats, Web stats, Visit, Audience Overview, Visitors Overview, Marketing, Google, Keywords, Counter, Tracker, Hit counter, hitcounter, visitor tracker, visitor tracking, visitors, tracking, stats, statscounter, analyse, hits, hit, track
+Version: 3.5.7
+Tags: Google, Analytics, Google Analytics, Stats, Counter, Tracker, Statistics, Analytics dashboard, Reports, Charts, Web stats, Visit, Audience Overview, Visitors Overview, Marketing, Keywords, Hit counter, hitcounter, visitor tracker, visitor tracking, visitors, tracking, stats, statscounter, analyse, hits, hit, track
 Requires at least: 3.9
-Tested up to: 4.4
+Tested up to: 4.9
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Author: wpadm.com
-Contributors: WPAdm, wpadm.com
+Contributors: wpadm.com
 
 Google analytics counter tracker - analyse the visitors hits on you website and display it graphically
 
@@ -41,11 +41,27 @@ Google analytics counter tracker - analyse the visitors hits on you homepage and
 = Features of Google Analytics Counter Tracker =
 * Very simple and easy to use.
 * Connect your Google Analytics account and get Google Analytics stats;
+* Anonymize IP address to mask the user IPs;
 * Group stats by hour, day, month and year;
 * See data for different time periods in your reports;
 * Compatible with almost every version of WordPress;
 * Mobile-Friendly Design;
-
+* Easy to use Google Analytics plugin and tracker;
+* Multilingual Google Analytics include many languages<br />
+  * English Google Analytics,<br />
+  * Arabic Google Analytics,<br />
+  * Dutch Google Analytics,<br />
+  * French(France) Google Analytics,<br />
+  * German Google Analytics,<br />
+  * Italian Google Analytics,<br />
+  * Japanese Google Analytics,<br />
+  * Korean Google Analytics,<br />
+  * Polski Google Analytics,<br />
+  * Portuguese(Portugal) Google Analytics,<br />
+  * Russian Google Analytics,<br />
+  * Spanish (Spain) Google Analytics,<br />
+  * Turkish Google Analytics<br />
+  
 = Support for Google Analytics Counter Tracker =
 If you need help with the Google Analytics Counter Tracker plugin or you want to report a bug please refer to http://www.wpadm.com/support/
 
@@ -85,10 +101,45 @@ To show Google Analytics statistics on your WordPress website you will need to h
 
 You can create Google Analytics account [here](https://accounts.google.com/ServiceLogin?service=analytics). Google Analycs is fully free.
 
+= When I open the Analytics Counter the following Message reported: <br /> Google Analytics service reports “Invalid value ’ga:’. Values must match the following regular expression: ’ga:[0-9]+'” =
+
+Please, choose your website again. To achieve it, please go to your WordPress admin dashboard –> on your sidebar find “Settings” –> Analytics Counter and choose your website.
+If it does not help, make “Disconnect your Google Analytics Account” and connect again.
+
+= Google Analytics service reports “Cannot read property ’innerHTML’ of undefined” =
+
+If you updated your plugin and use the latest version, but it still does not work, please deactivate the plugin and activate it again, as well as clean your browser cache. It must work.
+
+= I have installed your plugin for google analytics. IT shows me an error "The site reports about error! Please deactivate and activate plugin analytics-counter" I have deactivated it and reactivated it but same result. =
+
+The problem is that our system does not have requests from your site to our server secure.wpadm.com <br />
+
+1) It is possible that your hosting provider blocks website scripts on server to access the Internet; <br />
+2) You use any security plugin on WordPress, that also can blocks our requests. <br />
+
 
 == Changelog ==
 
 The new improved version of Analytics Counter plugin is now online.<br />
+
+= Google Analytics Counter Tracker version 3.5.4 for WordPress users. =
+* Tested with WordPress 4.7.3
+* The scripts loading problem from Google is fixed.
+
+= Google Analytics Counter Tracker version 3.5.3 for WordPress users. =
+* Tested with WordPress 4.7.1
+* Information message.
+* Bug fixes.
+
+= Google Analytics Counter Tracker version 3.5.2 for WordPress users. =
+* The prevention that there are no data for display yet.
+* Bug fixes.
+
+= Google Analytics Counter Tracker version 3.3.0 for WordPress users. = 
+* Tested with WordPress 4.6.1
+
+= Google Analytics Counter Tracker version 3.1.2 for WordPress users. =
+* Tested with WordPress 4.5
 
 = Google Analytics Counter Tracker version 3.0.0 for WordPress users. =
 * Integrate Google Analytics tracking code without to connect to google analytics account

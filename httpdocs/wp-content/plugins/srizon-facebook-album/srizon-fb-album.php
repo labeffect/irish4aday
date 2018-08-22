@@ -5,7 +5,7 @@ Plugin URI: http://www.srizon.com/srizon-facebook-album
 Description: Show your Facebook Albums/Galleries on your WordPress Site
 Text Domain: srizon-facebook-album
 Domain Path: /languages
-Version: 3.1.2
+Version: 3.3
 Author: Afzal
 Author URI: http://www.srizon.com/contact
 */
@@ -36,8 +36,20 @@ if(is_admin()) {
 
 register_activation_hook( __FILE__, 'srz_fb_install' );
 register_uninstall_hook( __FILE__, 'srz_fb_uninstall' );
-function srz_fb_install() {
-	SrizonFBDB::CreateDBTables();
+add_action( 'wpmu_new_blog', 'srz_on_create_blog', 10, 6 );
+
+function srz_fb_install($network_wide) {
+	global $wpdb;
+	if ( is_multisite() && $network_wide ) {
+		$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+		foreach ( $blog_ids as $blog_id ) {
+			switch_to_blog( $blog_id );
+			SrizonFBDB::CreateDBTables();
+			restore_current_blog();
+		}
+	} else {
+		SrizonFBDB::CreateDBTables();
+	}
 }
 
 function srz_fb_uninstall() {
@@ -45,6 +57,14 @@ function srz_fb_uninstall() {
 	//delete_option('srzfbcomm');
 }
 
+function srz_on_create_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+	// need to remove -pro from free version
+	if ( is_plugin_active_for_network( 'srizon-facebook-album/srizon-fb-album.php' ) ) {
+		switch_to_blog( $blog_id );
+		SrizonFBDB::CreateDBTables();
+		restore_current_blog();
+	}
+}
 function srz_fb_get_resource_url( $relativePath ) {
 	return plugins_url( $relativePath, plugin_basename( __FILE__ ) );
 }

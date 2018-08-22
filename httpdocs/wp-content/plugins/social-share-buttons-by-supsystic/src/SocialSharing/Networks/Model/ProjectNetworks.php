@@ -61,12 +61,12 @@ class SocialSharing_Networks_Model_ProjectNetworks extends SocialSharing_Core_Ba
      * @return bool
      * @throws Exception
      */
-    public function add($projectId, $networkId)
+    public function add($projectId, $networkId, $position)
     {
         $query = $this->getQueryBuilder()
             ->insertInto($this->getTable())
-            ->fields(array('project_id', 'network_id'))
-            ->values(array((int)$projectId, (int)$networkId));
+            ->fields(array('project_id', 'network_id', 'position'))
+            ->values(array((int)$projectId, (int)$networkId, (int)$position));
 
         return $this->db->query($query->build()) ? true : false;
     }
@@ -77,8 +77,8 @@ class SocialSharing_Networks_Model_ProjectNetworks extends SocialSharing_Core_Ba
             return;
         }
 
-        foreach ($prototype->networks as $network) {
-            $this->add($id, $network->id);
+        foreach ($prototype->networks as $position => $network) {
+            $this->add($id, $network->id, $position);
         }
     }
 
@@ -112,6 +112,21 @@ class SocialSharing_Networks_Model_ProjectNetworks extends SocialSharing_Core_Ba
     {
         try {
             $this->updateSomething($projectId, $networkId, 'text_format', $format);
+        } catch (RuntimeException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Updates network icon image.
+     * @param int $projectId Project id
+     * @param int $networkId Network id
+     * @param int $iconImage
+     */
+    public function updateIconImage($projectId, $networkId, $iconImage)
+    {
+        try {
+            $this->updateSomething($projectId, $networkId, 'icon_image', $iconImage);
         } catch (RuntimeException $e) {
             throw $e;
         }
@@ -177,6 +192,15 @@ class SocialSharing_Networks_Model_ProjectNetworks extends SocialSharing_Core_Ba
         }
     }
 
+    public function updateProfileName($projectId, $networkId, $name)
+    {
+        try {
+            $this->updateSomething($projectId, $networkId, 'profile_name', $name);
+        } catch (RuntimeException $e) {
+            throw $e;
+        }
+    }
+
     /**
      * Update selected field with the specified value.
      * @param int $projectId Project Id
@@ -207,7 +231,7 @@ class SocialSharing_Networks_Model_ProjectNetworks extends SocialSharing_Core_Ba
         if (null === $tableName) {
             $tableName = 'project_networks';
         }
-        
+
         return parent::getTable($tableName);
     }
 }

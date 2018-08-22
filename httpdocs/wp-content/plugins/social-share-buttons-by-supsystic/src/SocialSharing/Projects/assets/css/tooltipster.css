@@ -2,10 +2,12 @@
 .tooltipster-default {
 	border-radius: 5px; 
 	border: 2px solid #000;
+}
+/* #818 */
+.tooltipster-default.toplevel_page_supsystic-social-sharing {
 	background: #4c4c4c;
 	color: #fff;
 }
-
 /* Use this next selector to style things like font-size and line-height: */
 .tooltipster-default .tooltipster-content {
 	font-family: Arial, sans-serif;

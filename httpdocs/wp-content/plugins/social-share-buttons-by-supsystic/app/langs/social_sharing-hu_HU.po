@@ -271,10 +271,10 @@ msgstr "Megjelenítés/elrejtés navigációt ad az oldal-sáv módhoz. A felhas
 msgid "Allows user to display all networks in popup"
 msgstr "Az összes csatorna megjelenítése felugró ablakban."
 
-msgid "Allows you to lock content elements by class name before user share this page with any network"
+msgid "Allows you to lock content elements by class name before user shares this page with any network"
 msgstr "Ezzel osztálynév szerint lezárhatja a tartalmi elemeket mielőtt a felhasználó az oldalt megosztaná bármely csatornán."
 
-msgid "Choose pages you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
+msgid "Choose pages on which you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
 msgstr "Válassza ki, hogy mit szeretne megjeleníteni a felugró ablakban. Ez lehet \"Összes oldal\", vagy bizonyos bejegyzések, oldalak, illetve URL-ek."
 
 msgid "Choose this option if you don't want to display icons on mobile devices"
@@ -484,10 +484,10 @@ msgstr "Összes oldal"
 msgid "Hide on mobile devices"
 msgstr "Elrejtés a mobilokon"
 
-msgid "When page load"
+msgid "When page loads"
 msgstr "Amikor betölt az oldal"
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr "Ha a felhasználó kattint az oldalon"
 
 msgid "Select network"

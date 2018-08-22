@@ -1,7 +1,7 @@
 <?php
 
 
-class SocialSharing_Projects_Project 
+class SocialSharing_Projects_Project
 {
     const POSITION_SIDEBAR = 'sidebar';
     const POSITION_WIDGET = 'widget';
@@ -120,6 +120,11 @@ class SocialSharing_Projects_Project
         return 'on' === $this->get('display_total_shares');
     }
 
+    public function isDisplayAllTotalShares()
+    {
+        return 'on' === $this->get('display_all_total_shares');
+    }
+
     /**
      * @return bool
      */
@@ -216,6 +221,15 @@ class SocialSharing_Projects_Project
     }
 
     /**
+     * Get buttons align type in the shortcode
+     * @return string
+     */
+    public function getAlignTypeInCode()
+    {
+        return $this->get('align_in_code');
+    }
+
+    /**
      * This project should be shown in the widget?
      * @return bool
      */
@@ -242,9 +256,59 @@ class SocialSharing_Projects_Project
         return $this->isShowAt('popup');
     }
 
+	/**
+	 * This project should be shown in the map?
+	 * @return bool
+	 */
+	public function isShowAtGmap()
+	{
+		return $this->isShowAt('gmap');
+	}
+
+    /**
+     * This project should be shown in the grid gallery?
+     * @return bool true if project shown in grid gallery and false otherwise
+     */
+    public function isShowAtGridGallery()
+    {
+        return $this->isShowAt('grid_gallery');
+    }
+
+	/**
+	 * This project should be shown in the slider?
+	 * @return bool true if project shown in slider and false otherwise
+	 */
+	public function isShowAtSlider()
+	{
+		return $this->isShowAt('slider');
+	}
+
     public function isShowOnPosts()
     {
         return $this->has('show_on_posts') && is_array($this->get('show_on_posts'));
+    }
+
+    public function isHideOnPosts()
+    {
+        return $this->has('hide_on_posts') && is_array($this->get('hide_on_posts'));
+    }
+
+    public function isHideOnSpecificPost($id)
+    {
+        if (! $this->isHideOnPosts()) {
+            return false;
+        }
+        return in_array((int)$id, $this->get('hide_on_posts'), false);
+    }
+
+    public function isHideOnAllPosts()
+    {
+        return $this->isHideOnSpecificPost(-1);
+    }
+
+    public function isHideOnAllPages()
+    {
+        return $this->isHideOnSpecificPost(-2);
     }
 
     public function isShowOnSpecificPost($id)
@@ -253,6 +317,16 @@ class SocialSharing_Projects_Project
             return false;
         }
 
+        return in_array((int)$id, $this->get('show_on_posts'), false);
+    }
+
+    public function isHideOnSpecificAllPosts($id)
+    {
+        return in_array((int)$id, $this->get('hide_on_posts'), false);
+    }
+
+    public function isShowOnSpecificAllPosts($id)
+    {
         return in_array((int)$id, $this->get('show_on_posts'), false);
     }
 

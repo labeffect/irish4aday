@@ -270,10 +270,10 @@ msgstr "Weergeven / verbergen navigatieknop voor zijbalk mode. Hiermee kan de ge
 msgid "Allows user to display all networks in popup"
 msgstr "Hiermee kan de gebruiker naar alle netwerken in popup tonen"
 
-msgid "Allows you to lock content elements by class name before user share this page with any network"
+msgid "Allows you to lock content elements by class name before user shares this page with any network"
 msgstr "Hiermee kunt u content elementen per klasse naam te vergrendelen voordat gebruiker Deel deze pagina met een netwerk"
 
-msgid "Choose pages you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
+msgid "Choose pages on which you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
 msgstr "Kies pagina's die u wilt pop-up te laten zien. U kunt kiezen voor \"Alle pagina's\" of geef berichten, pagina's of URL's"
 
 msgid "Choose this option if you don't want to display icons on mobile devices"
@@ -483,10 +483,10 @@ msgstr "Alle pagina's"
 msgid "Hide on mobile devices"
 msgstr "Verbergen op mobiele apparaten"
 
-msgid "When page load"
+msgid "When page loads"
 msgstr "Wanneer de pagina wordt geladen"
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr "Gebruiker klikt op pagina"
 
 msgid "Select network"

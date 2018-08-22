@@ -1,141 +1,130 @@
 <?php
 /*
 Plugin Name: Social Share Button
-Plugin URI: 
-Description: Social Share Button is one of best plugin to display social share buttons under post with share count.
-Version: 2.1
-Author: projectW
-Author URI: 
+Plugin URI: http://pickplugins.com
+Description: Awesome Share Button.
+Version: 2.1.6
+Author: pickplugins
+Author URI: http://pickplugins.com
+Text Domain: social_share_button
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-if ( ! defined('ABSPATH')) exit;
-
-define('ssb_plugin_url', WP_PLUGIN_URL . '/' . plugin_basename( dirname(__FILE__) ) . '/' );
-define('ssb_plugin_dir', plugin_dir_path( __FILE__ ) );
-define('ssb_wp_url', 'http://wordpress.org/plugins/social-share-button/' );
-define('ssb_pro_url', '' );
-define('ssb_demo_url', '' );
-define('ssb_conatct_url', '' );
-define('ssb_qa_url', 'http://wordpress.org/support/plugin/social-share-button' );
-define('ssb_plugin_name', 'Social Share Button' );
-define('ssb_share_url', 'https://wordpress.org/plugins/social-share-button/' );
-define('ssb_tutorial_video_url', '' );
+if ( ! defined('ABSPATH')) exit;  // if direct access 
 
 
-require_once( plugin_dir_path( __FILE__ ) . 'themes/icons-body.php');
-require_once( plugin_dir_path( __FILE__ ) . 'themes/icons-style.php');
-require_once( plugin_dir_path( __FILE__ ) . 'includes/ssb-functions.php');
+class SocialShareButton{
+	
+	public function __construct(){
+		
+		define('social_share_button_plugin_url', plugins_url('/', __FILE__)  );
+		define('social_share_button_plugin_dir', plugin_dir_path( __FILE__ ) );
+		define('social_share_button_wp_url', 'https://wordpress.org/plugins/social-share-button/' );
+		define('social_share_button_wp_reviews', 'https://wordpress.org/plugins/social-share-button/#reviews' );
+		define('social_share_button_pro_url','http://www.pickplugins.com/' );
+		define('social_share_button_demo_url', 'www.pickplugins.com/demo/social-share-button/' );
+		define('social_share_button_conatct_url', 'http://www.pickplugins.com/contact/' );
+		define('social_share_button_qa_url', 'http://www.pickplugins.com/questions/' );
+		define('social_share_button_plugin_name', __('Social Share Button', 'social-share-button') );
+		define('social_share_button_plugin_version', '2.1.6' );
+		define('social_share_button_customer_type', 'free' );	 // pro & free
+		define('social_share_button_share_url', 'https://wordpress.org/plugins/social-share-button/' );
+
+		define('social_share_button_tutorial_doc_url', 'https://www.pickplugins.com/documentation/social-share-button/' );
+
+		// Class
+		//require_once( plugin_dir_path( __FILE__ ) . 'includes/class-post-types.php');
+		// require_once( plugin_dir_path( __FILE__ ) . 'includes/class-post-meta.php');
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-shortcodes.php');
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-functions.php');
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-settings.php');
+
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-migrate.php');
 
 
+		// Function's
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php');
 
-function ssb_init_scripts()
-	{
+		//add_action( 'admin_enqueue_scripts', 'wp_enqueue_media' );
+		add_action( 'wp_enqueue_scripts', array( $this, 'front_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+	
+
+		add_action( 'init', array( $this, 'textdomain' ));
+
+		register_activation_hook( __FILE__, array( $this, 'activation' ) );
+		register_deactivation_hook( __FILE__, array( $this, 'deactivation' ) );
+		//register_uninstall_hook( __FILE__, array( $this, 'uninstall' ) );
+	
+	}
+	
+	public function textdomain() {
+
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'social-share-button' );
+		load_textdomain('social-share-button', WP_LANG_DIR .'/social-share-button/social-share-button-'. $locale .'.mo' );
+
+		load_plugin_textdomain( 'social-share-button', false, plugin_basename( dirname( __FILE__ ) ) . '/languages/' );
+	}
+	
+	
+	
+	
+	public function activation(){
+
+		do_action( 'social_share_button_activation' );
+		}		
+		
+	public function uninstall(){
+		
+		do_action( 'social_share_button_uninstall' );
+		}		
+		
+	public function deactivation(){
+		
+		do_action( 'social_share_button_deactivation' );
+		}
+		
+	public function front_scripts(){
+		
 		wp_enqueue_script('jquery');
-		wp_enqueue_script('ssb_js', plugins_url( '/js/ssb-scripts.js' , __FILE__ ) , array( 'jquery' ));
-		wp_localize_script('ssb_js', 'ssb_ajax', array( 'ssb_ajaxurl' => admin_url( 'admin-ajax.php')));
+		//wp_enqueue_script('jquery-ui-datepicker');
 		
-		wp_enqueue_style('ssb-css', ssb_plugin_url.'css/ssb-style.css');
-		wp_enqueue_style('ssb-admin-css', ssb_plugin_url.'css/ssb-admin.css');		
-		wp_enqueue_script('jquery.tablednd', plugins_url( '/js/jquery.tablednd.js' , __FILE__ ) , array( 'jquery' ));
+		wp_enqueue_script('social_share_button_front_js', plugins_url( 'assets/front/js/scripts.js' , __FILE__ ) , array( 'jquery' ));
+		wp_localize_script('social_share_button_front_js', 'social_share_button_ajax', array( 'social_share_button_ajaxurl' => admin_url( 'admin-ajax.php')));
 		
+		
+		wp_enqueue_style('social_share_button_style', social_share_button_plugin_url.'assets/front/css/style.css');
+		wp_enqueue_style('font-awesome', social_share_button_plugin_url.'assets/global/css/font-awesome.css');
+		//wp_enqueue_style('jquery-ui', social_share_button_plugin_url.'admin/css/jquery-ui.css');
+
+		}
+
+	public function admin_scripts(){
+		
+		wp_enqueue_script('jquery');
+		wp_enqueue_script('jquery-ui-core');
+		wp_enqueue_script('jquery-ui-sortable');
+		wp_enqueue_script('jquery-ui-datepicker');
+		wp_enqueue_script('social_share_button_admin_js', plugins_url( '/assets/admin/js/scripts.js' , __FILE__ ) , array( 'jquery' ));
+		wp_localize_script( 'social_share_button_admin_js', 'social_share_button_ajax', array( 'social_share_button_ajaxurl' => admin_url( 'admin-ajax.php')));
+		wp_enqueue_style('social_share_button_admin_style', social_share_button_plugin_url.'assets/admin/css/style.css');
+		//wp_enqueue_style('jquery-ui', social_share_button_plugin_url.'assets/admin/css/jquery-ui.css');
+
+		wp_enqueue_style('font-awesome', social_share_button_plugin_url.'assets/global/css/font-awesome.css');
+
 		//ParaAdmin
-		wp_enqueue_style('ParaAdmin', ssb_plugin_url.'ParaAdmin/css/ParaAdmin.css');
-		wp_enqueue_script('ParaAdmin', plugins_url( 'ParaAdmin/js/ParaAdmin.js' , __FILE__ ) , array( 'jquery' ));
+		wp_enqueue_style('ParaAdmin', social_share_button_plugin_url.'assets/admin/ParaAdmin/css/ParaAdmin.css');
+		wp_enqueue_script('ParaAdmin', plugins_url( 'assets/admin/ParaAdmin/js/ParaAdmin.js' , __FILE__ ) , array( 'jquery' ));
 		
-	}
-add_action("init","ssb_init_scripts");
-
-
-
-
-register_activation_hook(__FILE__, 'ssb_activation');
-register_uninstall_hook(__FILE__, 'ssb_uninstall');
-
-function ssb_activation(){
-		$ssb_version= "2.1";
-		update_option('ssb_version', $ssb_version); //update plugin version.
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'social_share_button_color_picker', plugins_url('assets/admin/js/color-picker.js', __FILE__ ), array( 'wp-color-picker' ), false, true );
 		
-		$ssb_customer_type= "free"; //customer_type "free"
-		update_option('ssb_customer_type', $ssb_customer_type); //update plugin version.
-	}
-
-
-
-
-function ssb_uninstall()
-	{
-		
-		delete_post_meta_by_key( 'ssb_post_sites' ); //delete post meta from post
-		
-		delete_option( 'ssb_share_version' ); //delete option from database.
-		delete_option( 'ssb_share_filter_posttype' ); //delete option from database.
-		delete_option( 'ssb_share_content_display' ); //delete option from database.	
-		delete_option( 'ssb_share_target_tab' ); //delete option from database.			
-		delete_option( 'ssb_share_content_themes' ); //delete option from database.	
-		delete_option( 'ssb_share_content_position' ); //delete option from database.			
-		delete_option( 'ssb_share_content_icon_margin' ); //delete option from database.			
+		}
+	
+	
+	
 	
 	}
 
-
-add_action('wp_head', 'ssb_open_graph');
-
-function ssb_open_graph()
-	{
-		$open_graph = '';
-			
-		if ( is_singular() ) 
-			{
-				$post_thumbnail_id = get_post_thumbnail_id(get_the_ID());
-				$post_thumbnail_url = wp_get_attachment_url( $post_thumbnail_id );
-				$open_graph .= '<meta property="og:image" content="'.$post_thumbnail_url.'" />';
-			} 
-		else 
-			{
-
-			}
-			
-		echo $open_graph;
-	}
-
-
-
-
-
-add_action('admin_menu', 'ssb_menu_init');
-add_action('admin_init', 'ssb_options_init' );
-
-
-function ssb_options_init(){
-	register_setting('ssb_plugin_options', 'ssb_share_content_display');
-	register_setting('ssb_plugin_options', 'ssb_share_filter_posttype');	
-	register_setting('ssb_plugin_options', 'ssb_share_target_tab');	
-	register_setting('ssb_plugin_options', 'ssb_share_content_themes');	
-	register_setting('ssb_plugin_options', 'ssb_share_content_position');		
-	register_setting('ssb_plugin_options', 'ssb_share_content_icon_margin');		
-
-    }
-
-
-
-function ssb_menu_settings(){
-	include('ssb-settings.php');	
-	}
-function ssb_menu_stats(){
-	include('ssb-stats.php');	
-	}
-
-
-function ssb_menu_init() {
-	add_menu_page(__('ssb','ssb'), __('SSB Settings','ssb'), 'manage_options', 'ssb_menu_settings', 'ssb_menu_settings');
-	
-		
-	add_submenu_page('ssb_menu_settings', __('Stats','ssb'), __('Stats','ssb'), 'manage_options', 'ssb_menu_stats', 'ssb_menu_stats');	
-
-	}
-
-
-
-?>
+new SocialShareButton();

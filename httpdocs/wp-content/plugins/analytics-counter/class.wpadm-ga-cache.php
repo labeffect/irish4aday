@@ -3,8 +3,11 @@ class Wpadm_GA_Cache {
     
     static function getCache() {
         global $wpdb;
-        
+
+        check_ajax_referer('wpadm_ga_cache_security', 'security');
+
         $query = $_POST['query'];
+
         if (!$query || !is_array($query)) {
             wp_die();
         }
@@ -13,8 +16,8 @@ class Wpadm_GA_Cache {
         ksort($query);
         $query = json_encode($query);
 
-        $request_type = $_POST['request_type'];
-        $object_type = $_POST['object_type'];
+        $request_type = filter_input(INPUT_POST, 'request_type', FILTER_SANITIZE_STRING);
+        $object_type = filter_input(INPUT_POST, 'object_type', FILTER_SANITIZE_STRING);
 
         
         $sql = $wpdb->prepare(
@@ -57,6 +60,8 @@ class Wpadm_GA_Cache {
     static function setCache() {
         global $wpdb;
 
+        check_ajax_referer('wpadm_ga_cache_security', 'security');
+
         $query = $_POST['query'];
         if (!$query || !is_array($query)) {
             wp_die();
@@ -65,10 +70,10 @@ class Wpadm_GA_Cache {
         $table_name = self::getTableName();
         ksort($query);
 
-        $request_type = $_POST['request_type'];
-        $html = $_POST['html'];
+        $request_type = filter_input(INPUT_POST, 'request_type', FILTER_SANITIZE_STRING);
+        $html = filter_input(INPUT_POST, 'html', FILTER_SANITIZE_STRING);
         $result = json_encode($_POST['result']);
-        $object_type = $_POST['object_type'];
+        $object_type = filter_input(INPUT_POST, 'object_type', FILTER_SANITIZE_STRING);
 
         if (isset($query['metrics']) && is_array($query['metrics'])) {
             $query['metrics'] = implode(',', $query['metrics']);
@@ -151,5 +156,13 @@ class Wpadm_GA_Cache {
         );
         $wpdb->query($sql);
     } 
-    
+
+    static public function clear() {
+        global $wpdb;
+        $table_name = self::getTableName();
+        $sql = "DELETE FROM {$table_name}";
+        $wpdb->query($sql);
+
+    }
+
 }

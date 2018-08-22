@@ -1,56 +1,89 @@
 ﻿=== Social Share Buttons by Supsystic ===
 Contributors: supsystic.com
-Tags: share counter, social media share, social network share, social share, social share buttons, social sharing, facebook like, facebook share, like, share buttons, share links, sharebar, social buttons, facebook
-Tested up to: 4.4.2
-Stable tag: 1.5.9
+Tags: share counter, social media share, social network share, social share, social share buttons, social sharing, facebook like, facebook share, facebook share button, like, share buttons, share links, sharebar, social buttons, facebook, facebook integration, facebook connect, google+, twitter, twitter share, linkedin share, pinterest button, button, share
+Tested up to: 4.9.2
+Stable tag: 1.9.1
 
-Social share buttons to increase social traffic and popularity. Social sharing to Facebook, Twitter and other social networks
+Social share buttons to increase social traffic and popularity. Social sharing to Facebook like and share, Twitter, Pinterest and other social networks
 
 == Description ==
 
-Simple [social share solution](http://supsystic.com/plugins/social-share-plugin/ "Social Share Buttons plugin by Supsystic") with custom buttons design and placement. Choose any social network (Facebook, Twitter, etc.), button design and share bare location. Save your project and that's it.
-Simple, eye-catching with great customization and tons of features:
+Simple [social share solution](http://supsystic.com/plugins/social-share-plugin/ "Social Share Buttons plugin by Supsystic") includes custom buttons design and placement. Choose any social network (Facebook, Twitter, Pinterest, Google+, LinkdIn etc.), button design and share bare location. Save your project and that's it.
+Simple, eye-catching social sharing plugin with great customization and tons of features prevails with:
 
-* Over 15 Social Networks
+* Over 20 Social Networks
 * Fully Responsive
-* Add Sharing Buttons in Different Locations
+* Sharing Buttons in Different Locations
 * Professional Templates of the Social Media Icons & Share Buttons
-* Choose pages to show social share buttons
-* Simple share buttons configuration and design
+* Choice pages to show social share buttons
+* Simple share buttons [configuration](https://supsystic.com/documentation/social-share-displaying-configuration/ "Plugin Configuration") and [design](https://supsystic.com/documentation/social-share-design-customization/ "Design Customization")
 * Customizable design and animation effects
 * Shortcode support
+* Social Counters and Counter Templates
+* [Content lock](https://supsystic.com/documentation/content-lock-option-social-share/ "Content lock") (PRO feature)
+* Different [Buttons Placement Option](http://supsystic.com/placement-option/ "Social Share Buttons Placement Options")
+* [Content Lock](http://supsystic.com/content-lock/ "Content Lock Option")
 * [Example](http://supsystic.com/placement-option/ "Social Share Buttons Placement Option") of the social buttons different placement options
+* Intergration with [Photo Gallery](https://supsystic.com/plugins/photo-gallery "Photo Gallery"), [PopUp](https://supsystic.com/plugins/popup-plugin "PopUp"), [Slider](https://supsystic.com/plugins/slider "Slider") and [Google Maps](https://supsystic.com/plugins/google-maps-plugin/ "Google Maps") by Supsystic
 
 = Increase Numbers of Social Sharing =
 
-With our Social Share button solution you will increase your social popularity and will take social sharing on a next level. It will contribute of increase the social activity on your site. Social Share by Supsystic is an easy and fast way to let your visitors share your content to social networks, helping you in growth of your social traffic on your website.
+With our Social Share Button Solution you will increase your social popularity and will be able to take social sharing on a next level. It will promote the increase of social activity on your site. Social Share by Supsystic is very easy and fast way to let your visitors share your content to social networks, helping you to multiply your website social traffic.
 
 [youtube https://www.youtube.com/watch?v=_GvD8fZryzY]
 
 = Fully Responsive and Easy to Use =
 
-Social Share by Supsystic buttons are fully responsive and look nice on different devices and themes. With simple configuration of our plugin you don’t need any programming skills to create your own design of share buttons - you can easily set the template, size, animation, position of the buttons.
+Social Share buttons by Supsystic are fully responsive and look nice on different devices and themes. With simple configuration of our plugin you don’t need any programming skills to create your own design of share buttons - you can easily set the template, size, animation and position.
 
-= Over 15 Social Networks =
+= Over 20 Social Networks =
 
-Social Share plugin supports many different popular social networks - LinkdIn, Twitter, Google+, Vkontakte, Pinterest, Digg, Reddit, Facebook buttons and much more! You can add any numbers of social networks and create excellent sharing toolbar, which help your visitors to choose the most suitable network for them.
+[Social Share plugin](https://supsystic.com/plugins/social-share-plugin/ "Social Share by Supsystic") supports many different popular social networks - LinkdIn, Twitter, Google+, Vkontakte, Pinterest, Digg, Reddit, Facebook and many others! You can add the numbers of social networks and create excellent sharing toolbar, which will help your visitors to choose the most suitable network for them.
 
 = Different Placement Options of Social Share Buttons =
 
-Social Share by Supsystic provides you the ability to choose where to show share buttons - on different sides of the page, at any place of page or post content. Even in a popup window using our awesome Popup plugin! Using our plugin you can create Facebook share button widget with share buttons and show the sharing toolbar at theme’s widgets areas. Also you can use shortcode and show buttons where you want. With this options of Social Share buttons, you have much more chances to attract a wide variety of your website visitors.
+[Social Share by Supsystic](https://supsystic.com/plugins/social-share-plugin/ "Social Share by Supsystic") provides you the ability to choose where to show share buttons - on different sides of the page, at any place of page or post content. They can be placed even in a popup window using our awesome Popup plugin! Using our plugin you can create Facebook share button widget with share buttons and show the sharing toolbar at theme’s widgets areas. Also you can use shortcode and show buttons where you want. With this options of Social Share buttons, you have much more chances to attract a wide variety of your website visitors.
 
 = When to Show Option =
 
-Plugin allows you to choose the various options when to show social buttons (like Facebook share button) - when page load or when user click on page. Besides you can specify pages or posts where you want to show share buttons - everywhere or on specific pages/posts. Also it allows you to hide social buttons on mobile devices. Social Share by Supsystic gets users sharing the right content аt the right moments, and keeps them engaged on your website.
+Plugin allows you to choose the various time options for showing social buttons (like Facebook share button) - when page load or when user clicks on it. Besides you can specify share buttons on the pages or posts in any place you wish it to be shown - from standard to a very specific pages/posts. Also it allows you to hide social buttons on mobile devices. [Social Buttons by Supsystic](https://supsystic.com/plugins/social-share-plugin/ "Social Share by Supsystic") allures users to share the right content аt the right moments, and keeps them engaged on your website.
 
 = Customizable Design and Amazing Effects =
 
 Social Share solution offers you wonderful collection of multiple design buttons options and different animation effects. You can easily customize special Facebook share buttons design - choose buttons size, add button spacing, enable displaying of social share counter, select button and icon animation.
 
-= Translations Social Share Buttons by Supsystic in Your Language =
+= Translations [Social Share Buttons by Supsystic](https://supsystic.com/plugins/social-share-plugin/ "Social Share by Supsystic") in Your Language =
 
-You have an incredible opportunity to get PRO version of the social sharing plugin for free. Just make translation of the Social Share Buttons by Supsystic by Supsystic plugin!
-[Contact Us](http://supsystic.com/plugins/social-share-plugin#contact "Contact Us") if you translate the plugin.
+You have an incredible opportunity to get PRO version of the social sharing plugin for free. Just make translation of the Social Share Buttons plugin by Supsystic!
+[Contact Us](http://supsystic.com/plugins/social-share-plugin#contact "Contact Us") if you translate the plugin. Available Translations:
+
+* English
+* Dutch
+* Hungarian
+* Indonesian
+* Italian
+* Polish
+* Portuguese (Brazil)
+* Portuguese (Portugal)
+* Russian
+
+== Frequently Asked Questions ==
+
+= First time Social Share Buttons by Supsystic user =
+
+Complete tutorial [How to create your first Social Buttons](https://supsystic.com/documentation/social-share-getting-started/ "Getting Started")
+
+= How to install PRO version of plugin? = 
+
+To install Social Share Buttons by Supsystic PRO follow this [instruction](https://supsystic.com/documentation/installation-social-share-pro/ "Installation of PRO version")
+
+= Where is documentation for Social Share Buttons by Supsystic WP plugin? =
+Here it is [Social Share Buttons Documentation](https://supsystic.com/docs/social-share-buttons/ "Plugin documentation")
+
+= How to customize Social Buttons Design? =
+[Here](https://supsystic.com/documentation/social-share-design-customization/ "Design Customization") is design customization tutorial
+
+
 
 == Screenshots ==
 
@@ -64,7 +97,7 @@ You have an incredible opportunity to get PRO version of the social sharing plug
 
 == Installation ==
 
-= To install a social sharing plugin via FTP = 
+= To install a social sharing plugin via FTP =
 
 1. Download the Social Share buttons plugin
 2. Unarchive Social Buttons plugin
@@ -75,7 +108,7 @@ You have an incredible opportunity to get PRO version of the social sharing plug
 
 == Other Notes ==
 
-How to Create Social Share Buttons in WordPress - 
+= How to Create Social Share Buttons in WordPress =
 
 = Step 1: Creating Responsive Social Share Buttons =
 
@@ -84,9 +117,9 @@ How to Create Social Share Buttons in WordPress -
 
 = Step2: Customizing of Social Share by Supsystic =
 
-Here you can set all the options of Social Share plugin. Simply navigate the corresponding section of properties - Networks to show, Facebook Buttons Design, Animation, Where to show, When to show. Important! After changing the settings of plugin don’t forget to click “Save” button.
+Here you can set all the options of [Social Share plugin](https://supsystic.com/plugins/social-share-plugin/ "Social Share by Supsystic"). Simply navigate the corresponding section of properties - Networks to show, Facebook Buttons Design, Animation, Where to show, When to show. Important! After changing the settings of plugin don’t forget to click “Save” button.
 
-Also with Social Share plugin you can clone the project - on the top of the page with settings of the project click “Clone” button. It will create copy of the project and redirect you to it settings. 
+Also with [Social Share plugin](https://supsystic.com/plugins/social-share-plugin/ "Social Share by Supsystic") you can clone the project - on the top of the page with settings of the project click “Clone” button. It will create copy of the project and redirect you to it settings.
 
 Besides you have the ability to view the statistic of the project - on the top of the page with settings click “Statistic” button. Here you can monitor
 
@@ -94,7 +127,7 @@ Besides you have the ability to view the statistic of the project - on the top o
 * total shares for last 30 days
 * most popular pages for last 30 days
 
-Now more details about sections of properties - 
+Now more details about sections of properties -
 
 = Networks to show =
 
@@ -109,7 +142,7 @@ This section allows you:
 * Choose buttons template (Facebook social share button) - you have the ability to choose one of 4 templates.
 * Add social button spacing.
 * Set social buttons size - smallest, small, normal, big, biggest.
-* Enable display of counters for social buttons. Besides you can use short numbers for counter and select from where exactly to show numbers of counter - the all projects, the entire project or from the each page. 
+* Enable display of counters for social buttons. Besides you can use short numbers for counter and select from where exactly to show numbers of counter - the all projects, the entire project or from the each page.
 
 = Share Buttons Animation =
 
@@ -121,11 +154,11 @@ Here you have the opportunity:
 
 = Where to show social buttons =
 
-With Social Share by Supsystic you will be able to choose where to show social share toolbar - 
+With [Social Share Buttons by Supsystic](https://supsystic.com/plugins/social-share-plugin/ "Social Share by Supsystic") you will be able to choose where to show social share toolbar -
 
 * At the Sidebar of the page - top, bottom,left, right.
-* At the posts or pages content - above content, below content or above + below content. 
-* At the popup window - you need to install Popup by Supsystic plugin to use this feature. 
+* At the posts or pages content - above content, below content or above + below content.
+* At the popup window - you need to install Popup by Supsystic plugin to use this feature.
 * At the theme’s widgets areas - create a widget of your project at Appearance -> Widgets.
 * Use shortcode - insert the project shortcode and show buttons where you want.
 
@@ -133,13 +166,13 @@ With Social Share by Supsystic you will be able to choose where to show social s
 
 Here you can set when to show social share buttons:
 
-1. Show on next pages - 
+1. Show on next pages -
 
 * Show social buttons everywhere
 * Choose the specific pages or posts to show social buttons
 * Hide share buttons on mobile devices
 
-2. When to show - 
+2. When to show -
 
 * When page load
 * When user click on page
@@ -147,19 +180,196 @@ Here you can set when to show social share buttons:
 
 = Our plugins =
 
-* [Social Share Buttons by Supsystic](https://wordpress.org/plugins/social-share-buttons-by-supsystic/ "Social Share Buttons by Supsystic")
+* [Photo Gallery by Supsystic](https://wordpress.org/plugins/gallery-by-supsystic/ "Photo Gallery by Supsystic")
+* [Pricing Table by Supsystic](https://wordpress.org/plugins/pricing-table-by-supsystic/ "Pricing Table by Supsystic")
+* [Contact Form by Supsystic](https://wordpress.org/plugins/contact-form-by-supsystic/ "Contact Form by Supsystic")
 * [Data Tables Generator by Supsystic](https://wordpress.org/plugins/data-tables-generator-by-supsystic/ "Data Tables Generator by Supsystic")
-* [Google Maps Easy](https://wordpress.org/plugins/google-maps-easy/ "Google Maps Easy")
-* [Gallery by Supsystic](https://wordpress.org/plugins/gallery-by-supsystic/ "Gallery by Supsystic")
-* [Backup by Supsystic](https://wordpress.org/plugins/backup-by-supsystic/ "Backup by Supsystic")
-* [Lightbox by Supsystic](https://wordpress.org/plugins/lightbox-by-supsystic/ "Lightbox by Supsystic")
 * [Slider by Supsystic](https://wordpress.org/plugins/slider-by-supsystic/ "Slider by Supsystic")
+* [Coming Soon by Supsystic](https://wordpress.org/plugins/coming-soon-by-supsystic/ "Coming Soon by Supsystic")
 * [PopUp by Supsystic](https://wordpress.org/plugins/popup-by-supsystic/ "PopUp by Supsystic")
-* [Security by Supsystic](https://wordpress.org/plugins/security-by-supsystic/ "Security by Supsystic")
-* [Secure Login by Supsystic](https://wordpress.org/plugins/secure-login-by-supsystic/ "Secure Login by Supsystic")
+* [Digital Publications by Supsystic](https://wordpress.org/plugins/digital-publications-by-supsystic/ "Digital Publications by Supsystic")
+* [Backup by Supsystic](https://wordpress.org/plugins/backup-by-supsystic/ "Backup by Supsystic")
+* [Membership by Supsystic](https://wordpress.org/plugins/membership-by-supsystic/ "Membership by Supsystic")
+* [Newsletter by Supsystic](https://wordpress.org/plugins/newsletter-by-supsystic/ "Newsletter by Supsystic")
+* [Live Chat by Supsystic](https://wordpress.org/plugins/live-chat-by-supsystic/ "Live Chat by Supsystic")
+* [Google Maps Easy](https://wordpress.org/plugins/google-maps-easy/ "Google Maps Easy")
+* [Translate by Supsystic](https://wordpress.org/plugins/translate-by-supsystic/ "Translate by Supsystic")
+
 
 
 == Changelog ==
+
+= 1.9.1 / 23.01.2018 =
+ * Fixed displaying in Gallery
+ * Minor issues fixed and code improvements
+ * Added Ukrainian language translation
+
+= 1.9.0 / 19.12.2017 =
+ * Add ability to add general text for a buttons' block
+ * Add ability to select pictures for sharing on Pinterest
+ * Add ability to edit the order of share buttons
+ * Add ability to display the total amount of Shares
+ * Fix of using the post featured image for sharing on Facebook
+ * Fix of using of post content for sharing on VK
+ * Minor issues fixed and code improvements
+
+= 1.8.9 / 08.11.2017 =
+ * Fixed bug with Pinterest sharing
+ * Vendor fix
+ * Core code improvements
+
+= 1.8.8 / 11.10.2017 =
+ * Fixed bug with Category sharing
+ * Minor issues fixed and code improvements
+
+= 1.8.7 / 06.09.2017 =
+ * Fixed sharing of category page
+ * Fixed adding WhatsApp button for creating new project
+ * Updated link for Delicious service
+ * Fixed bug with adding all images for Pinterest service
+ * Added theme logo to sharing for Pinterest service
+ * Fixed bug with Counter option for Photo Gallery integration 
+ * Minor issue fix
+
+= 1.8.6 / 22.08.2017 =
+ * Removed index keys for table views
+ * Minor issue fix
+
+= 1.8.5 / 19.07.2017 =
+ * Reverted twig version to v.1.33.2 for php 5.2 support
+
+= 1.8.4 / 18.07.2017 =
+ * Updated twig to version 1.34.4
+ * Minor issue fix
+
+= 1.8.3 / 12.07.2017 =
+ * Fixed "Slider by Supsystic" compatibility
+ * Fixed displaying tooltip for the Popup item
+ * Fixed setting network's position
+ * Minor issue fix
+
+= 1.8.2 / 31.05.2017 =
+ * Small styles fix
+
+= 1.8.1 / 12.05.2017 =
+ * Hot fix for some databases updates
+
+= 1.8.0 / 11.05.2017 =
+ * Additional compatibility with Slider by Supsystic plugin
+ * Additional compatibility with Google Maps Easy plugin 
+ * Fix for AMP and FBIA plugin
+ * Fix for hide buttons on home page
+ * Removed tooltip from PopUp admin area integration
+ * Minor issue fix
+
+= 1.7.9 / 21.02.2017 =
+ * Fixed adding new projects for multisite
+ * Added improvement for mail address button
+ * Featured plugins updated - added Membership plugin
+ * Minor issue fix
+
+= 1.7.8 / 15.02.2017 =
+ * Fixed Social share table "shares" creation 
+ * Minor issue fix
+
+= 1.7.7 / 26.01.2017 =
+ * Framework updates
+ * Minor issue fix
+
+= 1.7.6 / 19.01.2017 =
+ * Changed mail share icon
+ * Framework updates
+ * Minor issue fix
+
+= 1.7.5 / 12.01.2017 =
+ * Fixed old code for php 7 compatibility
+ * Fixed Warning for Gallery
+ * Fixed Remove echo test info
+ * Framework update
+ * Minor issue fix
+
+= 1.7.4 / 13.12.2016 =
+ * Code improvements
+ * Minor issue fix
+
+= 1.7.3 / 18.10.2016 =
+ * Code review and improvements
+ * Minor issue fix
+
+= 1.7.2 / 27.09.2016 =
+ * Code review - improve basic menus vendor functionality
+ * MInor issues fix
+
+= 1.7.1 / 21.09.2016 =
+ * Fix Facebook like button
+ * Fix bug with social buttons widget
+ * Minor issues fix
+
+= 1.7.0 / 25.08.2016 =
+ * Fixed email sharing post link for content type
+ * Added description parameter to Pinterest button
+ * Fixed data preparation for plugin
+ * Fixed hover effect for forth template of buttons flat design.
+ * Minor issues fixes and code improvements
+ 
+
+= 1.6.9 / 13.07.2016 =
+ * Fixed bug with DB errors on install
+ * Fix common settings for social share statistics
+ * Minor responsive social buttons issue fix
+
+= 1.6.8 / 24.05.2016 =
+ * Added control options to statistics
+ * Integrated with plugin 'Photo Gallery' by Supsystic
+ * Minor issues fixes and code improvements
+
+= 1.6.7 / 12.05.2016 =
+ * Fix issue with missing mysql extension for PHP (for version 5.5.0 and later) at Overview admin page
+ * Fix activation issue with empty queries in plugin instalation
+ * Fixed bug, the option 'hide on home page' not always work
+ * Fix undefined variable notice
+ * Fixed bug with showing in content
+ * Minor issues fixes and code improvements
+
+= 1.6.6 / 27.04.2016 =
+* Fixed a conflict with the theme Celebrate
+* Updated api filter 'sss_network_builder_get_url'
+* Minor bug fixes
+
+= 1.6.5 / 19.04.2016 =
+* Modified compatibility with wp_trim_excerpt
+* Minor bugs fixes
+
+= 1.6.4 / 06.04.2016 =
+* Hot fix for compatibility of supsystic plugins (hot fix version 1.6.3)
+
+= 1.6.3 / 05.04.2016 =
+* Fixed bug when changing the design of buttons
+* Fixed bug on the home page with the plugin popup
+* Fixed bug in search of pictures of the product for certain themes
+* Minor bugs fixes
+
+= 1.6.2 / 29.03.2016 =
+* Added an option "Do not show on next pages / posts"
+* Added an option "Align buttons on content page" for shortcode
+* Fixed a bug with button in popup
+* Added support for Polish language
+* Added filter "sss_network_builder_get_url"
+* Fixed a bug with some languages
+
+= 1.6.1 / 24.02.2016 =
+* Fixed bug does not show the button in the summary of post
+* Fixed redirect after removal project
+* Fixed a bug with the alignment buttons
+* Fixed bug with saving of statistics
+* Fixed "hide on home page" option
+* Fixed semantic errors in the text
+
+= 1.6.0 / 12.02.2016 =
+* Fixed bug - removing of database aftre update
+* Fixed bug with Hide on home page
+* Minor bugs fix
+
 = 1.5.9 / 02.02.2016 =
 * Fixed design editor
 * Fixed upgrade process
@@ -267,7 +477,7 @@ Here you can set when to show social share buttons:
  * Added support of the social share button sets
  * Added Odnoklassniki social button icon
  * Fully rewritten 'Flat' social button style
- * Framework improvements and increased loading speed 
+ * Framework improvements and increased loading speed
  * Added Black and White mono social sharing button set
  * Code improvements and increased speed
  * Facebook social button fix
@@ -409,7 +619,7 @@ Here you can set when to show social share buttons:
  * Check and uncheck all socials button added to dialog
  * Social share icons added to all buttons
 
- 
+
 = 1.1.4 / 30.04.2015 =
  * Fixed bug with social sharing project creation
  * Fixed bug with social buttons responsive design

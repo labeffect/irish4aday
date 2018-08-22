@@ -7,6 +7,8 @@
  */
 class SocialSharing_Projects_Module extends SocialSharing_Core_BaseModule
 {
+    protected $isWPInit = false;
+
     /**
      * Module initialization.
      */
@@ -17,15 +19,79 @@ class SocialSharing_Projects_Module extends SocialSharing_Core_BaseModule
         $this->registerMenu();
         $dispatcher = $this->getEnvironment()->getDispatcher();
         $dispatcher->on('after_ui_loaded', array($this, 'onUiLoaded'));
-        $dispatcher->on('after_modules_loaded', array($this, 'doFrontendStuff'));
+		if(!is_admin() && !defined( 'DOING_AJAX' )) {
+			$dispatcher->on('after_modules_loaded', array($this, 'doFrontendStuff'));
+		}
 
         $projects = $this->getController()->getModelsFactory()->get('projects');
 
         $dispatcher->on('project_get', array($projects, 'filterGetProject'));
+        $dispatcher->filter('before_button_options_style_add', array($this, 'filterProOptions'));
 
         add_shortcode('supsystic-social-sharing', array($this, 'doShortcode'));
 
         $this->checkOldProVersion();
+
+        add_action('init', array($this, 'wpInitCallback'));
+	    add_action( 'wp_enqueue_scripts',array($this, 'localizeData'));
+    }
+
+    public function localizeData()
+    {
+	    wp_localize_script( 'jquery', 'theme_data', array('themeLogo' => wp_get_attachment_image_src( get_theme_mod( 'custom_logo' ))));
+    }
+
+    /** Filters pro options and returns options for button or icon (if $params[1] == true)
+     * @param mixed
+     * @return mixed
+     */
+    public function filterProOptions($params)
+    {
+	    list($settings,$isIcon) = $params;
+
+	    $prefix = $this->getEnvironment()->getConfig()->get('pro_button_option_prefix');
+	    $proOptions = array();
+		$notPx = array('border-style','border-color','background-color','horizontal-margin','vertical-margin','color','opacity');
+    	foreach($settings as $key=>$value) {
+    		if(strpos ($key,$prefix)===0) {
+			    if($value){
+				    $clearedSetting = str_replace( '_', '-', str_replace( $prefix, '', $key ) );
+
+				    $isIconSettings = ( strpos( $clearedSetting, 'icon-' ) !== false ) ? true : false;
+
+				    if ( $isIconSettings ) {
+					    $clearedSetting = str_replace( 'icon-', '', $clearedSetting );
+				    }
+
+				    if ( ! $isIcon AND $isIconSettings ) {
+					    continue;
+				    }
+				    if ( $isIcon AND ! $isIconSettings ) {
+					    continue;
+				    }
+
+				    $value = in_array( $clearedSetting, $notPx ) ? $value : $value . 'px';
+
+				    if ( 'vertical-margin' == $clearedSetting ) {
+					    $proOptions[] = "margin-top: {$value}px; margin-bottom: {$value}px;";
+					    continue;
+				    }
+
+				    if ( 'horizontal-margin' == $clearedSetting ) {
+					    $proOptions[] = "margin-left: {$value}px;margin-right: {$value}px;";
+					    continue;
+				    }
+				    $proOptions[] = "{$clearedSetting}: {$value};";
+		        }
+		    }
+	    }
+
+	    return $proOptions;
+    }
+
+    public function wpInitCallback()
+    {
+        $this->isWPInit = true;
     }
 
     /**
@@ -184,6 +250,14 @@ class SocialSharing_Projects_Module extends SocialSharing_Core_BaseModule
                     ->addDependency('jquery-ui-dialog')
                     ->addDependency('jquery-ui-sortable')
             );
+
+	        $ui->addAsset(
+		        $ui->create('script', 'wp-color-picker')
+			        ->setHookName($hookName));
+	        $ui->addAsset(
+		        $ui->create('style', 'wp-color-picker')
+			        ->setHookName($hookName));
+
         }
 
     }
@@ -209,6 +283,8 @@ class SocialSharing_Projects_Module extends SocialSharing_Core_BaseModule
         $handler = $this->createHandler(
             new SocialSharing_Projects_Project((array)$project)
         );
+
+        $handler->setWPInit($this->isWPInit);
 
         return $handler->handle();
     }
@@ -238,11 +314,14 @@ class SocialSharing_Projects_Module extends SocialSharing_Core_BaseModule
 
             return null;
         }
-
+        
         if (array_key_exists('place', $attributes) && array_key_exists('extra', $attributes)) {
             $project->settings['where_to_show'] = $attributes['place'];
             $project->settings['where_to_show_extra'] = $attributes['extra'];
         }
+
+        $network_settings = array_key_exists('network_settings', $attributes) ? $attributes['network_settings'] : array();
+        $this->processedNetworksLink($project, $network_settings);
 
         return $this->handleProject($project);
     }
@@ -259,18 +338,24 @@ class SocialSharing_Projects_Module extends SocialSharing_Core_BaseModule
             ->setMenuTitle($lang->translate('Add new'))
             ->setPageTitle($lang->translate('Add new'))
             ->setModuleName('add-new');
+		// Avoid conflicts with old vendor version
+		if(method_exists($submenuProjectsNew, 'setSortOrder')) {
+			$submenuProjectsNew->setSortOrder(20);
+		}
 
-        $menu->addSubmenuItem('add-new', $submenuProjectsNew)
-            ->register();
+        $menu->addSubmenuItem('add-new', $submenuProjectsNew);
 
         $submenuProjects->setCapability('manage_options')
             ->setMenuSlug('supsystic-social-sharing&module=projects')
             ->setMenuTitle($lang->translate('Projects'))
             ->setPageTitle($lang->translate('Projects'))
             ->setModuleName('projects');
+		// Avoid conflicts with old vendor version
+		if(method_exists($submenuProjects, 'setSortOrder')) {
+			$submenuProjects->setSortOrder(30);
+		}
 
-        $menu->addSubmenuItem('projects', $submenuProjects)
-            ->register();
+        $menu->addSubmenuItem('projects', $submenuProjects);
     }
 
     public function noticeOldVersion()
@@ -307,6 +392,14 @@ class SocialSharing_Projects_Module extends SocialSharing_Core_BaseModule
     {
         if (class_exists('SocialSharingPro_Projects_Sharer_Flat', false)) {
             add_action('admin_notices', array($this, 'noticeOldVersion'));
+        }
+    }
+
+    private function processedNetworksLink(&$project, $network_settings){
+        foreach ($project->networks as $network){
+            if(isset($network_settings[$network->class]) && strlen($network_settings[$network->class]) > 0){
+                $network->url = $network_settings[$network->class];
+            }
         }
     }
 }

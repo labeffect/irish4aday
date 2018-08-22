@@ -1,12 +1,7 @@
 (function ($) {
-
     $(document).ready(function () {
-
-        var selector = '.supsystic-social-sharing a.social-sharing-button',
-            $buttons = $(selector);
-
-        $buttons.on('click', function (e) {
-            var $button = $(this),
+        function ssClickHandler(e,clickedBy) {
+            var $button = this != document ? $(this) : $(clickedBy),
                 projectId = parseInt($button.data('pid')),
                 networkId = parseInt($button.data('nid')),
                 postId = parseInt($button.data('post-id')),
@@ -32,7 +27,11 @@
                 });
             });
 
-            e.preventDefault();
-        });
+            /** e.preventDefault(); **/
+        };
+
+        $(document.body).on('click', '.supsystic-social-sharing a.social-sharing-button', ssClickHandler);
+        $(document).on('ssSocialClick', ssClickHandler);
     });
 }(jQuery));
+// в /plugins/gallery-by-supsystic/src/GridGallery/Galleries/assets/js/frontend.js в стр.1605 добавить $(document).trigger('ssSocialClick', this);

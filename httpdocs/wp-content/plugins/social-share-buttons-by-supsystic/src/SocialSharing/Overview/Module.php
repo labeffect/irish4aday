@@ -66,8 +66,11 @@ class SocialSharing_Overview_Module extends Rsc_Mvc_Module
             ->setMenuTitle($lang->translate('Overview'))
             ->setPageTitle($lang->translate('Overview'))
             ->setModuleName('overview');
+		// Avoid conflicts with old vendor version
+		if(method_exists($submenu, 'setSortOrder')) {
+			$submenu->setSortOrder(10);
+		}
 
-        $menu->addSubmenuItem('ovewrview', $submenu)
-            ->register();
+        $menu->addSubmenuItem('ovewrview', $submenu);
     }
 } 

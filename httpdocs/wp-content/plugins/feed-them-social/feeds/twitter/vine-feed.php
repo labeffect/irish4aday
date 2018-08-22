@@ -1,13 +1,32 @@
 <?php
 namespace feedthemsocial;
+/**
+ * Class FTS Vine Feed
+ *
+ * @package feedthemsocial
+ */
 class FTS_Vine_Feed extends feed_them_social_functions {
+
+	/**
+	 * Construct
+	 *
+	 * Vine Feed constructor.
+	 *
+	 * @since 1.9.6
+	 */
 	function __construct() {
-		add_shortcode( 'fts_vine', array( $this, 'fts_vine_func'));
-		add_action('wp_enqueue_scripts', array( $this, 'fts_vine_head'));
+      // ommitting these from outputting for now
+	 //	add_shortcode( 'fts_vine', array( $this, 'fts_vine_func'));
+	//	add_action('wp_enqueue_scripts', array( $this, 'fts_vine_head'));
 	}
-	//**************************************************
-	// Add Styles and Scripts functions
-	//**************************************************
+
+	/**
+	 * FTS Vine Head
+	 *
+	 * Add Styles and Scripts functions.
+	 *
+	 * @since 1.9.6
+     */
 	function fts_vine_head() {
 		wp_enqueue_style( 'fts-feeds', plugins_url( 'feed-them-social/feeds/css/styles.css'));
 		
@@ -17,12 +36,23 @@ class FTS_Vine_Feed extends feed_them_social_functions {
 		}
 			wp_enqueue_script( 'fts-popup-js', plugins_url( 'feed-them-social/feeds/js/magnific-popup.js'), array( 'jquery' ));
 	}
+
+	/**
+	 * FTS Vine Footer
+	 *
+	 * @since 1.9.6
+     */
 	function fts_vine_footer() {
 					echo '<script src="https://platform.vine.co/static/scripts/embed.js"></script>';
 	}
-	//**************************************************
-	// Display Vine Feed
-	//**************************************************
+
+	/**
+	 * FTS Vine Functions
+	 *
+	 * @param $atts
+	 * @return mixed
+	 * @since 1.9.6
+     */
 	function fts_vine_func($atts) {
 
 		add_action( 'wp_footer', array( $this, 'fts_vine_footer'));
@@ -43,7 +73,8 @@ class FTS_Vine_Feed extends feed_them_social_functions {
 						'space_between_photos' => '',
 						'round_thumb_corner_size' => '',
 					), $atts ) );
-			$vids_count = '6';
+			// omitting limit of 6		
+			// $vids_count = '6';
 		}
 		$idNew = array();
 		$idNew = explode(',', $id);
@@ -59,8 +90,11 @@ class FTS_Vine_Feed extends feed_them_social_functions {
 		$set_zero = 0;
 		// NOTE: have to loop the json decode and all because be we cannot get array of more than one vine video at a time from vines api at the moment.
 		foreach ($idNew as $idF) {
-			if (isset($set_zero) && $set_zero == $vids_count)
-				break;
+			
+			// omitting limit of 6		
+			// if (isset($set_zero) && $set_zero == $vids_count)
+			//	break;
+			
 			$randomString =  trim($this->rand_string_vine(10).'_'.$type);
 			$vine_url['id'] = 'https://vine.co/oembed.json?id='.$idF.'';
 			$vine_data = $this->fts_get_feed_json($vine_url);
@@ -69,7 +103,7 @@ class FTS_Vine_Feed extends feed_them_social_functions {
 			echo '<div class="fts-vine-video-wrap popup-gallery-vine" style="max-width:'.$maxwidth.'; margin:'.$space_between_photos.';">';
 			// The content of the vine video which contains the thumbnail, logo author title and text.
 			echo '<div class="fts-vine-content">';
-			echo '<a href="#test-popup-'.$randomString.'" class="fts-vine-thumbnail" target="_blank">';
+			echo '<a href="#test-popup-'.$randomString.'" class="fts-vine-thumbnail" target="_blank" style="max-height:'.$maxwidth.';">';
 			if (is_plugin_active('feed-them-premium/feed-them-premium.php') && isset($show_vine_logo) && $show_vine_logo == 'no') {}
 			else {
 				// Vine logo that appears in the right top corner of the thumbnail
@@ -116,9 +150,13 @@ class FTS_Vine_Feed extends feed_them_social_functions {
 		return ob_get_clean();
 	}//END ELSE
 
-	//**************************************************
-	// Random String generator
-	//**************************************************
+	/**
+	 * Random String Vine
+	 *
+	 * @param int $length
+	 * @return string
+	 * @since 1.9.6
+     */
 	function rand_string_vine($length = 10) {
 		$characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$charactersLength = strlen($characters);

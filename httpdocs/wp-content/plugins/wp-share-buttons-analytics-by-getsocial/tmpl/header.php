@@ -38,14 +38,16 @@ wp_enqueue_script('gs-plugin');
         <nav>
             <ul>
                 <?php if (get_option('gs-api-key') != ''): ?>
+                    <?php if ($GS->is_pro()) { ?>
                     <li class="submenu-link">
                         <a href="<?php echo $GS->gs_account().'/sites/gs-wordpress/analytics/dashboard?api_key='.$GS->api_key.'&amp;source=wordpress' ?>" target="_blank">
                             <i class="fa fa-bar-chart"></i> Social Analytics</i>
                         </a>
                     </li>
+                    <?php } ?>
                     <li class="submenu-link">
                         <a id="settings" href="javascript:void(0)">
-                            <i class="fa fa-cogs"></i> Settings
+                            <i class="fa fa-cogs"></i> Plugin Settings
                         </a>
                     </li>
                     <li class="submenu-link">
@@ -60,13 +62,15 @@ wp_enqueue_script('gs-plugin');
                     </a>
                     <div class="submenu-wrapper">
                         <ul class="submenu">
+                            <?php if (get_option('gs-pro')) { ?>
                             <li>
-                                <a href="javascript:void(0)" id="help">
+                                <a href="mailto:b33e7fd1@incoming.intercom-mail.com">
                                     Email Support
                                 </a>
                             </li>
+                            <?php } ?>
                             <li>
-                                <a href="http://feedback.getsocial.io/" target="_blank">
+                                <a href="http://help.getsocial.io/" target="_blank">
                                     <i class="fa fa-life-bouy"></i> Documentation
                                 </a>
                             </li>
@@ -76,7 +80,7 @@ wp_enqueue_script('gs-plugin');
                 <?php if (get_option('gs-api-key') != '' && !$GS->is_pro()): ?>
                     <li id="cta-nav" class="right-link">
                         <a href="<?php echo $GS->gs_account() ?>/sites/gs-wordpress/billing/select_tier?api_key=<?php echo $GS->api_key ?>&amp;source=wordpress<?php echo $GS->utms('pro_header') ?>" target="_blank" class="plan-two">
-                            Upgrade to STARTER
+                            Upgrade to TOOLS
                         </a>
                     </li>
                     <?php if (get_option('gs-ask-review')): ?>

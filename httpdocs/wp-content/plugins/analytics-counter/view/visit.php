@@ -1,80 +1,84 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'error_no_data.php';
+?>
 <div class="error" id="gapi_error" style="display: none;"></div>
 
 <div style="float: left; padding-right: 30px; margin-bottom: 20px;">
-    <div style="font-weight: bold;">Date range</div>
+    <div style="font-weight: bold;"><?php _e('Date range', 'analytics-counter');?></div>
     <div id="reportrange" class="pull-left">
         <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
         <span></span> <b class="caret"></b>
     </div>
 </div>
 <div style="float: left; padding-right: 30px; margin-bottom: 20px;">
-    <div style="font-weight: bold;">Group statistics data by</div>
+    <div style="font-weight: bold;"><?php _e('Group statistics data by', 'analytics-counter');?></div>
     <div class="btn-group" role="group" aria-label="...">
-        <button class="group_by btn btn-default" onclick="changeGroupBy('dateHour', this)">Hour</button>
-        <button class="group_by active_group_by btn btn-default" onclick="changeGroupBy('date', this)">Day</button>
-        <button class="group_by btn btn-default" onclick="changeGroupBy('yearWeek', this)">Week</button>
-        <button class="group_by btn btn-default" onclick="changeGroupBy('yearMonth', this)">Month</button>
+        <button class="group_by btn btn-default" onclick="changeGroupBy('dateHour', this)"><?php _e('Hour', 'analytics-counter');?></button>
+        <button class="group_by active_group_by btn btn-default" onclick="changeGroupBy('date', this)"><?php _e('Day', 'analytics-counter');?></button>
+        <button class="group_by btn btn-default" onclick="changeGroupBy('yearWeek', this)"><?php _e('Week', 'analytics-counter');?></button>
+        <button class="group_by btn btn-default" onclick="changeGroupBy('yearMonth', this)"><?php _e('Month', 'analytics-counter');?></button>
     </div>
 </div>
 <div style="float: left; padding-right: 50px; margin-bottom: 20px;">
 
     <br>
-    If you have any suggestions or wishes  <a class="btn btn-info thickbox" href="#TB_inline?width=650&height=550&inlineId=wpadm-ga-support_container" style="margin-right: 0px;" onclick="wpadm_ga_supportFormNormalize()">Contact us</a>
+    <?php _e('If you have any suggestions or wishes', 'analytics-counter');?>  <a class="btn btn-info thickbox" href="#TB_inline?width=650&height=550&inlineId=wpadm-ga-support_container" style="margin-right: 0px;" onclick="wpadm_ga_supportFormNormalize()"><?php _e('Contact us', 'analytics-counter');?></a>
     
 </div>
 <div style="float:left; margin-bottom: 20px;">
     <br>
-    <a class="btn btn-info thickbox" href="<?php echo admin_url() . 'options-general.php?page=wpadm-ga-menu-settings&modal&TB_iframe=true&height=370'; ?>">Settings</a>
+    <a class="btn btn-info thickbox" href="<?php echo admin_url() . 'options-general.php?page=wpadm-ga-menu-settings&modal&TB_iframe=true&height=470'; ?>"><?php _e('Settings', 'analytics-counter');?></a>
     
 </div>
 
 <div class="clear"></div>
 
 <div class="report panel panel-default" id="chart-1-container">
-    <div class="panel-heading">Sessions and page views <div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('Sessions and page views', 'analytics-counter');?><div class="report-loader"></div></div>
     
     <div class="report-result"></div>
 </div>
 
 <div class="report report-data panel panel-default" id="data-sessions-container">
-    <div class="panel-heading">Sessions <div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('Sessions', 'analytics-counter');?><div class="report-loader"></div></div>
     
     <div class="report-result"></div>
 </div>
 
 <div class="report report-data panel panel-default" id="data-pageviews-container">
-    <div class="panel-heading">Page views <div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('Page views', 'analytics-counter');?><div class="report-loader"></div></div>
     
     <div class="report-result"></div>
 </div>
 
 <div class="report report-data panel panel-default" id="data-users-container">
-    <div class="panel-heading">Unique users<div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('Unique users', 'analytics-counter');?><div class="report-loader"></div></div>
     
     <div class="report-result"></div>
 </div>
 <div class="report report-data panel panel-default" id="data-bounces-container">
-    <div class="panel-heading">Bounces<div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('Bounces', 'analytics-counter');?><div class="report-loader"></div></div>
 
     <div class="report-result"></div>
 </div>
 <div class="report report-data panel panel-default" id="data-percentNewSessions-container">
-    <div class="panel-heading">Percent new sessions<div class="report-loader"></div></div>
+    <div class="panel-heading"><?php _e('Percent new sessions', 'analytics-counter');?><div class="report-loader"></div></div>
 
     <div class="report-result"></div>
 </div>
 <div class="clear"></div>
 <div class="panel panel-default">
-    <div class="panel-heading">Averages</div>
+    <div class="panel-heading"><?php _e('Averages', 'analytics-counter');?></div>
     <div class="panel-body">
         <div class="report report-data panel panel-default" id="data-pageviewsPerSession-container">
-            <div class="panel-heading">Page views per session<div class="report-loader"></div></div>
+            <div class="panel-heading"><?php _e('Page views per session', 'analytics-counter');?><div class="report-loader"></div></div>
 
             <div class="report-result"></div>
         </div>
         <div class="report report-data panel panel-default" id="data-avgSessionDuration-container">
-            <div class="panel-heading">Session duration<div class="report-loader"></div></div>
+            <div class="panel-heading"><?php _e('Session duration', 'analytics-counter');?><div class="report-loader"></div></div>
 
             <div class="report-result"></div>
         </div>
@@ -87,14 +91,14 @@
     <div class="row">
         <div class="col-md-6">
             <div class="report panel panel-default" id="table-hits-container">
-                <div class="panel-heading">Most popular pages<div class="report-loader"></div></div>
+                <div class="panel-heading"><?php _e('Most popular pages', 'analytics-counter');?><div class="report-loader"></div></div>
                 
                 <div class="report-result report-result-table"></div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="report panel panel-default" id="table-search-container">
-                <div class="panel-heading">Most popular keywords<div class="report-loader"></div></div>
+                <div class="panel-heading"><?php _e('Most popular keywords', 'analytics-counter');?><div class="report-loader"></div></div>
                 
                 <div class="report-result report-result-table"></div>
             </div>
@@ -103,7 +107,6 @@
 </div>
 
 <div style="display: none" class="wpadm-gapi-analytics-data-chart-styles-table-tr-odd"></div>
-
 
 <script>
     (function(w,d,s,g,js,fjs){
@@ -274,6 +277,11 @@
                 setStatusError('data-percentNewSessions-container', result.error.message);
             })
             data1.on('success', function(result) {
+                if (!result.hasOwnProperty('rows')) {
+                    jQuery('#btn_modal_error_no_data').click();
+                    ga_setTitleNoDataWindow();
+                    return;
+                }
                 setStatusSuccess('data-sessions-container', result.rows[0][0]);
                 setStatusSuccess('data-pageviews-container', result.rows[0][1]);
                 setStatusSuccess('data-users-container', result.rows[0][2]);

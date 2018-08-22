@@ -1,4 +1,6 @@
-<h2>Google Analytics Account</h2>
+<h2><?php
+    if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+    _e('Google Analytics Account', 'analytics-counter');?></h2>
 <?php
 
 $token = WPAdm_GA_Options::getGAAccessToken();
@@ -35,9 +37,10 @@ if($type == 'empty_token') {
 <div id="ga-accounts-container">
     <div class="container">
         <form class="form-horizontal" method="post">
+            <?php wp_nonce_field( 'wpadm_settings_ga_account' ); ?>
             <input type="hidden" name="form_name" value="ga-account">
             <div class="form-group">
-                <label for="ga-id" class="col-xs-1 control-label">Site</label>
+                <label for="ga-id" class="col-xs-1 control-label"><?php _e('Site', 'analytics-counter');?></label>
                 
                 <div class="col-md-5">
                     <select id='ga-accounts-select' style="width: 100%;" name="ga-id" onchange="onChangeAccount(this.options[this.selectedIndex].value)" onclick="wpadm_loadSites()">
@@ -47,7 +50,7 @@ if($type == 'empty_token') {
                                 echo "<option value='{$ga_accout_form->getValue('ga-id')}' selected>{$ga_accout_form->getValue('ga-url')}</option>";
                             }
                         ?>
-                        <option>loading...</option>
+                        <option><?php _e('loading...', 'analytics-counter');?></option>
                         <option></option>
                         <option></option>
                         <option></option>
@@ -57,25 +60,53 @@ if($type == 'empty_token') {
                     <input type="hidden" name="ga-webPropertyId" id="ga_webPropertyId"  value="<?php echo $ga_accout_form->getValue('ga-webPropertyId')?>">
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="col-xs-offset-1 col-xs-10">
                     <div class="checkbox">
                         <?php if (isset($_GET['modal'])): ?>
-                            <input type="checkbox" name="ga-enableCode" id="ga-enableCode" value="1" <?php if($ga_accout_form->getValue('ga-enableCode')) echo 'checked="checked"'; ?>><label for="ga-enableCode"> Enable google analytics tracking code on subpages of selected website</label>
+                            <input onchange="changeEnableCode(this)" type="checkbox" name="ga-enableCode" id="ga-enableCode" value="1" <?php if($ga_accout_form->getValue('ga-enableCode')) echo 'checked="checked"'; ?>><label for="ga-enableCode"> <?php _e('Enable google analytics tracking code on subpages of selected website', 'analytics-counter');?></label>
                         <?php else: ?>
-                            <label for="ga-enableCode"><input type="checkbox" name="ga-enableCode" id="ga-enableCode" value="1" <?php if($ga_accout_form->getValue('ga-enableCode')) echo 'checked="checked"'; ?>> Enable google analytics tracking code on subpages of selected website</label>
+                            <label for="ga-enableCode"><input  onchange="changeEnableCode(this)" type="checkbox" name="ga-enableCode" id="ga-enableCode" value="1" <?php if($ga_accout_form->getValue('ga-enableCode')) echo 'checked="checked"'; ?>> <?php _e('Enable google analytics tracking code on subpages of selected website', 'analytics-counter');?></label>
                         <?php endif; ?>
-                    </div>    
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-offset-1 col-xs-10">
+                    <div class="checkbox" >
+                        <fieldset  <?php if(!$ga_accout_form->getValue('ga-enableCode')) echo 'disabled style="color:gray;"'; ?> id="set-ga-enableAnonymization">
+                        <?php if (isset($_GET['modal'])): ?>
+                            <input   type="checkbox" name="ga-enableAnonymization" id="ga-enableAnonymization" value="1" <?php if($ga_accout_form->getValue('ga-enableAnonymization')) echo 'checked="checked"'; ?>><label for="ga-enableAnonymization"> <?php _e('Enable IP Anonymization', 'analytics-counter');?></label> <a href="https://support.google.com/analytics/answer/2763052"  target="_blank"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
+
+                        <?php else: ?>
+                            <label  for="ga-enableAnonymization"><input type="checkbox" name="ga-enableAnonymization" id="ga-enableAnonymization" value="1" <?php if($ga_accout_form->getValue('ga-enableAnonymization')) echo 'checked="checked"'; ?>> <?php _e('Enable IP Anonymization', 'analytics-counter');?></label> <a href="https://support.google.com/analytics/answer/2763052" target="_blank"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
+                        <?php endif; ?>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-offset-1 col-xs-10">
+                    <div class="checkbox">
+                        <?php if (isset($_GET['modal'])): ?>
+                            <input type="checkbox" name="ga-menuOnlyAdmin" id="ga-menuOnlyAdmin" value="1" <?php if($ga_accout_form->getValue('ga-menuOnlyAdmin')) echo 'checked="checked"'; ?>><label for="ga-menuOnlyAdmin"> <?php _e('Appear in menu for admins only', 'analytics-counter');?></label>
+                        <?php else: ?>
+                            <label for="ga-menuOnlyAdmin"><input type="checkbox" name="ga-menuOnlyAdmin" id="ga-menuOnlyAdmin" value="1" <?php if($ga_accout_form->getValue('ga-menuOnlyAdmin')) echo 'checked="checked"'; ?>> <?php _e('Appear in menu for admins only', 'analytics-counter');?></label>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-xs-offset-1 col-xs-10">
-                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="submit" class="btn btn-success"><?php _e('Save', 'analytics-counter');?></button>
                 </div>
             </div>
 	        
 	        <hr>
-	        Status: <span style="color: green; font-weight: bold; margin-right: 50px; ">connected</span><button type="submit" name="ga-disconnect-btn" value="disconnect" class="btn btn-link" onclick="return confirm('Are you sure you want to disconnect from your Google Analytics account?');">Disconnect your Google Analytics Account</button>
+            <?php _e('Status', 'analytics-counter');?>: <span style="color: green; font-weight: bold; margin-right: 50px; "><?php _e('connected', 'analytics-counter');?></span><button type="submit" name="ga-disconnect-btn" value="disconnect" class="btn btn-link" onclick="return confirm('<?php _e('Are you sure you want to disconnect from your Google Analytics account?', 'analytics-counter');?>');"><?php _e('Disconnect your Google Analytics Account', 'analytics-counter');?></button>
 	        
         </form>
     </div>
@@ -126,7 +157,7 @@ gapi.analytics.ready(function () {
 
         var  accounts = results.items;
         if (accounts.length == 0) {
-            setStatusError('ga-accounts-container-loading', 'User does not have any Google Analytics account');
+            setStatusError('ga-accounts-container-loading', "<?php _e('User does not have any Google Analytics account', 'analytics-counter');?>");
             jQuery('#ga-accounts-container-loading').hide();
             return;
         }
@@ -178,7 +209,15 @@ gapi.analytics.ready(function () {
         document.getElementById('ga_webPropertyId').value = ga_accounts['id'+id].webPropertyId;
     }
 
+    function changeEnableCode(ch) {
+        if(ch.checked) {
+            jQuery('#set-ga-enableAnonymization').attr('disabled', false);
+            jQuery('#set-ga-enableAnonymization').css('color', 'black');
 
-
+        } else {
+            jQuery('#set-ga-enableAnonymization').attr('disabled', true);
+            jQuery('#set-ga-enableAnonymization').css('color', 'gray');
+        }
+    }
 </script>
 

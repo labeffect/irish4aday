@@ -18,10 +18,12 @@
             $wtsExtras = $('.wts-extra'),
             $showEverywhere = $('input[name="settings[show_at]"][value="everywhere"]'),
             $showOnlyOnHome = $('input[name="settings[show_at]"][value="homepage"]'),
+            $hideOnHome = $('input[name="settings[hide_in_home]"]'),
             $hideOnMobile = $('input[name="settings[hide_on_mobile]"]'),
             $showOnlyOnMobile = $('input[name="settings[show_only_on_mobile]"]'),
             $pages = $('.chosen'),
             $displayTotalShares = $('input[name="settings[display_total_shares]"]'),
+            $displayAllTotalShares = $('input[name="settings[display_all_total_shares]"]'),
             $counterStyles = $('select[name="settings[shares_style]"]'),
             $sharesRadios = $('input[name="settings[shares]"]'),
             $shortNumbers = $('input[name="settings[short_numbers]"]'),
@@ -63,6 +65,49 @@
 
                 e.preventDefault();
             }
+        });
+
+        $networksList.on('click', '.icon-image-preview-image, .icon-image-nav-upload', function () {
+            var $root = $(this).parents('.network-icon_image-container'),
+                $iconInput = $root.find('.networkIconImage'),
+                $preview = $root.find('.icon-image-preview-image'),
+                $removeButton = $root.find('.icon-image-nav-remove'),
+                frame = wp.media({
+                    multiple: false
+                });
+
+            frame.on('select', function() {
+                var attachment = frame.state().get('selection').first().toJSON();
+
+                $iconInput.val(attachment.id);
+
+                $preview.css('background-image', 'url(' + attachment.url + ')');
+
+                $preview.removeClass('not-active');
+
+                $removeButton.removeClass('not-active');
+
+                saveIconImage($iconInput);
+            });
+
+            frame.open();
+        });
+
+        $networksList.on('click', '.icon-image-nav-remove', function () {
+            var $root = $(this).parents('.network-icon_image-container'),
+                $iconInput = $root.find('.networkIconImage'),
+                $preview = $root.find('.icon-image-preview-image'),
+                $removeButton = $root.find('.icon-image-nav-remove');
+
+            $iconInput.val('');
+
+            $preview.css('background-image', 'none');
+
+            $preview.addClass('not-active');
+
+            $removeButton.addClass('not-active');
+
+            saveIconImage($iconInput);
         });
 
         // cb
@@ -149,8 +194,9 @@
         // Allow to save settings for non-HTML5 browsers.
         $('button#save').bind('click', function (e) {
             var oldHtml = $(e.currentTarget).html();
+            var btnSave = e.currentTarget;
 
-            $(e.currentTarget).html($('<i/>', { class: 'fa fa-circle-o-notch fa-spin' }));
+            $(btnSave).html($('<i/>', { class: 'fa fa-circle-o-notch fa-spin' }));
 
             var stdstr = 'action=social-sharing&route%5Bmodule%5D=networks&route%5Baction%5D=addToProject&project_id=1';
 
@@ -183,7 +229,7 @@
                         'positions': networksPositions
                     }).done(function(response) {
                         $.post($('form#settings').attr('action'), $('form#settings').serialize()).done(function (r) {
-                            $(e.currentTarget).html(oldHtml);
+                            $(btnSave).html(oldHtml);
                             if ('popup_id' in r) $('input[name="settings[popup_id]"]').val(r.popup_id);
                         })
                     });
@@ -196,6 +242,8 @@
 
             var hasExtra = $(this).parents('li').has('ul.wts-extra').length;
             var selectFirstItemInExtra = $(this).closest('ul.not-select-first').length;
+            var $whereToShowValue = $(this).parents('li').find('[name="settings[where_to_show]"]');
+
             if (hasExtra) {
                 $(this).parents('li')
                     .find('.wts-extra')
@@ -209,8 +257,17 @@
                 }
             }
 
-            $('#wts-shortcode').hide();
-            if (this.value == 'code') {
+            var code = undefined;
+
+            if ($whereToShowValue.size())
+                code = $whereToShowValue.val();
+
+            if (code != 'code') {
+                $('#wts-shortcode').hide();
+                if (this.value == 'code') {
+                    $('#wts-shortcode').show();
+                }
+            } else {
                 $('#wts-shortcode').show();
             }
             window.ppsCheckUpdateArea($(this).closest('ul'));
@@ -309,7 +366,7 @@
                             .removeClass('checked');
                     $network.removeAttr( 'checked' );
                 });
-                
+
                 $.each(networksExists, function each(index, network) {
                     var $network = $(network);
                     var networkId = $network.find('[name="networks[]"]').val();
@@ -385,6 +442,11 @@
                                     .html('&nbsp; | &nbsp; Short url')
                             );
 
+                        $networkContainer.find('nav').append(
+                            $('<span/>', { class: 'network-nav-item admin-nav-text', data: { type: 'icon_image' } })
+                                .html('&nbsp; | &nbsp; Image')
+                        );
+
                         $.each(['title', 'name', 'tooltip', 'text_format'], function (index, value) {
                             if (value === 'text_format' && network.url.indexOf('{title}') == -1) return;
                             var $line = null;
@@ -409,6 +471,25 @@
                                 '</div>'
                             );
 
+                        $networkContainer.find('div').append(
+                            '<div class="field network-field-container network-icon_image-container" data-param="icon_image" data-id="' + network.id + '">' +
+                                '<input type="hidden" data-id="' + network.id + '" name="networkIconImage" class="network-icon_image networkIconImage">' +
+                                '<div class="icon-image-container">' +
+                                    '<div class="icon-image-preview-container">' +
+                                        '<span class="icon-image-preview-image not-active"></span>' +
+                                    '</div>' +
+                                    '<div class="icon-image-nav-container">' +
+                                        '<button type="button" class="icon-image-nav-remove not-active">' +
+                                            '<i class="fa fa-times" aria-hidden="true"></i>' +
+                                        '</button>' +
+                                        '<button type="button" class="icon-image-nav-upload">' +
+                                            '<i class="fa fa-upload" aria-hidden="true"></i>' +
+                                        '</button>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>'
+                        );
+
                         if (!$networksList.has('#network' + network.id).length) {
                             $networksList.append($networkContainer);
                             $networkContainer.find('.information-container input').bind('focusout', function() {
@@ -422,6 +503,9 @@
                                     } break;
                                     case 'text_format' : {
                                         return saveTextFormat($(this));
+                                    } break;
+                                    case 'icon_image' : {
+                                        return saveIconImage($(this));
                                     } break;
                                     case 'tooltip' : {
                                         return saveTooltip($(this));
@@ -509,6 +593,7 @@
 
                 selectExamplePreviewButtonDesign();
             }
+            $(document).trigger('presetTemplateChanged');
         });
 
 
@@ -542,6 +627,13 @@
                 $pages.find(':selected').removeAttr('selected');
                 $pages.trigger('chosen:updated');
                 $showEverywhere.iCheck('uncheck');
+                $hideOnHome.iCheck('uncheck');
+            }
+        });
+
+        $hideOnHome.bind('click', function () {
+            if (this.checked) {
+                $showOnlyOnHome.iCheck('uncheck');
             }
         });
 
@@ -551,6 +643,7 @@
                 $shortNumbers.removeAttr('disabled');
                 $sharesRadios.removeAttr('disabled');
                 $counterStyles.parents('tr').show();
+                $displayAllTotalShares.parents('tr').show();
             } else {
                 $previewButtons.addClass('without-counter');
                 $previewButtons.find('.counter').text('5731');
@@ -558,6 +651,7 @@
                 $shortNumbers.attr('disabled', 'disabled');
                 $sharesRadios.attr('disabled', 'disabled');
                 $counterStyles.parents('tr').hide();
+                $displayAllTotalShares.parents('tr').hide();
             }
         });
 
@@ -607,15 +701,14 @@
 
         // Delete
         $('.button.delete').bind('click', function (e) {
+            var linkToProject = $('.supsystic-navigation [data-menu-item-title="Projects"] a').attr('href');
+
             e.preventDefault();
 
             if (confirm('Are you sure want to remove this Project?')) {
                 $(this).html($('<i/>', { class: 'fa fa-fw fa-circle-o-notch fa-spin' }));
                 $.post(this.href).done(function () {
-                    window.location.href = $('#addProject_modal').parents('li')
-                        .next()
-                        .find('a')
-                        .attr('href');
+                    window.location.href = linkToProject;
                 });
             }
         });
@@ -644,6 +737,7 @@
 
                 $sections.hide()
                     .filter('[data-navigation="' + $(this).data('block') + '"]').show();
+                $(document).trigger('settingsTabChanged',[$(this).data('block')]);
             }
         });
 
@@ -768,6 +862,40 @@
             });
         };
 
+        var saveProfileName = function($element) {
+            var networkId = $element.data('id'),
+                name = $element.val();
+
+            $.post($('form#networks').attr('action'), {
+                'action': 'social-sharing',
+                'route': {
+                    'module': 'networks',
+                    'action': 'saveProfileName'
+                },
+                'project_id': parseInt($('#networks [name="project_id"]').val()),
+                'data': { 'id': networkId, 'value': name }
+            }).done(function(response) {
+                //console.log(response);
+            });
+        };
+
+        var saveIconImage = function ($element) {
+            var networkId = $element.data('id'),
+                iconID = $element.val();
+
+            $.post($('form#networks').attr('action'), {
+                'action': 'social-sharing',
+                'route': {
+                    'module': 'networks',
+                    'action': 'saveIconImage'
+                },
+                'project_id': parseInt($('#networks [name="project_id"]').val()),
+                'data': { 'id': networkId, 'value': iconID }
+            }).done(function(response) {
+                //console.log(response);
+            });
+        };
+
         var saveTextFormat = function($element) {
             var networkId = $element.data('id'),
                 format = $element.val();
@@ -822,6 +950,10 @@
 
         $('.network-title').on('focusout', function() {
             saveTitle($(this));
+        });
+
+        $('.network-profile_name').on('focusout', function() {
+            saveProfileName($(this));
         });
 
         $('.network-text_format').on('focusout', function() {
@@ -887,7 +1019,8 @@
                     // Current buttons group
                     $group = $container.find('span'),
                     // Inputs group
-                    $inputs = $container.parent().find('.information-container input');
+                    $inputs = $container.parent().find('.information-container input'),
+                    $fieldContainer = $container.parent().find('.network-' + $button.data('type')+  '-container');
 
                 $group.removeClass('active');
                 $button.addClass('active');
@@ -897,10 +1030,16 @@
                     var $this = $(this);
 
                     if ($this.is('[type="checkbox"]'))
-                        $this.parents('.field').hide();                    
+                        $this.parents('.field').hide();
                 });
 
-                $inputs.filter('.network-' + $button.data('type')).show();
+                $container.parent().find('.network-field-container').hide();
+
+                if ($fieldContainer.size()) {
+                    $fieldContainer.show();
+                } else {
+                    $inputs.filter('.network-' + $button.data('type')).show();
+                }
 
                 if ($inputs.filter('.network-' + $button.data('type')).is('[type="checkbox"]'))
                     $inputs.filter('.network-' + $button.data('type')).parents('.field').show();
@@ -922,26 +1061,42 @@
         });
 
         // Select popup on popup radio
-        var $popupDialog = $('#selectPopupDialog').dialog({
-            width: 400,
-            modal: true,
-            autoOpen: false,
-            buttons: {
-                Select: function () {
-                    $('#popupId').val($popupDialog.find('select').val());
-                    $(this).dialog('close');
-                },
-                Cancel: function () {
-                    $(this).dialog('close');
-                }
-            }
-        });
+        $('#wts-popup').on('change ifChanged', function () {
+			var $opts = $('#selectPopupDialog');
 
-        $('#wts-popup').on('click', function () {
-            $popupDialog.dialog('open');
+			if($(this).is(':checked')) {
+				$opts.show();
+			} else {
+				$opts.hide();
+			}
 
-            return false;
-        });
+			return false;
+		});
+		$('#wts-popup').trigger('change');
+
+		$('#selectPopup').on('change ifChanged', function () {
+			$('#popupId').val($(this).val());
+			return false;
+		});
+
+		// Select map on gmap radio
+		$('#wts-gmap').on('change ifChanged', function () {
+			var $opts = $('#selectGmapDialog');
+
+			if($(this).is(':checked')) {
+				$opts.css({ display: 'inline-block'});
+			} else {
+				$opts.hide();
+			}
+
+			return false;
+		});
+		$('#wts-gmap').trigger('change');
+
+		$('#selectGmap').on('change ifChanged', function () {
+			$('#gmapId').val($(this).val());
+			return false;
+		});
 
         // Buttons Set select
         var $buttonSetSelect = $('#buttonSet'),
@@ -1105,6 +1260,196 @@
             var url = '//supsystic.com/plugins/social-share-plugin/?utm_source=plugin&utm_medium=' + selectedProDesign + '&utm_campaign=socialbuttons';
             window.location.href = url;
         });
+
+
+        // Button customization
+        // buttons attr changed
+        $('[name="settings[pro_button_option_border_style]"], [name="settings[pro_button_option_border_width]"], [name="settings[pro_button_option_border_radius]"]').on('change', function(e) {
+             if(this.name == "settings[pro_button_option_border_style]") {
+                 $('[name="settings[pro_button_option_border_style]"]').val() != "none"  ? displayBorderOptions(true) :  displayBorderOptions(false);
+             }
+             setButtonBorder()
+        });
+
+        // enable customization click
+        $('.enable-customization').click(function(){
+            enable_customization(parseInt($(this).val()));
+        });
+
+        // opacity changed
+        $('[name="settings[pro_button_option_opacity]"]').on('change',  function(e) {
+            setOpacity();
+        })
+
+        //buton width changed
+        $('[name="settings[pro_button_option_width]"]').on('change',  function(e) {
+            setButtonWidth()
+        })
+        //vert margin changed
+        $('[name="settings[pro_button_option_vertical_margin]"]').on('change',  function(e) {
+            setMargin($('[name="settings[pro_button_option_vertical_margin]"]').val(),true)
+        })
+        //hor margin changed
+        $('[name="settings[pro_button_option_horizontal_margin]"]').on('change',  function(e) {
+            setMargin($('[name="settings[pro_button_option_horizontal_margin]"]').val(),false)
+        })
+        //icon font size changed
+        $('[name="settings[pro_button_option_icon_font_size]"]').on('change',  function(e) {
+            setIconFontSize();
+        })
+
+
+
+        //opacity
+        function setOpacity() {
+            $('a.social-sharing-button:visible').css('opacity', parseFloat($('[name="settings[pro_button_option_opacity]"]').val()));
+        }
+        //width
+        function setButtonWidth() {
+            var newWidth = isNaN(parseInt($('[name="settings[pro_button_option_width]"]').val())) ? '' : parseInt($('[name="settings[pro_button_option_width]"]').val());
+            $('a.social-sharing-button:visible').css('width', newWidth);
+        }
+        //icon font size
+        function setIconFontSize() {
+            var iconFontSize = isNaN(parseInt($('[name="settings[pro_button_option_icon_font_size]"]').val())) ? '' : parseInt($('[name="settings[pro_button_option_icon_font_size]"]').val());
+            $('a.social-sharing-button:visible i').css('font-size', iconFontSize);
+        }
+
+        //change margin
+        function setMargin(margin, vertical) {
+            var margin = isNaN(parseInt(margin))? '' : parseInt(margin);
+            if(vertical) {
+                $('a.social-sharing-button:visible').css('margin-top', margin);
+                $('a.social-sharing-button:visible').css('margin-bottom', margin);
+            } else {
+                $('a.social-sharing-button:visible').css('margin-left', margin);
+                $('a.social-sharing-button:visible').css('margin-right', margin);
+            }
+        }
+        // bg
+        function setButtonBackground(color) {
+            var colorToSet = (typeof color !== 'undefined') ? color : $('input#color-picker-button-background-color').val();
+
+            $('a.social-sharing-button:visible').css('background-color',colorToSet);
+        }
+        // icon Color
+        function setIconColor(color) {
+            var colorToSet = (typeof color !== 'undefined') ? color : $('input#color-picker-button-icon-color').val();
+
+            $('a.social-sharing-button:visible i').css('color',colorToSet);
+        }
+
+
+        // custom border
+        function setButtonBorder(color) {
+            var colorToSet = (typeof color !== 'undefined') ? color : $('input#color-picker-button-border-color').val();
+
+            if ( $('[name="settings[pro_button_option_border_style]"]').val() != "none" ) {
+                    $('a.social-sharing-button:visible').css('border-style',
+                        $('[name="settings[pro_button_option_border_style]"]').val());
+
+                    var borderWidth = isNaN(parseInt($('[name="settings[pro_button_option_border_width]"]').val())) ? '' : parseInt($('[name="settings[pro_button_option_border_width]"]').val());
+
+                    $('a.social-sharing-button:visible').css('border-width', borderWidth);
+
+                var borderRadius = isNaN(parseInt($('[name="settings[pro_button_option_border_radius]"]').val())) ? '' : parseInt($('[name="settings[pro_button_option_border_radius]"]').val());
+
+                    $('a.social-sharing-button:visible').css('border-radius', borderRadius);
+
+                    $('a.social-sharing-button:visible').css('border-color', colorToSet);
+                } else {
+                    $('a.social-sharing-button').css('border-style', 'none');
+                    $('a.social-sharing-button').css('border-width', '');
+                    $('a.social-sharing-button').css('border-color', '');
+                    $('a.social-sharing-button').css('border-radius', '');
+
+                }
+        }
+
+        function displayBorderOptions(display) {
+            if(display) {
+                $('[name="settings[pro_button_option_border_color]"]').closest('tr').show();
+                $('[name="settings[pro_button_option_border_width]"]').closest('tr').show();
+                $('[name="settings[pro_button_option_border_radius]"]').closest('tr').show();
+            } else {
+                $('[name="settings[pro_button_option_border_color]"]').closest('tr').hide();
+                $('[name="settings[pro_button_option_border_width]"]').closest('tr').hide();
+                $('[name="settings[pro_button_option_border_radius]"]').closest('tr').hide();
+            }
+        };
+
+        function clearButtons() {
+            $('a.social-sharing-button').css('border-style', '');
+            $('a.social-sharing-button').css('border-width', '');
+            $('a.social-sharing-button').css('border-color', '');
+            $('a.social-sharing-button').css('background-color','');
+            $('a.social-sharing-button').css('margin-left','');
+            $('a.social-sharing-button').css('margin-right','');
+            $('a.social-sharing-button').css('margin-top','');
+            $('a.social-sharing-button').css('margin-bottom','');
+            $('a.social-sharing-button i').css('color','');
+            $('a.social-sharing-button i').css('font-size','');
+            $('a.social-sharing-button').css('width','');
+            $('a.social-sharing-button').css('opacity','');
+            setButtonBackground('');
+            setIconColor('');
+        }
+
+        function enable_customization(enabled) {
+            if(enabled) {
+                $('#customization-block').fadeIn();
+                setButtonBorder();
+                setButtonBackground();
+                setIconColor();
+                setIconFontSize();
+                setButtonWidth();
+                setOpacity();
+            } else {
+                $('#customization-block').fadeOut();
+                clearButtons();
+            }
+        }
+
+        // color pickers
+        $('input#color-picker-button-border-color').wpColorPicker({color:'#FFFFFF',change:function(event, ui){
+            setTimeout(function () {
+                setButtonBorder('#'+ ui.color._color.toString(16));
+            }, 50);
+        },clear:function(){
+            setButtonBorder('');
+        },palettes: true});
+
+        $('input#color-picker-button-background-color').wpColorPicker({color:'#FFFFFF',change:function(event, ui){
+            setTimeout(function () {
+                setButtonBackground('#'+ ui.color._color.toString(16));
+            }, 50);
+        },clear:function(){
+            setButtonBackground('');
+        },palettes: true});
+
+        $('input#color-picker-button-icon-color').wpColorPicker({color:'#FFFFFF',change:function(event, ui){
+            setTimeout(function () {
+                setIconColor('#'+ ui.color._color.toString(16));
+            }, 50);
+        },clear:function(){
+            setIconColor('');
+        },palettes: true});
+
+        // initial button style set and on template change
+        $(document).on('settingsTabChanged , presetTemplateChanged',function(e,tabName) {
+            if(e.type == 'settingsTabChanged' && tabName == 'design' || e.type == 'presetTemplateChanged') {
+                if($('.enable-customization:checked').length) {
+                    enable_customization(parseInt($('.enable-customization:checked').val()));
+                }
+            }
+        })
+	
+	    jQuery('.disableClick input').attr("disabled", true);
+	    jQuery('.disableClick select').attr("disabled", true);
+	    jQuery('.disableClick .wp-color-result').off('click').on('click',function (e) {
+		    e.preventDefault();
+	    });
+	
     });
 
 }(window.jQuery, window.supsystic.SocialSharing));

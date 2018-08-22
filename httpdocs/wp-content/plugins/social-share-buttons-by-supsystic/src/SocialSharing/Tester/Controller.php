@@ -16,7 +16,7 @@ class SocialSharing_Tester_Controller extends SocialSharing_Core_BaseController
         $count = $request->post->get('count');
         $networks = $this->modelsFactory->get('networks')->all();
 
-        $posts = get_posts(array('posts_per_page' => -1));
+		$posts = $this->modelsFactory->get('projects')->getPosts();
 
         for ($i = 0; $i <= $count; $i++) {
             $network = mt_rand(0, count($networks) - 1);

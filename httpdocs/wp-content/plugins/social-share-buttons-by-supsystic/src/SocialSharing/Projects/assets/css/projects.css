@@ -18,10 +18,16 @@
     margin: 0;
     vertical-align: bottom;
     margin-bottom: 3px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+}
+
+.supsystic-plugin ul {
+	margin: 20px 0;
 }
 
 .supsystic-plugin li {
-    margin-bottom: 14px;
+    margin-bottom: 20px;
 }
 
 .supsystic-plugin .supsystic-social-sharing .iradio_minimal {
@@ -91,10 +97,11 @@
     text-align: center;
 }
 
-.supsystic-plugin .form-table.form th {
+.supsystic-plugin .form-table.form th, .supsystic-plugin .form-table.form td {
     font-weight: normal;
     font-size: 15px;
-    padding-left: 10px;
+    padding-top: 0;
+    padding-left: 0;
 }
 
 .supsystic-plugin .scroll {
@@ -269,4 +276,120 @@
 
 .information-container .field .icheckbox_minimal {
     margin-left: 10px;
+}
+
+.supsystic-plugin .icon-image-container .icon-image-nav-container button {
+    background: transparent;
+    border: none;
+}
+
+.supsystic-plugin .icon-image-container,
+.supsystic-plugin .icon-image-preview-container,
+.supsystic-plugin .icon-image-nav-container {
+    height: 75px;
+}
+
+.supsystic-plugin .icon-image-preview-container,
+.supsystic-plugin .icon-image-preview-container .icon-image-preview-image {
+    width: 75px;
+    background-size: 100% 100%;
+    background-position: center;
+}
+
+.supsystic-plugin .icon-image-preview-container,
+.supsystic-plugin .icon-image-nav-container {
+    float: left;
+}
+
+.supsystic-plugin .icon-image-nav-container {
+    position: relative;
+    margin-left: 3px;
+    transition: all .3s ease;
+}
+
+.supsystic-plugin .icon-image-nav-container .icon-image-nav-remove {
+    position: absolute;
+    top: -3px;
+    color: rgba(0,0,0,0.7);
+}
+
+.supsystic-plugin .icon-image-nav-container .icon-image-nav-remove.not-active .fa {
+    color: rgba(0,0,0,0.25);
+}
+
+.supsystic-plugin .icon-image-nav-container .icon-image-nav-upload {
+    position: absolute;
+    bottom: -2px;
+    color: rgba(0,0,0,0.7);
+}
+
+.supsystic-plugin .icon-image-preview-image {
+    background-color: #DADADA;
+    height: 100%;
+    width: 100%;
+    display: block;
+    font: normal normal normal 14px/1 FontAwesome;
+    position: relative;
+    cursor: pointer;
+    transition: all .3s ease;
+    background-size: cover;
+}
+
+.supsystic-plugin .icon-image-preview-image:hover {
+    box-shadow: inset 1px 1px 1px rgba(0,0,0,0.2);
+}
+
+.supsystic-plugin .icon-image-preview-image.not-active:before {
+    position: absolute;
+    content: "\f093";
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    text-align: center;
+    font-size: 35px;
+    color: rgba(0, 0, 0, 0.1);
+    padding: 18px 0px;
+}
+
+.supsystic-plugin .network-field-container {
+    display: none;
+    cursor: auto;
+}
+
+/* buttons customization */
+.form-table input.small {
+    width: 3rem;
+}
+.form-table input.medium {
+    width: 4rem;
+}
+.relative {
+    position:relative;
+}
+#customization-block {
+    display: none;
+}
+table.buttons-customization th[scope=row],
+table.customization-checkbox th[scope=row] {
+    width:65%;
+}
+.iris-picker .iris-slider-offset {
+    background: transparent!important;
+}
+h2 a.pro-link {
+    display: inline;
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: 1rem;
+    color:#0074a2;
+}
+table.form-table.customization-checkbox {
+    margin-top: -3.4rem;
+}
+table.form-table.customization-checkbox th:first-child{
+    width:55%;
+}
+label.border-param {
+    margin-left:1rem;
 }

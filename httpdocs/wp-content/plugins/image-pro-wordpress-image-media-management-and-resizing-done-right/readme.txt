@@ -3,17 +3,14 @@ Contributors: mihaivalentin
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SGRFS9EVFAFQU
 Tags: post, plugin, image, images, pictures, editor, upload, management, frames, caption, borders
 Requires at least: 3.0.0
-Tested up to: 3.9
-Stable tag: 0.35
+Tested up to: 4.7
+Stable tag: 0.36
 
 Upload, resize, add, change images instantly. Manage your media collection with ease and use it for any post or page. A new way of managing content!
 
 == Description ==
 
-NEW: update to 0.34 to get:
-
-*   frames for your pictures (rounded corners, polaroid and round frame)
-*   captions for your pictures
+NEW: update to 0.36 to get PHP7 & Wordpress 4.7 support
 
 Check out the 2 minute video presentation of this plugin:
 http://www.mihaivalentin.com/image-pro-wordpress-image-management/
@@ -69,6 +66,10 @@ Last but not least, great thanks to Jetbrains for their great PhpStorm IDE!
 6. General plugin overview (1 - media library, 2 - image properties)  (check http://www.mihaivalentin.com/image-pro-wordpress-image-management/ for a movie on how this plugin works - 2min)
 
 == Changelog ==
+
+= 0.36 =
+* upgraded phpThumb to newer version, now supports PHP7
+* tested compatibility with WordPress 4.7.2, still some minor fixes to do, stay tuned
 
 = 0.35 =
 * fixed plugin issues when used with themes that change $.ajax, such as Elemin theme

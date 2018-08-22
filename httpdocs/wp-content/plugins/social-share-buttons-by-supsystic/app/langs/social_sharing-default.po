@@ -259,7 +259,7 @@ msgstr ""
 msgid "Allows you to lock content elements by class name before user share this page with any network"
 msgstr ""
 
-msgid "Choose pages you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
+msgid "Choose pages on which you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
 msgstr ""
 
 msgid "Choose this option if you don\'t want to display icons on mobile devices"
@@ -469,10 +469,10 @@ msgstr ""
 msgid "Hide on mobile devices"
 msgstr ""
 
-msgid "When page load"
+msgid "When page loads"
 msgstr ""
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr ""
 
 msgid "Select network"

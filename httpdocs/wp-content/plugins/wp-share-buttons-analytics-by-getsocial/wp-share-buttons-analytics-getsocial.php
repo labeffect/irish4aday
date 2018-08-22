@@ -3,7 +3,7 @@
  * Plugin Name: Share Buttons & tools to grow traffic by GetSocial.io
  * Plugin URI: http://getsocial.io
  * Description: Share Buttons by GetSocial.io is a freemium WordPress plugin that enables you to track social shares on Wordpress. Provide beautiful wordpress sharing buttons, track how many shares were made in each post and see how much traffic, conversions and shares each post generated. Optimize your SEO and increase social shares with GetSocial.io.
- * Version: 3.0.2
+ * Version: 4.0.3
  * Author: Getsocial, S.A.
  * Author URI: http://getsocial.io
  * License: GPL2
@@ -18,6 +18,13 @@ function gs_getsocial_menu() {
     $GS = get_gs();
 
     add_menu_page( 'GetSocial', 'GetSocial', 'manage_options', slug_path('init.php'), '', 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjAgMjAiPjxwYXRoIGZpbGw9IiMzMzlFRDUiIGQ9Ik0xOCAwaC0xNmMtMS4xIDAtMiAuOS0yIDJ2MTZjMCAxLjEuOSAyIDIgMmgxNmMxLjEgMCAyLS45IDItMnYtMTZjMC0xLjEtLjktMi0yLTJ6bS0xMS45IDE0LjZjLTIgMC00LjEtMS4yLTQuMS0zLjkgMC0xLjMuNi0yLjcgMS42LTMuN3MyLjMtMS42IDMuOS0xLjZjMS44IDAgMi45LjcgMy42IDEuNWwtMS41IDEuM2MtLjUtLjYtMS4yLTEtMi4zLTEtLjkgMC0xLjcuNC0yLjMgMS0uNi42LTEgMS41LTEgMi41IDAgMS40IDEgMi4xIDIuMiAyLjEuNyAwIDEuMi0uMiAxLjYtLjNsLjQtMS41aC0xLjlsLjQtMS43aDMuOGwtMS4yIDQuNGMtLjkuNi0xLjkuOS0zLjIuOXptOC45LTUuMmMxLjIuNSAyIDEuMSAyIDIuMyAwIC43LS4zIDEuNC0uNyAxLjktLjYuNi0xLjUgMS0yLjUgMS0xLjYgMC0yLjgtLjUtMy42LTEuNWwxLjMtMS4xYy43LjggMS41IDEuMSAyLjQgMS4xLjggMCAxLjQtLjQgMS40LTEuMSAwLS41LS4zLS44LTEuNS0xLjMtMS4xLS41LTItMS0yLTIuMyAwLS43LjMtMS40LjctMS45LjYtLjYgMS41LTEgMi42LTEgMS4zIDAgMi4zLjQgMyAxLjJsLTEuMyAxLjNjLS42LS42LTEuMi0uOS0yLS45LS45IDAtMS40LjUtMS40IDEgMCAuNi41LjggMS42IDEuM3oiLz48L3N2Zz4=' );
+
+    // If it's an update from a previous version, don't show the popup
+    if (get_option('gs-api-key')) {
+        update_option("gs-popup-showed", "showed");
+    }
+
+    
     add_action( 'admin_init', 'register_gs_settings' );
 }
 
@@ -55,6 +62,7 @@ function register_gs_settings() {
     register_setting('getsocial-gs-settings' , 'gs-place-follow');
     register_setting('getsocial-gs-settings' , 'gs-lang');
     register_setting('getsocial-gs-settings' , 'gs-posts-page');
+    register_setting('getsocial-gs-settings' , 'gs-user-email');
 
     foreach(array('group', 'floating') as $app):
         register_setting('getsocial-gs-' . $app, 'gs-' . $app . '-active');
@@ -95,7 +103,7 @@ if (class_exists('WooCommerce')) {
 // check if page builder plugin is installed and change the order of the GS div
 $installed_plugins = get_option('active_plugins');
 
-if (array_key_exists('siteorigin-panels/siteorigin-panels.php', $installed_plugins)) {
+if (false !== array_search('siteorigin-panels/siteorigin-panels.php', $installed_plugins)) {
     add_filter('the_content', 'on_post_content', 10);
 } else {
     add_filter('the_content', 'on_post_content', 0);
@@ -361,7 +369,6 @@ function add_buttons_to_content($content, $woocomerce, $wooposition = null) {
 add_shortcode('getsocial', 'gs_bars_shortcode');
 
 function gs_bars_shortcode($atts) {
-
     global $wp_query;
     $post = $wp_query->post;
     $GS = get_gs();
@@ -487,12 +494,18 @@ function add_popup_scripts_method() {
         return;
     } else {
 
-        $url = plugins_url( '/lib/onboarding_popup.php' , __FILE__ );
-        
-        wp_enqueue_script( 'jquery-form');
-        wp_enqueue_script('gs-popover', plugins_url( '/js/create_popover.js' , __FILE__ ), array('jquery'));
-        wp_localize_script( 'gs-popover', 'GETSOCIAL_ONBOARDING_PATH', $url );
-        wp_localize_script( 'gs-popover', 'popup_showed', get_option('gs-popup-showed') );
+        try {
+            $url = plugins_url( '/lib/onboarding_popup.php' , __FILE__ );
+            
+            wp_enqueue_script( 'jquery-form');
+            wp_enqueue_script('gs-popover', plugins_url( '/js/create_popover.js' , __FILE__ ), array('jquery'));
+            wp_localize_script( 'gs-popover', 'GETSOCIAL_ONBOARDING_PATH', $url );
+            wp_localize_script( 'gs-popover', 'popup_showed', get_option('gs-popup-showed') );
+        }
+        // If there's some problem creating the popup, just ignore it
+        catch(Exception $e) {
+            update_option("gs-popup-showed", "showed");
+        }
     }
 }
 

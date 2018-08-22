@@ -26,7 +26,7 @@ function srz_fb_albums() {
 			}
 		}
 		echo '<h2>Albums<a href="admin.php?page=SrzFb-Albums&srzf=edit" class="add-new-h2">' . __( 'Add New', 'srizon-facebook-album' ) . '</a></h2>';
-		$albums = SrizonFBDB::GetAllAlbums();
+		$albums = stripslashes_deep( SrizonFBDB::GetAllAlbums() );
 		include( 'tables/album-table.php' );
 	}
 	SrizonFBUI::PageWrapEnd();
@@ -34,10 +34,11 @@ function srz_fb_albums() {
 
 
 function srz_fb_albums_edit() {
-	$optvar = SrizonFBDB::GetCommonOpt();
+	$optvar = stripslashes_deep( SrizonFBDB::GetCommonOpt() );
 	if ( isset( $_GET['id'] ) ) {
 		echo '<div id="icon-edit-pages" class="icon32 icon32-posts-page"><br></div><h2>' . __( 'Edit Album', 'srizon-facebook-album' ) . '</h2>';
 		$value_arr = SrizonFBDB::GetAlbum( $_GET['id'] );
+		$value_arr = stripslashes_deep( $value_arr );
 	} else {
 		echo '<div id="icon-edit-pages" class="icon32 icon32-posts-page"><br></div><h2>' . __( 'Add New Album', 'srizon-facebook-album' ) . '</h2>';
 		$value_arr = array(
@@ -63,6 +64,7 @@ function srz_fb_albums_edit() {
 			'app_id'             => $optvar['srzfbappid'],
 			'app_secret'         => $optvar['srzfbappsecret'],
 		);
+		$value_arr = stripslashes_deep( $value_arr );
 	}
 
 	SrizonFBUI::OptionWrapperStart();

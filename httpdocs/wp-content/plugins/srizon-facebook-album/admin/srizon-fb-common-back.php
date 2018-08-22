@@ -23,9 +23,9 @@ function srz_fb_options_page() {
 		if ( wp_verify_nonce( $_POST['srjfb_submit'], 'SrjFb' ) == false ) {
 			die( 'Form token mismatch!' );
 		}
-		$optvar = SrizonFBDB::SaveCommonOpt();
+		$optvar = stripslashes_deep( SrizonFBDB::SaveCommonOpt() );
 	} else {
-		$optvar = SrizonFBDB::GetCommonOpt();
+		$optvar = stripslashes_deep( SrizonFBDB::GetCommonOpt() );
 	}
 	echo '<div class="icon32" id="icon-tools"><br /></div><h2>' . __( 'Srizon FB Album Option Page', 'srizon-facebook-album' ) . '</h2>';
 	SrizonFBUI::OptionWrapperStart();

@@ -42,7 +42,9 @@ class SocialSharing_Core_Module extends SocialSharing_Core_BaseModule
     public function disablePromo()
     {
         $pluginName = $this->getEnvironment()->getPluginName();
-        update_option($pluginName.'_promo_shown', 1);
+		if(!get_option($pluginName.'_promo_shown')) {
+			update_option($pluginName.'_promo_shown', 1);
+		}
     }
 
     public function doPluginNotices()
@@ -68,6 +70,27 @@ class SocialSharing_Core_Module extends SocialSharing_Core_BaseModule
             new Twig_SimpleFunction(
                 'plugin_directory_url',
                 array($this, 'getPluginDirectoryUrl')
+            )
+        );
+
+        $twig->addFunction(
+            new Twig_SimpleFunction(
+                'get_posts',
+                'get_posts'
+            )
+        );
+
+        $twig->addFunction(
+            new Twig_SimpleFunction(
+                'ucfirst',
+                'ucfirst'
+            )
+        );
+
+        $twig->addFunction(
+            new Twig_SimpleFunction(
+                'wp_get_attachment_image_url',
+                'wp_get_attachment_image_url'
             )
         );
     }

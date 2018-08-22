@@ -33,9 +33,9 @@ class SocialSharing_Networks_Controller extends SocialSharing_Core_BaseControlle
 //        $this->modelsFactory->get('ProjectNetworks', 'Networks')
 //            ->drop($projectId);
 
-        foreach ((array)$networks as $networkId) {
+        foreach ((array)$networks as $key => $networkId) {
             if (!$model->has($projectId, $networkId)) {
-                $model->add($projectId, $networkId);
+                $model->add($projectId, $networkId, $key);
             }
         }
     }
@@ -77,6 +77,39 @@ class SocialSharing_Networks_Controller extends SocialSharing_Core_BaseControlle
         try {
             $projectNetworks = $this->getProjectsNetworksModel();
             $projectNetworks->updateTitle($projectId, $networkId, $title);
+        } catch (RuntimeException $e) {
+            return $this->ajaxError($e->getMessage(), $data);
+        }
+
+        return $this->ajaxSuccess();
+    }
+
+    public function saveProfileNameAction(Rsc_Http_Request $request) {
+        $projectId = (int)$request->post->get('project_id');
+        $data = $request->post->get('data', array());
+        $networkId = array_key_exists('id', $data) ? (int)$data['id'] : null;
+        $name = array_key_exists('value', $data) ? $data['value'] : null;
+
+        try {
+            $projectNetworks = $this->getProjectsNetworksModel();
+            $projectNetworks->updateProfileName($projectId, $networkId, $name);
+        } catch (RuntimeException $e) {
+            return $this->ajaxError($e->getMessage(), $data);
+        }
+
+        return $this->ajaxSuccess();
+    }
+
+    public function saveIconImageAction(Rsc_Http_Request $request) {
+        $projectId = (int)$request->post->get('project_id');
+        $data = $request->post->get('data', array());
+        $networkId = array_key_exists('id', $data) ? (int) $data['id'] : null;
+        $iconImage = array_key_exists('value', $data) ? (int) $data['value'] : 0;
+
+        try {
+            $projectNetworks = $this->getProjectsNetworksModel();
+
+            $projectNetworks->updateIconImage($projectId, $networkId, $iconImage);
         } catch (RuntimeException $e) {
             return $this->ajaxError($e->getMessage(), $data);
         }

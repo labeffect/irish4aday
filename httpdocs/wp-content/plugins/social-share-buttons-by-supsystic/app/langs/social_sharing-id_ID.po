@@ -269,10 +269,10 @@ msgstr "Tampilkan/sembunyikan tombol navigasi untuk mode sidebar. Mengizinkan pe
 msgid "Allows user to display all networks in popup"
 msgstr "IZinkan pengguna menampilkan semua jaringan di popup"
 
-msgid "Allows you to lock content elements by class name before user share this page with any network"
+msgid "Allows you to lock content elements by class name before user shares this page with any network"
 msgstr "Memungkinkan Anda untuk mengunci elemen konten dengan nama class sebelum pengguna share laman ini dengan jaringan manapun"
 
-msgid "Choose pages you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
+msgid "Choose pages on which you want to show popup. You can choose \"All Pages\" or specify posts, pages or URLs"
 msgstr "Pilih laman yang Anda ingin popup muncul. Anda dapat memilih \"Semua Laman\" atau post tertentu, laman, atau URL."
 
 msgid "Choose this option if you don't want to display icons on mobile devices"
@@ -482,10 +482,10 @@ msgstr "Semua laman"
 msgid "Hide on mobile devices"
 msgstr "Sembunyikan pada perangkat ponsel"
 
-msgid "When page load"
+msgid "When page loads"
 msgstr "Ketika laman dimuat"
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr "Pengguna mengklik laman"
 
 msgid "Select network"

@@ -33,12 +33,12 @@ class SocialSharing_Overview_Controller extends SocialSharing_Core_BaseControlle
     }
 
     protected function getServerSettings() {
+    	global $wpdb;
         return array(
             'Operating System' => array('value' => PHP_OS),
             'PHP Version' => array('value' => PHP_VERSION),
             'Server Software' => array('value' => $_SERVER['SERVER_SOFTWARE']),
-            'MySQL' => array('value' => @mysql_get_server_info()),
-            'PHP Safe Mode' => array('value' => ini_get('safe_mode') ? 'Yes' : 'No', 'error' => ini_get('safe_mode')),
+            'MySQL' => array('value' => $wpdb->db_version()),
             'PHP Allow URL Fopen' => array('value' => ini_get('allow_url_fopen') ? 'Yes' : 'No'),
             'PHP Memory Limit' => array('value' => ini_get('memory_limit')),
             'PHP Max Post Size' => array('value' => ini_get('post_max_size')),

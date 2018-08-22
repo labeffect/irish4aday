@@ -353,6 +353,22 @@
 	?>
 	<table class="srzfb-admin-gallery">
 		<tr>
+			<td>
+				<span class="label"><?php _e( 'Album text', 'srizon-facebook-albums' ); ?></span>
+			</td>
+			<td>
+				<input type="text" name="options[albumtxt]" value="<?php echo $value_arr['albumtxt']; ?>" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="label"><?php _e( 'Back To Gallery text', 'srizon-facebook-albums' ); ?></span>
+			</td>
+			<td>
+				<input type="text" name="options[backtogallerytxt]" value="<?php echo $value_arr['backtogallerytxt']; ?>" />
+			</td>
+		</tr>
+		<tr>
 			<td width="30%">
 				<span
 					class="label"><?php _e( 'Sync After Every # minutes', 'srizon-facebook-album' ); ?></span>

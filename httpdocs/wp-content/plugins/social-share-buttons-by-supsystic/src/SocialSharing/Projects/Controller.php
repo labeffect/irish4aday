@@ -50,6 +50,7 @@ class SocialSharing_Projects_Controller extends SocialSharing_Core_BaseControlle
 
         if(empty($title) || empty($title)) {
             $buttonsPreview = $this->getModelsFactory()->get('projects')->getButtonsDesignPreview();
+            
             return $this->response('@projects/add_new.twig',
                 array(
                     'buttons_preview' => $buttonsPreview,
@@ -63,9 +64,9 @@ class SocialSharing_Projects_Controller extends SocialSharing_Core_BaseControlle
                     $design
                 );
 
-                foreach ((array)$networksInProject as $networkId) {
+                foreach ((array)$networksInProject as $key => $networkId) {
                     if (!$networkModel->has($insertId, $networkId)) {
-                        $networkModel->add($insertId, $networkId);
+                        $networkModel->add($insertId, $networkId, $key);
                     }
                 }
 
@@ -119,7 +120,16 @@ class SocialSharing_Projects_Controller extends SocialSharing_Core_BaseControlle
 				}
             }
         }
-
+        if($settings['where_to_show'] != 'grid_gallery'){
+            $this->getEnvironment()->getModule('gridGallery')->disableSocialSharing($id);
+        } else {
+			$this->getEnvironment()->getModule('gridGallery')->cleanSocialSharingCache($id);
+		}
+		if($settings['where_to_show'] != 'slider'){
+			$this->getEnvironment()->getModule('slider')->disableSocialSharing($id);
+		} else {
+			$this->getEnvironment()->getModule('slider')->cleanSocialSharingCache($id);
+		}
         $projects->save($id, $settings);
 
         return $this->ajaxSuccess(array('popup_id' => $settings['popup_id']));
@@ -139,34 +149,82 @@ class SocialSharing_Projects_Controller extends SocialSharing_Core_BaseControlle
         $networks = $this->modelsFactory->get('networks')->all();
         $tooltips = $this->modelsFactory->get('projects')->getTooltips();
         $buttonsPreview = $this->getModelsFactory()->get('projects')->getButtonsDesignPreview();
-
+        $sharesModel = $this->getEnvironment()->getModule('shares')->getModelsFactory()->get('shares');
+        
         $popup = $this->getEnvironment()->getModule('popup');
 		$popupInstalled = $popup->isInstalled();
 		$popups = $popupInstalled ? $popup->getModel()->getSimpleList('original_id != 0') : array();
 		$popupAddUrl = $popupInstalled ? $popup->call('getModule', array('options'))->getTabUrl('popup_add_new') : '';
 
+		$slider = $this->getEnvironment()->getModule('slider');
+		$sliderInstalled = $slider->isInstalled();
+
+        $gridGallery = $this->getEnvironment()->getModule('gridGallery');
+        $galleryInstalled = $gridGallery->isInstalled();
+
+		$gmap = $this->getEnvironment()->getModule('googleMaps');
+		$gmapInstalled = $gmap->isInstalled();
+		$gmaps = $gmapInstalled ? $gmap->getModel()->getAllMaps() : array();
+		$gmapAddUrl = $gmapInstalled ? $gmap->call('getModule', array('options'))->getTabUrl('gmap_add_new') : '';
+
         $dispatcher = $this->getEnvironment()->getDispatcher();
+        $buttonSets = $dispatcher->apply(
+            'button_sets',
+            array(
+                array(
+                    new SocialSharing_Projects_ButtonSet(
+                        'flat',
+                        9,
+                        array(8, 9)
+                    )
+                )
+            )
+        );
+
+        $otherPostTypes = get_post_types(array('public' => true));
+
+        if (isset($otherPostTypes['post']))
+        {
+            unset($otherPostTypes['post']);
+        }
+
+        if (isset($otherPostTypes['page']))
+        {
+            unset($otherPostTypes['page']);
+        }
+
+		$postsList = $this->modelsFactory->get('projects')->getPosts();
+		$pageList = $this->modelsFactory->get('projects')->getPages();
+
+        // Load wp media script
+        wp_enqueue_media();
 
         return $this->response(
             '@projects/view.twig',
             array(
-                'project'           => $project,
-                'networks'          => $networks,
-                'posts'             => get_posts(array('posts_per_page' => -1)),
-                'pages'             => get_pages(array('posts_per_page' => -1)),
-                'post_types'        => get_post_types(array('public' => true)),
-                'popup_installed'   => $popupInstalled,
-                'popups'            => $popups,
-				'popup_add_new_url' => $popupAddUrl,
-                'tooltips'          => $tooltips,
-                'buttons_preview' => $buttonsPreview,
-                'button_sets'       => $dispatcher->apply(
-                    'button_sets',
-                    array(
-                        $this->getButtonSets()
-                    )
-                ),
-                'templates'         => array(
+                'project'            => $project,
+                'networks'           => $networks,
+                'posts'              => $postsList,
+                'pages'              => $pageList,
+                'post_types'         => get_post_types(array('public' => true)),
+                'other_post_types'   => $otherPostTypes,
+                'popup_installed'    => $popupInstalled,
+                'slider_installed'   => $sliderInstalled,
+				'gallery_installed'  => $galleryInstalled,
+				'gmap_installed'  	 => $gmapInstalled,
+				'popup_activate'	 => $popupInstalled ? '' : admin_url('plugin-install.php?s=popup+by+supsystic&tab=search&type=term'),
+				'slider_activate'	 => $sliderInstalled ? '' : admin_url('plugin-install.php?s=slider+by+supsystic&tab=search&type=term'),
+				'gallery_activate'	 => $galleryInstalled ? '' : admin_url('plugin-install.php?s=gallery+by+supsystic&tab=search&type=term'),
+				'gmap_activate'		 => $gmapInstalled ? '' : admin_url('plugin-install.php?s=google+maps+by+supsystic&tab=search&type=term'),
+                'popups'             => $popups,
+				'popup_add_new_url'  => $popupAddUrl,
+				'gmaps'              => $gmaps,
+				'gmap_add_new_url'   => $gmapAddUrl,
+                'tooltips'           => $tooltips,
+                'buttons_preview'    => $buttonsPreview,
+                'button_sets'        => $buttonSets,
+                'statistics_options' => $sharesModel->getOptionList($projectId),
+                'templates'          => array(
                     'twitter', 'pinterest', 'facebook', 'digg'
                 ),
             )
@@ -271,12 +329,17 @@ class SocialSharing_Projects_Controller extends SocialSharing_Core_BaseControlle
         return $this->response('@projects/dev_preview.twig');
     }
 
-    protected function getButtonSets()
+    protected function getButtonSets($design)
     {
+        $hasPrefix = strripos($design, '-1') == strlen($design) - 2;
+
+        if ($hasPrefix)
+            $design = substr($design, 0, -2);
+
         $environment = $this->getEnvironment();
         $sets = array(
             new SocialSharing_Projects_ButtonSet(
-                $environment->translate('Flat'),
+                $design,
                 9,
                 array(8, 9)
             )

@@ -34,6 +34,11 @@ class SocialSharing_Projects_Handler
         $this->builder = $this->instantiateBuilder();
     }
 
+    public function setWPInit($isInit)
+    {
+        $this->builder->setWPInit($isInit);
+    }
+
     /**
      * Builds the composite and returns button markup.
      * @return string
@@ -48,6 +53,18 @@ class SocialSharing_Projects_Handler
             array($this->project)
         );
 
+        $current = get_post();
+
+
+        if ($current) {
+            if (($current->post_type === 'post' && $this->project->isHideOnAllPosts())
+                || ($current->post_type === 'page' && $this->project->isHideOnAllPages())
+                || ($this->project->isHideOnSpecificPost($current->ID) && ! $this->builder->isHomepage())) {
+
+                return '';
+            }
+        }
+
         if (
             (
                 !array_key_exists('action', $_GET)
@@ -56,8 +73,6 @@ class SocialSharing_Projects_Handler
                 && $this->project->isShowOnPosts()
                     && !$this->project->isShowAt('popup')
         ) {
-            $current = get_post();
-
             if ($current === null) {
                 return '';
             }
@@ -87,11 +102,19 @@ class SocialSharing_Projects_Handler
                             && !$this->project->showOnSpecificPostType($current->post_type)
                                 && !$this->project->isShowOnAllPostTypes()
             ) {
-                return '';
+                if (! $this->project->isShowOnSpecificAllPosts($current->ID)) {
+                    return '';
+                }
             }
+
         }
 
         if (!$this->project->isShortCodeShow() && !$this->project->isPopupShow() && $this->project->isShowOnHomepage() && !$this->builder->isHomepage()) {
+            return '';
+        }
+
+
+        if ($this->project->isShowAt('sidebar') && $this->project->isShowOnPosts() && $this->builder->isHomepage()) {
             return '';
         }
 
@@ -133,7 +156,7 @@ class SocialSharing_Projects_Handler
         if (in_array($projectId, self::$listenProjects)) return;
 
         self::$listenProjects[] = $projectId;
-        
+
         switch ($this->project->get('where_to_show')) {
             case SocialSharing_Projects_Project::POSITION_WIDGET:
                 $this->action('widgets_init', 'applyWidgetCallback');
@@ -142,11 +165,56 @@ class SocialSharing_Projects_Handler
                 $this->action('wp_footer', 'applySidebarCallback');
                 break;
             case SocialSharing_Projects_Project::POSITION_CONTENT:
+                // Remove default wp trim handler
+                remove_filter('get_the_excerpt', 'wp_trim_excerpt');
+
                 $this->filter('the_content', 'applyContentCallback');
                 $this->filter('the_excerpt', 'applyContentCallback');
-                remove_filter('get_the_excerpt', 'wp_trim_excerpt');
+                
+                /* fix for AMP and FBIA */
+                add_action('amp_post_template_head', array($this, 'addedStylesForAMP'));
+
+                /* fix for RSS */
+                $this->filter('the_excerpt_rss', 'removeButtonsFromFeed');
+                $this->filter('the_content_feed', 'removeButtonsFromFeed');
+
+                // Add custom trim handler
+                $this->filter('get_the_excerpt', 'wpCustomTrimExcerpt');
                 break;
         }
+    }
+
+    public function addedStylesForAMP($content) {
+        wp_head();
+    }
+
+    public function wpCustomTrimExcerpt($text)
+    {
+        $raw_excerpt = $text;
+
+        if ( '' == $text )
+        {
+            $text = get_the_content('');
+
+            $text = strip_shortcodes($text);
+
+            $text = apply_filters('the_content', $text);
+
+            $socialShareHTML = $this->build();
+
+            $text = str_replace($socialShareHTML, '', $text);
+
+            $text = str_replace(']]>', ']]&gt;', $text);
+
+            $excerpt_length = apply_filters( 'excerpt_length', 55 );
+
+            $excerpt_more = apply_filters( 'excerpt_more', ' ' . '[&hellip;]' );
+
+            $text = wp_trim_words( $text, $excerpt_length, $excerpt_more );
+        }
+
+
+        return apply_filters('wp_trim_excerpt', $text, $raw_excerpt);
     }
 
     /**
@@ -155,7 +223,12 @@ class SocialSharing_Projects_Handler
      */
     public function handle()
     {
-        if ($this->project->isShowAtShortcode() || $this->project->isShowAtPopup()) {
+        if ($this->project->isShowAtShortcode()
+			|| $this->project->isShowAtPopup()
+			|| $this->project->isShowAtGmap()
+            || $this->project->isShowAtGridGallery()
+            || $this->project->isShowAtSlider()
+		) {
             return $this->build();
         }
 
@@ -280,6 +353,11 @@ class SocialSharing_Projects_Handler
                 $this->project,
                 $this->environment
             );
+        } elseif (class_exists('SocialSharingPro_Projects_Builder_Strict') && 'strict' === substr($this->project->get('design'), 0, 6)) {
+            $builder = new SocialSharingPro_Projects_Builder_Strict(
+                $this->project,
+                $this->environment
+            );
         } else {
             $this->project->setSettings(
                 array_merge(
@@ -299,8 +377,9 @@ class SocialSharing_Projects_Handler
         }
 
         /** @var SocialSharing_Networks_Module $networks */
+        $networks = $this->environment->getModule('networks');
         if ($this->project->has('show_more')
-            && null !== $networks = $this->environment->getModule('networks')
+            && null !== $networks
         ) {
             $builder = new SocialSharing_Projects_Builder_Decorator_Popup(
                 $builder, $networks->getAll()
@@ -367,9 +446,9 @@ class SocialSharing_Projects_Handler
      * @param string $hook Hook name
      * @param string $method Method name
      */
-    protected function filter($hook, $method)
+    protected function filter($hook, $method, $priority = 10)
     {
-        add_filter($hook, array($this, $method));
+        add_filter($hook, array($this, $method), $priority);
     }
 
     /**
@@ -380,5 +459,14 @@ class SocialSharing_Projects_Handler
     protected function action($hook, $method)
     {
         add_action($hook, array($this, $method));
+    }
+
+    /*
+        Удаление кода кнопок из RSS
+    */
+    public function removeButtonsFromFeed($content) {
+        remove_filter('the_content', array($this, 'applyContentCallback'));
+
+        return $content;
     }
 }

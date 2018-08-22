@@ -25,10 +25,10 @@
                 <div class="scrollable-inner">
                     <div class="scroll" data-navigation="main">
                         <h2>
-                            <span style="float: left;">
+                            <span style="vertical-align: middle;">
                                 {{ environment.translate('Networks to show') }}
                             </span>
-                            <button class="button" id="addNetwork" style="float: left; margin-left: 4px;">
+                            <button class="button" id="addNetwork" style="margin: 5px; vertical-align: middle;">
                                 <i class="fa fa-fw fa-plus"></i>
                                 <!-- /.fa fa-fw fa-plus -->
                                 {{ environment.translate('Add Networks') }}
@@ -92,9 +92,10 @@
                         <input name="route[module]" type="hidden" value="projects"/>
                         <input name="route[action]" type="hidden" value="save"/>
                         <input name="settings[popup_id]" id="popupId" value="{{ project.settings.popup_id | default(0) }}" type="hidden"/>
+                        <input name="settings[map_id]" id="gmapId" value="{{ project.settings.map_id | default(0) }}" type="hidden"/>
 
                         <div class="scroll" data-navigation="design" hidden>
-                            <div class="half-page-left" style="float: left; width: 50%;">
+                            <div class="half-page-left" style="float: left; width: 50%; padding-right: 25px;">
                                 <h2>
                                     {{ environment.translate('Buttons Design') }}
                                 </h2>
@@ -188,6 +189,19 @@
                                                    {% if project.settings.display_total_shares == 'on' %}checked="checked"{% endif %}/>
                                         </td>
                                     </tr>
+                                    <tr {% if project.settings.display_total_shares != 'on' %}style="display:none"{% endif %}>
+                                        <th scope="row">
+                                            <label for="bd-display-total-shares" data-toggle="tooltip" data-original-title="{{ environment.translate('Displays counters of social shares on buttons.') }}">
+                                                {{ environment.translate('Display total counter') }}
+                                            </label>
+                                        </th>
+                                        <td>
+                                            <input type="checkbox"
+                                                   name="settings[display_all_total_shares]"
+                                                   id="bd-display-total-shares"
+                                                   {% if project.settings.display_all_total_shares == 'on' %}checked="checked"{% endif %}/>
+                                        </td>
+                                    </tr>
 
                                     <tr {% if project.settings.display_total_shares != 'on' %}style="display:none"{% endif %}>
                                         <th scope="row">
@@ -213,6 +227,17 @@
                                         </th>
                                         <td>
                                             <input type="text" name="settings[show_counter_after]" id="bd-counter-show-after" value="{{ project.settings.show_counter_after | default(0) }}">
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">
+                                            <label for="bd-counter-show-after">
+                                                {{ environment.translate('Text after buttons') }}
+                                            </label>
+                                        </th>
+                                        <td>
+                                            <input type="text" name="settings[text_after_buttons]" id="bd-text-after-buttons" value="{{ project.settings.text_after_buttons }}">
                                         </td>
                                     </tr>
 
@@ -344,6 +369,174 @@
                                     </tr>
                                     </tbody>
                                 </table>
+
+                                    <h2 style="">{{ environment.translate('Buttons customization') }}</h2>
+		                            {% if environment.isPro() != 'true' %}
+			                            <a class="pro-link" href="http://supsystic.com/plugins/social-share-plugin/" target="_blank">PRO option</a>
+		                            {% endif %}
+                                        <table class="form-table customization-checkbox">
+                                            <tr>
+                                                <th scope="row">
+                                                    {#<label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Enable button customization') }}">#}
+                                                        {#{{ environment.translate('Enable button customization') }}#}
+                                                        {#<i class="fa fa-question location-tooltip" title="{{ tooltips['button-enable-customiation-tooltip'] }}"></i>#}
+                                                    {#</label>#}
+                                                </th>
+                                                <td>
+                                                    <label for="enable-custom-yes">{{ environment.translate('Enable') }}</label>&nbsp;
+
+                                                    <input type="radio" class="small enable-customization" name="settings[button_enable_customization]" value=1 id="enable-custom-yes" {% if project.settings.button_enable_customization == 1 %}checked{% endif %}>&nbsp;
+                                                    <label for="enable-custom-no">{{ environment.translate('Disable') }}</label>&nbsp;
+                                                    <input type="radio" class="small enable-customization" name="settings[button_enable_customization]" value=0 id="enable-custom-no"{% if project.settings.button_enable_customization == 0 or project.settings.button_enable_customization is empty %}checked{% endif %}>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+		                            {% if environment.isPro() != 'true' %}
+		                                <fieldset id="customization-block" class="disableClick" style="margin-top: 10px;">
+		                            {% else %}
+		                                <fieldset id="customization-block">
+		                            {% endif %}
+
+
+                                        <legend><strong>{{ environment.translate('Button parameters') }} </strong></legend>
+
+
+                                        <table class="form-table form buttons-customization">
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Button border style') }}">
+                                                    {{ environment.translate('Button border style') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['border-style'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <select class="" name="settings[pro_button_option_border_style]" >
+                                                    {#<option value="" {% if project.settings.pro_button_option_border_style is null or project.settings.pro_button_option_border_style is empty %}selected{% endif %}></option>#}
+                                                {% for value in ['none','solid', 'dotted', 'dashed', 'double' ,'groove', 'ridge', 'inset', 'outset'] %}
+                                                    <option value="{{ value }}" {% if project.settings.pro_button_option_border_style == value %}selected{% endif %}>{{ value | title }}</option>
+                                                {% endfor %}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <th scope="row">
+                                                    <label for="" class="border-param"  data-toggle="tooltip" data-original-title="{{ environment.translate('Border color') }}">
+                                                        {{ environment.translate('Border color') }}
+                                                        <i class="fa fa-question location-tooltip" title="{{ tooltips['border-color'] }}"></i>
+                                                    </label>
+                                                </th>
+                                                <td>
+                                                    <input type="text" class="" id="color-picker-button-border-color" name="settings[pro_button_option_border_color]" value="{{ project.settings.pro_button_option_border_color }}">
+                                                </td>
+                                            </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" class="border-param"  data-toggle="tooltip" data-original-title="{{ environment.translate('Button border radius') }}">
+                                                    {{ environment.translate('Button border radius') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['border-radius'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="number" class="small" min="0" name="settings[pro_button_option_border_radius]" value="{{ project.settings.pro_button_option_border_radius }}"> px
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" class="border-param"  data-toggle="tooltip" data-original-title="{{ environment.translate('Button border width') }}">
+                                                    {{ environment.translate('Button border width') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['border-width'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="number" class="small" min="0" name="settings[pro_button_option_border_width]" value="{{ project.settings.pro_button_option_border_width |default(1)}}"> px
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Button width') }}">
+                                                    {{ environment.translate('Button width') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['button-width'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="number" class="medium"  min="40" name="settings[pro_button_option_width]" value="{{ project.settings.pro_button_option_width }}"> px
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Button vertical margin') }}">
+                                                    {{ environment.translate('Button vertical margin') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['button-vertical-margin'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="number" class="small" min="0"  name="settings[pro_button_option_vertical_margin]" value="{{ project.settings.pro_button_option_vertical_margin }}"> px
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Button horizontal margin') }}">
+                                                    {{ environment.translate('Button horizontal margin') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['button-horizontal-margin'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="number" class="small"  min="0" name="settings[pro_button_option_horizontal_margin]" value="{{ project.settings.pro_button_option_horizontal_margin }}"> px
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Icon font size') }}">
+                                                    {{ environment.translate('Icon font size') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['icon-font-size'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="number" class="small"  min="0" name="settings[pro_button_option_icon_font_size]" value="{{ project.settings.pro_button_option_icon_font_size }}"> px
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Button background color') }}">
+                                                    {{ environment.translate('Button background color') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['button-background-color'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="text"  class="" id="color-picker-button-background-color" name="settings[pro_button_option_background_color]" value="{{ project.settings.pro_button_option_background_color }}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Button icon color') }}">
+                                                    {{ environment.translate('Button icon color') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['button-icon-color'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <input type="text" class="" id="color-picker-button-icon-color" name="settings[pro_button_option_icon_color]" value="{{ project.settings.pro_button_option_icon_color }}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label for="" data-toggle="tooltip" data-original-title="{{ environment.translate('Button transparency') }}">
+                                                    {{ environment.translate('Button transparency') }}
+                                                    <i class="fa fa-question location-tooltip" title="{{ tooltips['button-transparency'] }}"></i>
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <select class="" name="settings[pro_button_option_opacity]" >
+                                                    {% for percent in range(0, 90, 10) %}
+                                                        <option value="{{ (100-percent)/100 }}" {% if project.settings.pro_button_option_opacity == (100-percent)/100 %}selected{% endif %}>{{ percent~'%' }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                        </fieldset>
+
                             </div>
                             <div class="clearfix"></div>
 
@@ -496,10 +689,86 @@
                                         <!-- /#wts-popup -->
                                         {{ environment.translate('Popup') }}
                                         {% if popup_installed == false %}
-                                            <small>({{ environment.translate('You need to install <a href="%s" target="_blank">Popup by Supsystic</a> to use this feature.') | format('http://supsystic.com/plugins/popup-plugin/') | raw }})</small>
+                                            <small>({{ environment.translate('You need to install <a href="%s" target="_blank" rel="noopener noreferrer">Popup by Supsystic</a> to use this feature.') | format( popup_activate ) | raw }})</small>
+                                        {% else %}
+                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['popup-tooltip'] }}"></i>
                                         {% endif %}
-                                        <i class="fa fa-question location-tooltip" title="{{ tooltips['popup-tooltip'] }}"></i>
                                     </label>
+                                </li>
+                                <li id="selectPopupDialog" style="display: none; max-width: 100%; vertical-align: middle;">
+                                    {% if popups | length %}
+                                        <select id="selectPopup" style="max-width: 100%;">
+                                            <option>{{ environment.translate('Select popup') }}</option>
+                                            {% for popupObject in popups %}
+                                                <option value="{{ popupObject.id }}" {% if project.settings.popup_id == popupObject.id %}selected="selected"{% endif %}>{{ popupObject.label }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    {% else %}
+                                        <span>{{ environment.translate('Currently you haven\'t any popups. <a style="display: inline-block; text-decoration: none !important; margin: 0; border: none !important;" href="%s" target="_blank" class="ui-button">Create your first PopUp</a> and then just return to this page and select PopUp here.') | format(popup_add_new_url) | raw  }}</span>
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    <label for="wts-slider" data-toggle="tooltip">
+                                        <input type="radio"
+                                               name="settings[where_to_show]"
+                                               value="slider"
+                                               {% if slider_installed == false %}disabled="disabled"{% endif %}
+                                                {% if project.settings.where_to_show == 'slider' %}checked="checked"{% endif %}
+                                               id="wts-slider"/>
+                                        <!-- /#wts-slider -->
+                                        {{ environment.translate('Slider') }}
+                                        {% if slider_installed == false %}
+                                            <small>({{ environment.translate('You need to install <a href="%s" target="_blank" rel="noopener noreferrer">Slider by Supsystic</a> to use this feature.') | format( slider_activate ) | raw }})</small>
+                                        {% else %}
+                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['slider-tooltip'] }}"></i>
+                                        {% endif %}
+                                    </label>
+                                </li>
+                                <li>
+                                    <label for="wts-grid-gallery" data-toggle="tooltip">
+                                        <input type="radio"
+                                               name="settings[where_to_show]"
+                                               value="grid_gallery"
+                                               {% if gallery_installed == false %}disabled="disabled"{% endif %}
+                                                {% if project.settings.where_to_show == 'grid_gallery' %}checked="checked"{% endif %}
+                                               id="wts-grid-gallery"/>
+                                        <!-- /#wts-popup -->
+                                        {{ environment.translate('Photo Gallery') }}
+                                        {% if gallery_installed == false %}
+                                            <small>({{ environment.translate('You need to install <a href="%s" target="_blank" rel="noopener noreferrer">Photo Gallery by Supsystic</a> to use this feature.') | format( gallery_activate ) | raw }})</small>
+                                        {% else %}
+                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['grid-gallery-tooltip'] }}"></i>
+                                        {% endif %}
+                                    </label>
+                                </li>
+                                <li>
+                                    <label for="wts-gmap" data-toggle="tooltip">
+                                        <input type="radio"
+                                               name="settings[where_to_show]"
+                                               value="gmap"
+                                               {% if gmap_installed == false %}disabled="disabled"{% endif %}
+                                                {% if project.settings.where_to_show == 'gmap' %}checked="checked"{% endif %}
+                                               id="wts-gmap"/>
+                                        <!-- /#wts-popup -->
+                                        {{ environment.translate('Google Maps') }}
+                                        {% if gmap_installed == false %}
+                                            <small>({{ environment.translate('You need to install <a href="%s" target="_blank" rel="noopener noreferrer">Google Maps Easy</a> to use this feature.') | format( gmap_activate ) | raw }})</small>
+                                        {% else %}
+                                            <i class="fa fa-question location-tooltip" title="{{ gmap_installed == false ? tooltips['gmap-plug-req-tooltip'] : tooltips['gmap-tooltip'] }}"></i>
+                                        {% endif %}
+                                    </label>
+                                </li>
+                                <li id="selectGmapDialog" style="display: none; max-width: 100%; vertical-align: middle;">
+                                    {% if gmaps | length %}
+                                        <select id="selectGmap" style="max-width: 100%;">
+                                            <option value="0"> {{ environment.translate('Select map') }}</option>
+                                            {% for mapObject in gmaps %}
+                                                <option value="{{ mapObject.id }}" {% if project.settings.map_id == mapObject.id %}selected="selected"{% endif %}>{{ mapObject.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    {% else %}
+                                        <span>{{ environment.translate('Currently you haven\'t any maps. <a style="display: inline-block; text-decoration: none !important; margin: 0; border: none !important;" href="%s" target="_blank" class="ui-button">Create your first Map</a> and then just return to this page and select Map here.') | format(gmap_add_new_url) | raw  }}</span>
+                                    {% endif %}
                                 </li>
                                 <li>
                                     <label for="wts-widget" data-toggle="tooltip">
@@ -525,6 +794,38 @@
                                         <input class="code" style="width: 240px; background-color: #F5F5F5 !important; border: 1px solid #CCCCCC !important; border-radius: 4px !important; color: #333333 !important; font-size: 13px !important; margin: 0 0 10px !important; padding: 9.5px !important; font-family: monospace !important; cursor: pointer;" value="[supsystic-social-sharing id='{{ project.id }}']">
                                         <input class="code" style="width: 240px; display: block; margin-top: 10px; background-color: #F5F5F5 !important; border: 1px solid #CCCCCC !important; border-radius: 4px !important; color: #333333 !important; font-size: 13px !important; margin: 0 0 10px !important; padding: 9.5px !important; font-family: monospace !important; cursor: pointer;" value="{{ "<?php echo do_shortcode('[supsystic-social-sharing id=\"" ~ project.id ~ "\"]') ?>" }}">
                                     </div>
+                                    <ul class="wts-extra not-select-first" {% if project.settings.where_to_show != 'code' %}style="display: none;"{% endif %}>
+                                        <lh>
+                                            {{ environment.translate('Align buttons on content page:') }}
+                                        </lh>
+                                        <li>
+                                            <label for="wts-shortcode-align-left">
+                                                <input type="radio"
+                                                       name="settings[align_in_code]"
+                                                       value="left"
+                                                       id="wts-shortcode-align-left" {% if project.settings.align_in_content == 'left' or project.settings.align_in_content == false %}checked="checked"{% endif %}/>
+                                                {{ environment.translate('Left') }}
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label for="wts-shortcode-align-center">
+                                                <input type="radio"
+                                                       name="settings[align_in_code]"
+                                                       value="center"
+                                                       id="wts-shortcode-align-center" {% if project.settings.align_in_content == 'center' %}checked="checked"{% endif %}/>
+                                                {{ environment.translate('Center') }}
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label for="wts-shortcode-align-right">
+                                                <input type="radio"
+                                                       name="settings[align_in_code]"
+                                                       value="right"
+                                                       id="wts-shortcode-align-right" {% if project.settings.align_in_content == 'right' %}checked="checked"{% endif %}/>
+                                                {{ environment.translate('Right') }}
+                                            </label>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
                             <label for="wts-sidebar-nav" {% if project.settings.where_to_show != 'sidebar' %}hidden{% endif %}>
@@ -572,14 +873,54 @@
                         </div>
                         <!-- /.scroll -->
 
-                        <div class="scroll" data-navigation="main">
+                        <div class="scroll" data-navigation="main" style="padding-bottom: 0;">
+                            <h2>When to show</h2>
+                            <table class="form-table form">
+                                <tbody>
+                                <tr>
+                                    <th scope="row" style="width: 20px;">
+                                        <input type="radio"
+                                               name="settings[when_show]"
+                                               value="load" id="ws-page-load" {% if project.settings.when_show == 'load' %}checked="checked"{% endif %}/>
+                                    </th>
+                                    <td>
+                                        <label for="ws-page-load">
+                                            {{ environment.translate('When page loads') }}
+                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['page-load'] }}"></i>
+                                        </label>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" style="width: 20px;">
+                                        <input type="radio"
+                                               name="settings[when_show]"
+                                               value="click"
+                                               id="ws-page-click" {% if project.settings.when_show == 'click' %}checked="checked"{% endif %}/>
+                                    </th>
+                                    <td>
+                                        <label for="ws-page-click">
+                                            {{ environment.translate('User clicks on a page') }}
+                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['user-click'] }}"></i>
+                                        </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- /.form-table form -->
+                        </div>
+                        <!-- /.scroll -->
+
+                        <div class="scroll" data-navigation="main" style="padding-top: 0;">
                             <h2>{{ environment.translate('Show at next pages') }}</h2>
                             <table class="form-table form">
                                 <tbody>
                                 <tr>
                                     <th scope="row">
-                                        <label for="ws-everywhere">{{ environment.translate('Show everywhere') }}</label>
-                                <i class="fa fa-question location-tooltip" title="{{ tooltips['show-everywhere'] }}"></i>
+                                        <label for="ws-everywhere">
+                                            {{ environment.translate('Show everywhere') }}
+                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['show-everywhere'] }}"></i>
+                                        </label>
                                     </th>
                                     <td>
                                         <input type="checkbox"
@@ -599,7 +940,7 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">
-                                            <label for="ws-hide-homepage">{{ environment.translate('Hide in home page') }}</label>
+                                            <label for="ws-hide-homepage">{{ environment.translate('Hide on home page') }}</label>
                                         </th>
                                         <td>
                                             <input type="checkbox" name="settings[hide_in_home]" id="ws-hide-homepage" value="homepage" {% if project.settings.hide_in_home %}checked="checked"{% endif %}>
@@ -629,6 +970,13 @@
                                                     <option value="{{ page.ID }}" {% if page.ID in project.settings.show_on_posts %}selected="selected"{% endif %}>{{ page.post_title|slice(0, 50) }}</option>
                                                 {% endfor %}
                                             </optgroup>
+                                            {% for post_type in other_post_types %}
+                                            <optgroup label="{{ environment.translate(ucfirst(post_type)) }}">
+                                                {% for entity in get_posts({ 'post_type': post_type, 'posts_per_page': -1 }) %}
+                                                    <option value="{{ entity.ID }}" {% if entity.ID in project.settings.show_on_posts %}selected="selected"{% endif %}>{{ entity.post_title|slice(0, 50) }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            {% endfor %}
                                             <optgroup label="{{ environment.translate('Post type') }}">
                                                 <option value="-3" {% if '-3' in project.settings.show_on_posts %}selected="selected"{% endif %}>{{ environment.translate('All post type') }}</option>
                                                 {% for post_type in post_types %}
@@ -637,6 +985,37 @@
                                             </optgroup>
                                         </select>
                                         <!-- /#ws-posts.chosen -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">
+                                        <label for="ws-hide-posts">
+                                            {{ environment.translate('Don\'t show on next pages / posts') }}
+                                                <i class="fa fa-question location-tooltip" title="{{ tooltips['hide-on-pages'] }}"></i>
+                                        </label>
+                                    </th>
+                                    <td style="width: 50%;">
+                                        <select multiple="multiple" name="settings[hide_on_posts][]" id="ws-hide-posts" class="chosen">
+                                            <optgroup label="{{ environment.translate('Posts') }}">
+                                                <option value="-1" {% if '-1' in project.settings.hide_on_posts %}selected="selected"{% endif %}>{{ environment.translate('All posts') }}</option>
+                                                {% for post in posts %}
+                                                    <option value="{{ post.ID }}" {% if post.ID in project.settings.hide_on_posts %}selected="selected"{% endif %}>{{ post.post_title|slice(0, 50) }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            <optgroup label="{{ environment.translate('Pages') }}">
+                                                <option value="-2" {% if '-2' in project.settings.hide_on_posts %}selected="selected"{% endif %}>{{ environment.translate('All pages') }}</option>
+                                                {% for page in pages %}
+                                                    <option value="{{ page.ID }}" {% if page.ID in project.settings.hide_on_posts %}selected="selected"{% endif %}>{{ page.post_title|slice(0, 50) }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            {% for post_type in other_post_types %}
+                                            <optgroup label="{{ environment.translate(ucfirst(post_type)) }}">
+                                                {% for entity in get_posts({ 'post_type': post_type, 'posts_per_page': -1 }) %}
+                                                    <option value="{{ entity.ID }}" {% if entity.ID in project.settings.hide_on_posts %}selected="selected"{% endif %}>{{ entity.post_title|slice(0, 50) }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            {% endfor %}
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>
@@ -654,7 +1033,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row" style="font-size: 0.98em;">
+                                    <th scope="row">
                                         <label for="ws-show-only-on-mobile">
                                             {{ environment.translate('Show Only on Mobile Devices') }}
                                 <i class="fa fa-question location-tooltip" title="{{ tooltips['show-only-on-mobile'] }}"></i>
@@ -670,47 +1049,13 @@
                             </table>
                             <!-- /.form-table form -->
                         </div>
-
-                        <div class="scroll" data-navigation="main">
-                            <h2>When to show</h2>
-                            <table class="form-table form">
-                                <tbody>
-                                <tr>
-                                    <th scope="row">
-                                        <label for="ws-page-load">
-                                            {{ environment.translate('When page load') }}
-                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['page-load'] }}"></i>
-                                        </label>
-                                    </th>
-                                    <td>
-                                        <input type="radio"
-                                               name="settings[when_show]"
-                                               value="load" id="ws-page-load" {% if project.settings.when_show == 'load' %}checked="checked"{% endif %}/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">
-                                        <label for="ws-page-click">
-                                            {{ environment.translate('User click on page') }}
-                                            <i class="fa fa-question location-tooltip" title="{{ tooltips['user-click'] }}"></i>
-                                        </label>
-                                    </th>
-                                    <td>
-                                        <input type="radio"
-                                               name="settings[when_show]"
-                                               value="click"
-                                               id="ws-page-click" {% if project.settings.when_show == 'click' %}checked="checked"{% endif %}/>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <!-- /.form-table form -->
-                        </div>
+                        <!-- /.scroll -->
 
                         <div class="scroll" data-navigation="statistic" hidden>
                             {% import '@shares/statistic.twig' as shares %}
-                            {{ shares.show() }}
+                            {{ shares.show(statistics_options) }}
                         </div>
+                        <!-- /.scroll -->
                     </form>
 
                     <!-- /.scroll -->
@@ -785,27 +1130,6 @@
 
         </div>
         <!-- select design dialog end -->
-
-        <div id="selectPopupDialog" title="{{ environment.translate('Select popup') }}">
-            <div style="padding: 15px;">
-                {% if popups | length %}
-                    <div>
-                        <label for="selectPopup">
-                            {{ environment.translate('Select popup') }}
-                        </label>
-                    </div>
-                    <div>
-                        <select id="selectPopup">
-                            {% for popupObject in popups %}
-                                <option value="{{ popupObject.id }}" {% if project.settings.popup_id == popupObject.id %}selected="selected"{% endif %}>{{ popupObject.label }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                {% else %}
-                    <p>{{ environment.translate('Currently you haven\'t any popups. <a style="display: inline-block; text-decoration: none !important; padding-left: 5px; padding-right: 5px; margin: 0;" href="%s" target="_blank" class="ui-button">Create your first PopUp</a> and then just return to this page and select PopUp here.') | format(popup_add_new_url) | raw  }}</p>
-                {% endif %}
-            </div>
-        </div>
 
         {% import 'dialogs.twig' as dialogs %}
         {{ dialogs.buttonsAnimation(['no-animation', 'pulse', 'rubberBand', 'shake', 'swing', 'tada', 'wobble'], project.settings.buttons_animation) }}

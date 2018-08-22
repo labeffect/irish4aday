@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS=0;
+
 CREATE TABLE IF NOT EXISTS `%prefix%projects` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
@@ -6,7 +8,6 @@ CREATE TABLE IF NOT EXISTS `%prefix%projects` (
   PRIMARY KEY  (`id`)
 )
   COLLATE='utf8_general_ci'
-  ENGINE=InnoDB
 ;
 
 CREATE TABLE IF NOT EXISTS `%prefix%networks` (
@@ -20,7 +21,6 @@ CREATE TABLE IF NOT EXISTS `%prefix%networks` (
   PRIMARY KEY  (`id`)
 )
   COLLATE='utf8_general_ci'
-  ENGINE=InnoDB
 ;
 
 CREATE TABLE IF NOT EXISTS `%prefix%project_networks` (
@@ -28,14 +28,20 @@ CREATE TABLE IF NOT EXISTS `%prefix%project_networks` (
   `project_id` INT(11) UNSIGNED NULL DEFAULT NULL,
   `network_id` INT(11) UNSIGNED NULL DEFAULT NULL,
   `position` INT(11) UNSIGNED NULL DEFAULT '0',
+  `title` VARCHAR(255) NULL DEFAULT NULL,
+  `text` VARCHAR(255) NULL DEFAULT NULL,
+  `tooltip` VARCHAR(255) NULL DEFAULT NULL,
+  `text_format` VARCHAR(255) NULL DEFAULT NULL,
+  `profile_name` VARCHAR(255) NULL DEFAULT NULL,
+  `icon_image` INT(11) UNSIGNED NULL DEFAULT NULL,
+  `use_short_url`  bit(1) NULL DEFAULT NULL,
   PRIMARY KEY  (`id`),
   INDEX `FK__%prefix%projects` (`project_id`),
   INDEX `FK__%prefix%networks` (`network_id`),
   CONSTRAINT `FK__%prefix%networks` FOREIGN KEY (`network_id`) REFERENCES `%prefix%networks` (`id`),
-  CONSTRAINT `FK__%prefix%projects` FOREIGN KEY (`project_id`) REFERENCES `%prefix%projects` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FK__%prefix%projects` FOREIGN KEY (`project_id`) REFERENCES `%prefix%projects` (`id`) ON DELETE CASCADE 
 )
   COLLATE='utf8_general_ci'
-  ENGINE=InnoDB
 ;
 
 CREATE TABLE IF NOT EXISTS `%prefix%shares` (
@@ -45,13 +51,12 @@ CREATE TABLE IF NOT EXISTS `%prefix%shares` (
   `post_id` INT(11) UNSIGNED NULL DEFAULT NULL,
   `timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  INDEX `FK_%prefix%shares_%prefix%networks` (`network_id`),
-  INDEX `FK_%prefix%shares_%prefix%projects` (`project_id`),
-  CONSTRAINT `FK_%prefix%shares_%prefix%networks` FOREIGN KEY (`network_id`) REFERENCES `%prefix%networks` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_%prefix%shares_%prefix%projects` FOREIGN KEY (`project_id`) REFERENCES `%prefix%projects` (`id`) ON DELETE CASCADE
+  INDEX `FK_%prefix%shares_networks` (`network_id`),
+  INDEX `FK_%prefix%shares_projects` (`project_id`),
+  CONSTRAINT `FK_%prefix%shares_networks` FOREIGN KEY (`network_id`) REFERENCES `%prefix%networks` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_%prefix%shares_projects` FOREIGN KEY (`project_id`) REFERENCES `%prefix%projects` (`id`) ON DELETE CASCADE
 )
   COLLATE='utf8_general_ci'
-  ENGINE=InnoDB
 ;
 
 CREATE TABLE IF NOT EXISTS `%prefix%views` (
@@ -61,10 +66,9 @@ CREATE TABLE IF NOT EXISTS `%prefix%views` (
   `timestamp` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `FK_%prefix%views_%prefix%projects` (`project_id`),
-  CONSTRAINT `FK_%prefix%views_%prefix%projects` FOREIGN KEY (`project_id`) REFERENCES `%prefix%projects` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FK_%prefix%views_%prefix%projects` FOREIGN KEY (`project_id`) REFERENCES `%prefix%projects` (`id`) ON DELETE CASCADE 
 )
   COLLATE='utf8_general_ci'
-  ENGINE=InnoDB
 ;
 
 INSERT INTO `%prefix%networks` (`id`, `name`, `url`, `class`, `brand_primary`, `brand_secondary`, `total_shares`) VALUES (1, 'Facebook', 'http://www.facebook.com/sharer.php?u={url}', 'facebook', '#3b5998', '#ffffff', 0)
@@ -103,7 +107,7 @@ INSERT INTO `%prefix%networks` (`id`, `name`, `url`, `class`, `brand_primary`, `
 ON DUPLICATE KEY UPDATE
     name = VALUES(name), url = VALUES(url), class = VALUES(class), brand_primary = VALUES(brand_primary), brand_secondary = VALUES(brand_secondary), total_shares = VALUES(total_shares);
 
-INSERT INTO `%prefix%networks` (`id`, `name`, `url`, `class`, `brand_primary`, `brand_secondary`, `total_shares`) VALUES (10, 'Delicious', 'https://delicious.com/save?v=5&jump=close&url={url}&title={title}', 'delicious', '#3399ff', '#ffffff', 0)
+INSERT INTO `%prefix%networks` (`id`, `name`, `url`, `class`, `brand_primary`, `brand_secondary`, `total_shares`) VALUES (10, 'Delicious', 'https://del.icio.us/save?v=5&jump=close&url={url}&title={title}', 'delicious', '#3399ff', '#ffffff', 0)
 ON DUPLICATE KEY UPDATE
     name = VALUES(name), url = VALUES(url), class = VALUES(class), brand_primary = VALUES(brand_primary), brand_secondary = VALUES(brand_secondary), total_shares = VALUES(total_shares);
 
@@ -134,3 +138,6 @@ ON DUPLICATE KEY UPDATE
 INSERT INTO `%prefix%networks` (`id`, `name`, `url`, `class`, `brand_primary`, `brand_secondary`, `total_shares`) VALUES (17, 'Evernote', 'https://www.evernote.com/clip.action?url={url}&title={title}', 'evernote', '#6ba92f', '#ffffff', 0)
 ON DUPLICATE KEY UPDATE
     name = VALUES(name), url = VALUES(url), class = VALUES(class), brand_primary = VALUES(brand_primary), brand_secondary = VALUES(brand_secondary), total_shares = VALUES(total_shares);
+
+
+SET FOREIGN_KEY_CHECKS=1;

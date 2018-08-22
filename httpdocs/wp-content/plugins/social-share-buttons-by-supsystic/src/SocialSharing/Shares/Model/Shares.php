@@ -3,6 +3,12 @@
 
 class SocialSharing_Shares_Model_Shares extends SocialSharing_Core_BaseModel
 {
+    protected static $optionKeys = array(
+        'isEnable'  => 'SocialSharingIsEnableStat',
+        'sharesLog' => 'SocialSharingSharesLog',
+        'viewsLog'  => 'SocialSharingViewsLog'
+    );
+
     /**
      * Adds share to the database.
      * @param int $projectId Project Id
@@ -360,5 +366,93 @@ class SocialSharing_Shares_Model_Shares extends SocialSharing_Core_BaseModel
         return $list;
     }
 
+    public function removeDataByProjectID($projectId)
+    {
+        $query = $this->getQueryBuilder()
+            ->deleteFrom($this->getTable())
+            ->where('project_id', '=', (int) $projectId);
 
+        $this->db->query($query->build());
+    }
+
+    public function setIsEnableOption($isEnable)
+    {
+        // update_option(self::$optionKeys['isEnable'], $isEnable ? 1 : 0);
+    }
+
+    public function setViewsLogOption($isEnable)
+    {
+        // update_option(self::$optionKeys['viewsLog'], $isEnable ? 1 : 0);
+    }
+
+    public function setSharesLogOption($isEnable)
+    {
+        // update_option(self::$optionKeys['sharesLog'], $isEnable ? 1 : 0);
+    }
+
+    protected function _getSettingsFromDB($settingName, $projectId) {
+        $query = $this->getQueryBuilder()
+            ->select(array('settings'))
+            ->from($this->getTable('projects'))
+            ->where('id', '=', $projectId);
+        $dbresult = $this->db->get_results($query->build());
+        $result = unserialize($dbresult[0]->settings);
+        if (isset($settingName) && isset($result[$settingName]) && !empty($result[$settingName])) {
+            return $result[$settingName] == 'on' ? true : false;
+        } else if (!isset($settingName)) {
+            return $result;
+        }
+        return false;
+    }
+
+    public function getIsEnableOption($projectId)
+    {
+        return $this->_getSettingsFromDB('enable_disable_statistic', $projectId);
+    }
+
+    public function getSharesLogOption($projectId)
+    {
+        return $this->_getSettingsFromDB('shares_log_statistic', $projectId);
+    }
+
+    public function getViewsLogOption($projectId)
+    {
+        return $this->_getSettingsFromDB('views_log_statistic', $projectId);
+    }
+
+    /**
+     * Returns all options
+     * @return array<mixed>
+     */
+    public function getOptionList($projectId)
+    {
+        $options = array();
+
+        foreach (self::$optionKeys as $option => $key)
+        {
+            $getMethod = 'get' . ucfirst($option) . 'Option';
+
+            $optionValue = null;
+
+            // Search `get` method from this option
+            if (method_exists($this, $getMethod))
+            {
+                $optionValue = call_user_func_array(
+                    array(
+                        $this,
+                        $getMethod
+                    ),
+                    array($projectId)
+                );
+            }
+            else
+            {
+                $optionValue = get_option($key, null);
+            }
+
+            $options[$option] = $optionValue;
+        }
+
+        return $options;
+    }
 }

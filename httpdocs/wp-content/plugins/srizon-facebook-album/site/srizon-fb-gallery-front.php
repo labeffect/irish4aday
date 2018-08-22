@@ -8,6 +8,7 @@ function srz_fb_gallery_shortcode( $atts ) {
 	if ( ! $srz_page ) {
 		return __('Page Not Found','srizon-facebook-album');
 	}
+	$srz_page = stripslashes_deep($srz_page);
 	if($srz_page['album_source'] == 'profile') $srz_page['pageid']='me';
 	srz_fb_set_debug_msg( 'Album Details:', $srz_page );
 	if ( ! isset( $GLOBALS['imggroup'] ) ) {
@@ -30,6 +31,7 @@ function srz_fb_gallery_shortcode( $atts ) {
 	srz_fb_set_debug_msg( 'Images', $srz_images_all );
 
 	$srz_common_options = SrizonFBDB::GetCommonOpt();
+	$srz_common_options = stripslashes_deep($srz_common_options);
 	if ( $srz_common_options['loadlightbox'] == 'mp' ) {
 		$lightbox_attribute = 'class="aimg"';
 	} else {

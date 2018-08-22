@@ -12,7 +12,11 @@ else{
 }
 $extraclass = '';
 if($srz_page['showhoverzoom']) $extraclass.=' zoom';
-$backlink = ' <a href="' . $blink . '">' .  __('[Back To Gallery]','srizon-facebook-album') . '</a>';
+$backtogallerytxt = $srz_page['backtogallerytxt'];
+if(empty($backtogallerytxt)) {
+	$backtogallerytxt = $srz_common_options['backtogallerytxt'];
+}
+$backlink = ' <a href="' . $blink . '">' .  __($backtogallerytxt,'srizon-facebook-album') . '</a>';
 $dtg=' data-gallery="gallery"';
 if ($set) {
 	$data .= '<h2>' . filter_fb_text($pagetitle) . $backlink . '</h2>';
@@ -31,7 +35,13 @@ foreach ($srz_images as $image) {
 			$link = $link.'#'.$scroller_id;
 		}
 		$grelval = '';
-		$image['txt'] = __('Album: ','srizon-facebook-album') . filter_fb_text($image['txt']) . "\n";
+		if(! empty($srz_page['albumtxt'])) {
+			$image['txt'] = __($srz_page['albumtxt'] . ': ', 'srizon-facebook-album') . filter_fb_text($image['txt']) . "\n";
+		} elseif(! empty($srz_common_options['albumtxt'])) {
+			$image['txt'] = __($srz_common_options['albumtxt'] . ': ', 'srizon-facebook-album') . filter_fb_text($image['txt']) . "\n";
+		} else {
+			$image['txt'] = filter_fb_text($image['txt']) . "\n";
+		}
 		if ($srz_page['show_image_count']) {
 			$image['txt'] = $image['txt'] . $image['count'] . __(' Photos','srizon-facebook-album');
 		}

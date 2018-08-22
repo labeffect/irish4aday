@@ -37,7 +37,7 @@ class SocialSharing_Popup_Module extends SocialSharing_Core_Module
 
         /** @var SocialSharing_Projects_Model_Projects $projects */
         $projects = $this->getProjectsModule()->getModelsFactory()->get('projects');
-        $project = $projects->searchByPopupId($search);
+        $project = $projects->searchByElementId($search);
 
         if (null === $project) {
             return $html;

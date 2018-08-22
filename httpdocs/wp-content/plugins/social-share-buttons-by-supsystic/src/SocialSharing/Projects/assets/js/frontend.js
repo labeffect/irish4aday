@@ -1,7 +1,9 @@
 (function ($, window, app) {
 
     $(document).ready(function () {
-        $('.supsystic-social-sharing a.social-sharing-button').on('click', function (e) {
+        var bgClass = "bg-modal";
+
+        $('.supsystic-social-sharing a.social-sharing-button:not(".pinterest")').on('click', function (e) {
             e.preventDefault();
 
             if (e.currentTarget.href.slice(-1) !== '#') {
@@ -9,10 +11,71 @@
             }
         });
 
+        $('.supsystic-social-sharing a.social-sharing-button.pinterest').on('click', function (e) {
+            e.preventDefault();
+            var self = this;
+            var parentEvent = e;
+            var imageLogo;
+
+            e.preventDefault();
+            // select image to pin
+            if($('.'+bgClass).length) {
+                $('.'+bgClass).show();
+                return;
+            }
+            var bgElement =  $('<div class="'+bgClass+'"></div>').appendTo(document.body);
+
+            if(theme_data.themeLogo[0] !== 'undefined') {
+                imageLogo = theme_data.themeLogo[0];
+                sssDisplayPageImagesFiltered(bgElement, imageLogo);
+            } else {
+                sssDisplayPageImagesFiltered(bgElement);
+            }
+
+            $(document).on('click', '.pinterest-image-to-select', function (event) {
+                var src = $(event.target).attr('src');
+                var replaced = $(self).attr('href').replace(/&media=(.*?)&/, '/&media=' + src + '&');
+                $(self).attr('href', replaced);
+                bgElement.hide();
+                if (parentEvent.currentTarget.href.slice(-1) !== '#') {
+                    window.open(parentEvent.currentTarget.href, 'mw' + parentEvent.timeStamp, 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
+                }
+            });
+        });
+
+        $(document).keyup(function(e) {
+            if($('.' + bgClass).length) {
+                if ((e.keyCode === 27) && $('.' + bgClass).is(":visible")) {
+                    $('.' + bgClass).hide();
+                }
+                ;   // esc
+            }
+        });
+
+        function sssDisplayPageImagesFiltered(bgElement,imageLogo) {
+
+            bgElement.show();
+            var images = $('img').filter(function(i) { return $(this).width() > 100});
+            var wrapper = $("<div id='pinterest-images-select-wrapper'></div>").appendTo(bgElement);
+            $.each(images,function( i, image ) {
+                $('<img src="'+$(image).attr('src')+'" class="pinterest-image-to-select">').appendTo(wrapper);
+            });
+            if (typeof imageLogo !== 'undefined') {
+                var filenameBase = imageLogo.substring(0,(imageLogo.length - 12));
+
+                if(bgElement.find('img[src^="'+filenameBase+'"]').length)
+                    return;
+                $('<img src="'+ imageLogo +'" class="pinterest-image-to-select">').appendTo(wrapper);
+            }
+
+        }
+
         window.initSupsysticSocialSharing = function ($container) {
             if (!($container instanceof jQuery)) {
                 $container = $($container);
             }
+
+			if(!$container.length) return;
 
             var $buttons = $container.find('a'),
                 animation = $container.attr('data-animation'),
@@ -21,6 +84,7 @@
                 $navButton = $container.find('.nav-button'),
                 $printButton = $container.find('.print'),
                 $bookmarkButton = $container.find('.bookmark'),
+                $twitterFollowButton = $container.find('.twitter-follow'),
                 $mailButton = $container.find('.mail'),
                 animationEndEvents = 'webkitAnimationEnd mozAnimationEnd ' +
                     'MSAnimationEnd oanimationend animationend',
@@ -50,7 +114,7 @@
 
             var checkNavOrientation = function ($c) {
                 $.each(transitionHelper, function (index, value) {
-                    if ($.inArray(index, $c.attr('class').split(' ')) > -1) {
+                    if (typeof $c.attr('class') !== 'undefined' && ($.inArray(index, $c.attr('class').split(' ')) > -1)) {
                         $c.find('.nav-button').css({
                             'display': value['display']
                         });
@@ -88,7 +152,9 @@
                 if(pinterestBtn && pinterestBtn.size()) {
                     var $img = sssFindMostImportantImg();
                     if($img) {
-                        pinterestBtn.attr('href', pinterestBtn.attr('href')+ '&media='+ encodeURIComponent($img.attr('src')));
+                        pinterestBtn.attr('href', pinterestBtn.attr('href')+
+                            '&media='+ encodeURIComponent($img.attr('src'))+
+                            '&description='+ encodeURIComponent(pinterestBtn.attr('data-description')));
                     }
                 }
             }
@@ -132,15 +198,51 @@
                 }
             });
 
-            $mailButton.on('click', function () {
-                var url = encodeURIComponent(window.location.href);
-                var src = 'mailto:adresse@example.com?subject=' + encodeURIComponent(document.title) + '&body=' + url;
-                var iframe = $('<iframe id="mailtoFrame" src="' + src + '" width="1" height="1" border="0" frameborder="0"></iframe>');
+            if($twitterFollowButton.length) {
+                loadTwitterWidgetApi();
 
-                $('body').append(iframe);
-                window.setTimeout(function(){
-                    iframe.remove();
-                }, 500);
+                $twitterFollowButton.each(function() {
+                    var name = $(this).data('name');
+
+                    $(this)
+                        .attr('href', 'https://twitter.com/intent/follow?screen_name=' + name);
+                });
+            }
+
+            if($container.find('a').hasClass('have-all-counter') && $('.counter').length) {
+                var summ = 0;
+
+                $('.counter').each(function() {
+                    var counter = parseInt($(this).text());
+
+                    if(typeof counter === 'number') summ += counter;
+                });
+
+                var htmlTotalCounter  = '<div class="supsystic-social-sharing-total-counter counter-wrap">';
+                    htmlTotalCounter += '<span>Shares</span> ';
+                    htmlTotalCounter += '<span>' + summ + '</span>';
+                    htmlTotalCounter += '</div>';
+                $container.prepend(htmlTotalCounter);
+            }
+
+            if($container.data('text')) {
+                var text = $container.data('text');
+                var htmlButtons  = '<div>';
+                    htmlButtons += '<span>' + text + '</span>';
+                    htmlButtons += '</div>';
+                $container.append(htmlButtons);
+            }
+            
+
+            $mailButton.each(function () {
+                var url = encodeURIComponent(window.location.href);
+
+                if ($(this).parent().hasClass('supsystic-social-homepage')) {
+                    url += '?p=' + $(this).attr('data-post-id');
+                }
+
+                var src = 'mailto:?subject=' + encodeURIComponent(document.title) + '&body=' + url;
+                $(this).attr('href', src);
             });
 
             $('div.supsystic-social-sharing-bottom a.social-sharing-button.tooltip-icon').tooltipster({
@@ -167,6 +269,8 @@
                 theme:     'tooltipster-shadow'
             });
 
+            $container.addClass('supsystic-social-sharing-init');
+
             var containerShow = false;
 
             if ($container.hasClass('supsystic-social-sharing-hide-on-mobile')) {
@@ -189,9 +293,11 @@
                 $container.addClass('supsystic-social-sharing-loaded');
                 containerShow = true;
             }
-            
-            if ($container.hasClass('supsystic-social-sharing-hide-on-homepage') && $container.hasClass('supsystic-social-homepage'))
+
+            if ($container.hasClass('supsystic-social-sharing-hide-on-homepage') 
+            && $('body').hasClass('home')) {
                 containerShow = false;
+            }
 
             if (containerShow)
                 $container.show();
@@ -213,37 +319,66 @@
         $(window).on('resize', onResize);
 
         $(document).on('click', function () {
-            $('.supsystic-social-sharing-click')
-                .show();
+            var $projectContainer = $('.supsystic-social-sharing-click');
+
+            if ($projectContainer.hasClass('supsystic-social-sharing-hide-on-homepage') 
+            && $projectContainer.hasClass('supsystic-social-homepage'))
+                return;
+
+            $projectContainer.show();
         });
 
         // Init social sharing.
-        $('.supsystic-social-sharing').each(function (index, el) {
+        $('.supsystic-social-sharing:not(.supsystic-social-sharing-init)').each(function (index, el) {
             window.initSupsysticSocialSharing(el);
         });
+
+        document.body.addEventListener("DOMSubtreeModified", function () {
+            $('.supsystic-social-sharing:not(.supsystic-social-sharing-init)').each(function (index, el) {
+                window.initSupsysticSocialSharing(el);
+            });
+        }, false);
     });
 
 }(window.jQuery, window));
 function sssFindMostImportantImg() {
-	var $img = null;
-	var findWhere = ['.woocommerce-main-image', 'article', '.entry-content', 'body'];
-	for(var i = 0; i < findWhere.length; i++) {
-		$img = _sssFindImg( jQuery(findWhere[i]) );
-		if($img)
-			break;
-	}
-	return $img;
+    var $img = null;
+    var findWhere = ['.woocommerce-main-image', 'article', '.entry-content', 'body'];
+    for(var i = 0; i < findWhere.length; i++) {
+        $img = _sssFindImg( jQuery(findWhere[i]) );
+        if($img)
+            break;
+    }
+    return $img;
 }
 function _sssFindImg($el) {
-	if($el && $el.size()) {
-		var $img = null;
-		$el.each(function(){
-			$img = jQuery(this).find('img');
-			if($img && $img.size()) {
-				return false;
-			}
-		});
-		return $img && $img.size() ? $img : false;
-	}
-	return false;
+    if($el && $el.size()) {
+        var $img = null;
+        $el.each(function(){
+            $img = jQuery(this).find('img');
+            if($img && $img.size()) {
+                return false;
+            }
+        });
+        return $img && $img.size() ? $img : false;
+    }
+    return false;
+}
+function loadTwitterWidgetApi() {
+    window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+            t._e.push(f);
+        };
+
+        return t;
+    }(document, "script", "twitter-wjs"));
 }

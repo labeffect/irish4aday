@@ -51,6 +51,22 @@ if ( $fb->test_app_id_secret( $optvar['srzfbappid'], $optvar['srzfbappsecret'] )
 <form action="admin.php?page=SrzFb" method="post">
 	<table class="srzfb-admin-common">
 		<tr>
+			<td>
+				<span class="label"><?php _e( 'Album text', 'srizon-facebook-album' ); ?></span>
+			</td>
+			<td>
+				<input type="text" name="albumtxt" value="<?php echo $optvar['albumtxt']; ?>" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="label"><?php _e( 'Back To Gallery text', 'srizon-facebook-album' ); ?></span>
+			</td>
+			<td>
+				<input type="text" name="backtogallerytxt" value="<?php echo $optvar['backtogallerytxt']; ?>" />
+			</td>
+		</tr>
+		<tr>
 			<td width="20%">
 				<span class="label"><?php _e( 'Lightbox Selection:', 'srizon-facebook-album' ); ?></span>
 			</td>
@@ -71,7 +87,7 @@ if ( $fb->test_app_id_secret( $optvar['srzfbappid'], $optvar['srzfbappsecret'] )
 			</td>
 			<td>
 				<input type="text" size="30" name="lightboxattrib"
-				       value='<?php echo stripslashes( $optvar['lightboxattrib'] ); ?>'/>
+				       value='<?php echo $optvar['lightboxattrib']; ?>'/>
 
 				<p class="srz-admin-subtext"><?php _e( '(Might be required for Other Lightbox)', 'srizon-facebook-album' ); ?></p>
 			</td>
@@ -105,7 +121,7 @@ if ( $fb->test_app_id_secret( $optvar['srzfbappid'], $optvar['srzfbappsecret'] )
 			</td>
 			<td>
 				<input type="text" size="40" id="srzfbappid" name="srzfbappid"
-				       value='<?php echo stripslashes( $optvar['srzfbappid'] ); ?>'/>
+				       value='<?php echo $optvar['srzfbappid']; ?>'/>
 
 				<p class="srz-admin-subtext"><?php _e( 'Put the default App ID.', 'srizon-facebook-album' ); ?>
 					<a
@@ -120,7 +136,7 @@ if ( $fb->test_app_id_secret( $optvar['srzfbappid'], $optvar['srzfbappsecret'] )
 			</td>
 			<td>
 				<input type="text" size="40" id="srzfbappsecret" name="srzfbappsecret"
-				       value='<?php echo stripslashes( $optvar['srzfbappsecret'] ); ?>'/>
+				       value='<?php echo $optvar['srzfbappsecret']; ?>'/>
 
 				<p class="srz-admin-subtext"><?php _e( 'Put the default App Secret.', 'srizon-facebook-album' ); ?>
 					<a
@@ -139,7 +155,7 @@ if ( $fb->test_app_id_secret( $optvar['srzfbappid'], $optvar['srzfbappsecret'] )
 				   id="srzFBloginbutton"><?php _e( "Loading FB Scripts..." ) ?></a> <input type="text" size="40"
 				                                                                           id="srzfbaccesstoken"
 				                                                                           name="srzfbaccesstoken"
-				                                                                           value='<?php echo stripslashes( $optvar['srzfbaccesstoken'] ); ?>'/><br>
+				                                                                           value='<?php echo $optvar['srzfbaccesstoken']; ?>'/><br>
 
 				<p class="srz-admin-subtext"><?php _e( 'In order to get user access token your FB App should be set-up properly with the domain of this website. Default App ID and Secret will not work as they are not set-up for your domain. Create your own app for your domain.', 'srizon-facebook-album' ); ?>
 					<a href="https://www.youtube.com/watch?v=QMGSgxlux4c"

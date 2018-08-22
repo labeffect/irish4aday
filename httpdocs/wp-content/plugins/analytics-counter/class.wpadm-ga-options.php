@@ -12,8 +12,10 @@ class WPAdm_GA_Options
     protected $ga_url = null;
     protected $ga_webPropertyId = null;
     protected $ga_enableCode = null;
+    protected $ga_enableAnonymization = null;
     protected $ga_typeCode = '';
-    
+    protected $ga_menuOnlyAdmin = 1;
+
     protected $wpadmin_token = null;
     
     protected $dt_install = '';
@@ -34,6 +36,8 @@ class WPAdm_GA_Options
             $this->ga_url = (isset($wpadm_ga['ga_url'])) ? $wpadm_ga['ga_url'] : null;
             $this->ga_webPropertyId = (isset($wpadm_ga['ga_webPropertyId'])) ? $wpadm_ga['ga_webPropertyId'] : null;
             $this->ga_enableCode = (isset($wpadm_ga['ga_enableCode'])) ? $wpadm_ga['ga_enableCode'] : 1;
+            $this->ga_enableAnonymization = (isset($wpadm_ga['ga_enableAnonymization'])) ? $wpadm_ga['ga_enableAnonymization'] : 1;
+            $this->ga_menuOnlyAdmin = (isset($wpadm_ga['ga_menuOnlyAdmin'])) ? $wpadm_ga['ga_menuOnlyAdmin'] : 1;
             $this->ga_typeCode = self::TYPE_CODE_UNIVERSAL;
         }
         
@@ -134,6 +138,31 @@ class WPAdm_GA_Options
         return self::getVar('ga_enableCode');
     }
 
+    /** enableAnonymization */
+    public static function setGAEnableAnonymization($ga_enableAnonymization) {
+        if (is_null(self::$instance)) {
+            self::getInstance();
+        }
+        self::$instance->ga_enableAnonymization = $ga_enableAnonymization;
+        self::saveOptions();
+    }
+    public static function getGAEnableAnonymization() {
+        return self::getVar('ga_enableAnonymization');
+    }
+
+    /** menuOnlyAdmin */
+    public static function setGAMenuOnlyAdmin($ga_menuOnlyAdmin) {
+        if (is_null(self::$instance)) {
+            self::getInstance();
+        }
+        self::$instance->ga_menuOnlyAdmin = $ga_menuOnlyAdmin;
+        self::saveOptions();
+    }
+
+    public static function getGAMenuOnlyAdmin() {
+        return self::getVar('ga_menuOnlyAdmin');
+    }
+
 
     /** typeCode */
     public static function setGATypeCode($ga_typeCode) {
@@ -170,6 +199,8 @@ class WPAdm_GA_Options
             'ga_url' => self::$instance->ga_url,
             'ga_webPropertyId' => self::getGAWebPropertyId(),
             'ga_enableCode' => self::getGAEnableCode(),
+            'ga_enableAnonymization' => self::getGAEnableAnonymization(),
+            'ga_menuOnlyAdmin' => self::getGAMenuOnlyAdmin(),
             'ga_typeCode' => self::TYPE_CODE_UNIVERSAL
         ));
         

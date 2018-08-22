@@ -25,15 +25,20 @@ class SocialSharing_Updater_Module extends SocialSharing_Core_BaseModule
 
         $revision = $this->getCurrentRevision();
         $installed = $this->getInstalledRevision();
-
+        
         if (!$installed) {
             $this->setInstalledRevision(0);
+        }
+        
+        if ($installed == 288 || $installed == 289 || $installed == 290) {
+            $this->update288();
+            $this->setInstalledRevision(291);
         }
 
         if ($revision > $installed) {
             $updatesLoader = $this->getUpdatesLoader();
             $prefix = $this->getPrefix();
-
+            
             if (!function_exists('dbDelta')) {
                 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             }
@@ -44,15 +49,42 @@ class SocialSharing_Updater_Module extends SocialSharing_Core_BaseModule
                 }
 
                 $queries = str_replace('%prefix%', $prefix, $queries);
+                $temp_arr = explode('`', $queries);
+                $spaces_arr = array("\r\n", "\r", "\n", "\t", ' ');
 
-                if (false === stripos($queries, 'ALTER')) {
-                    dbDelta($queries);
-                } else {
-                    $wpdb->query($queries);
+                if (
+                    'ALTERTABLE' == strtoupper(str_replace($spaces_arr, '', $temp_arr[0]))
+                    && 'ADDCOLUMN' == strtoupper(str_replace($spaces_arr, '', $temp_arr[2]))
+                ) {
+                    $sql = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{$temp_arr[1]}' AND column_name='$temp_arr[3]'";
+                    if($wpdb->query($sql) > 0) continue;
                 }
+                $wpdb->query($queries);
             }
 
             $this->setInstalledRevision($revision);
+        }
+    }
+
+    public function update288() {
+        global $wpdb;
+
+        $updatesLoader = $this->getUpdatesLoader();
+        $prefix = $this->getPrefix();
+
+        if (!function_exists('dbDelta')) {
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        }
+
+        for ($i = 168; $i <= 260; $i++) {
+            if (!$queries = $updatesLoader->load($i)) {
+                continue;
+            }
+            $queries = str_replace('%prefix%', $prefix, $queries);
+
+            $wpdb->show_errors = false;
+            $wpdb->query($queries);
+            $wpdb->show_errors = true;
         }
     }
 

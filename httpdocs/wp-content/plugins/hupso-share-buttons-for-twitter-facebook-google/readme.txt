@@ -1,23 +1,26 @@
 === Hupso Share Buttons for Twitter, Facebook & Google+ ===
 Contributors: kasal
 Donate link: http://www.hupso.com/
-Tags: twitter, facebook, google, social sharing, share buttons, social share buttons, share icons, stumbleupon, addthis, sharethis, sexybookmarks, addtoany, multisite, pinterest, print, tumblr, bebo, social media, social buttons, social share, email, print button, social plugin, social widget, email button, post, plus 1, vkontakte, vk.com, reddit, delicous, del.icio.us, linkedin, tumblr, pinterest, stumbleupon, digg, stumble upon, pinterest button, +1, google +1, tweet, like, share, sharing, shortcode
-Requires at least: 2.8
-Tested up to: 4.2.2
-Stable tag: 4.0.3
+Tags: twitter, facebook, google, social sharing, share buttons, social share buttons, share icons, stumbleupon, addthis, sharethis, addtoany, sexybookmarks, pinterest, print, tumblr, bebo, social media, social buttons, social share, email, print button, social plugin, social widget, email button, post, vkontakte, vk.com, reddit, delicous, del.icio.us, linkedin, tumblr, pinterest, stumbleupon, digg, stumble upon, pinterest button, tweet, like, share, sharing, shortcode, button, page, amp
+Requires at least: 2.9
+Tested up to: 4.8.1
+Stable tag: 4.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Help share your posts on popular social networks: Twitter, Facebook, Google+, Linkedin, Pinterest, StumbleUpon, Tumblr, Reddit, Bebo and others.
+Add social share buttons to your posts or pages. Support for Twitter, Facebook, Google+, Linkedin, Pinterest, Tumblr, Reddit and others.
 
 == Description ==
 
-Add simple social share buttons to your articles. Your visitors will be able to easily share your content on the most popular social networks: Twitter, Facebook, Google Plus, Linkedin, Tumblr, Pinterest, StumbleUpon, Digg, Reddit, Bebo, Delicous, VKontakte and Email. 
+Add simple social share buttons to your posts or pages. Your visitors will be able to easily share your content on the most popular social networks: Twitter, Facebook, Google Plus, Linkedin, Tumblr, Pinterest, StumbleUpon, Digg, Reddit, Bebo, Delicous, VKontakte and Email. 
 
 These services are used by millions of people every day, so sharing your content there will increase traffic to your website.
 
+[Screenshots](https://wordpress.org/plugins/hupso-share-buttons-for-twitter-facebook-google/#screenshots)
+
 **Main features / advantages**
 
+* Keep Facebook likes when switching your website from http to https protocol
 * Slick, minimalistic design.
 * Very small and fast. The code for sharing button is very small (only a few KB), so share buttons will not slow down your website - even on devices with slow network connections.
 * All major social networks are supported: Twitter, Facebook (Facebook Share / Facebook Like / Facebook Send), Google Plus, Linkedin, Tumblr, Pinterest, StumbleUpon, Digg, Reddit, Bebo, Delicious, VKontakte, Odnoklassniki, Sina Weibo, QZone, Renren.
@@ -45,6 +48,7 @@ These services are used by millions of people every day, so sharing your content
 * All share buttons are optional: You can add or remove any button from plugin settings
 * Multisite support (works with Wordpress Multi-site)
 * Support for custom post types (it is possible to show or hide share buttons for each custom post type)
+* Compatible with AMP plugin by Automattic
 
 Share Buttons are *very easy to configure*. Just select button type, size, position and which social networking services do you want to offer to your visitors.
 Buttons will appear below your articles or on top of them (or both) as you choose.
@@ -61,10 +65,11 @@ You can configure share buttons in plugin settings.
 **Translations**
 
 Plugin is currently translated into: French, Czech, Polish, Arabic, Traditional Chinese, Simplified Chinese and Dutch (Nederlands / Belgium).
+
 If you would like to translate into your language, send message [here](http://www.hupso.com/share/feedback/).
 
 
-[Share Buttons Demo](http://www.hupso.com/share/) | [FAQ](http://wordpress.org/extend/plugins/hupso-share-buttons-for-twitter-facebook-google/faq/) | [Feedback](http://www.hupso.com/share/feedback/)
+[Share Buttons Demo](http://www.hupso.com/share/) | [Screenshots](https://wordpress.org/plugins/hupso-share-buttons-for-twitter-facebook-google/#screenshots) | [FAQ](http://wordpress.org/extend/plugins/hupso-share-buttons-for-twitter-facebook-google/faq/) | [Privacy](http://www.hupso.com/privacy) | [Feedback](http://www.hupso.com/share/feedback/)
 
 
 == Installation ==
@@ -304,6 +309,33 @@ Please send bug reports and suggestion using [this feedback form](http://www.hup
 
 
 == Changelog ==
+
+= 4.1.4 =
+* Compatible with AMP plugin by Automattic
+
+= 4.1.3 =
+* Improved compatibility with older versions of Wordpress (2.x)
+* Compatible with Wordpress 4.8.1
+
+= 4.1.2 =
+* Improved HTTPS/SSL support (Fix for Preview in Plugin Settings)
+* Compatible with Wordpress 4.7.5
+
+= 4.1.1 =
+* Improved support to keep old Facebook likes
+* Improved compatibility with some themes
+* Compatible with Wordpress 4.7.3
+
+= 4.1.0 =
+* Option to keep Facebook likes when switching from http to https protocol
+
+= 4.0.7 =
+* Compatible with Wordpress 4.7.2
+* Fix for counters not aligned properly with some themes
+
+= 4.0.5 =
+* Compatible with Wordpress 4.7.1
+* Security fixes
 
 = 4.0.3 =
 * Added Arabic translation

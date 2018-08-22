@@ -333,10 +333,10 @@ msgstr "Tutte le pagine"
 msgid "Hide on mobile devices"
 msgstr "Nascondi sui dispositivi portatili"
 
-msgid "When page load"
+msgid "When page loads"
 msgstr "Guando la pagina carica"
 
-msgid "User click on page"
+msgid "User clicks on a page"
 msgstr "Utente clicca sulla pagina"
 
 msgid "Select network"

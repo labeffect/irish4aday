@@ -231,4 +231,13 @@ class SocialSharing_Shares_Model_Views extends SocialSharing_Core_BaseModel
 
         return (int)$this->db->get_var($query->build(), 0, 0);
     }
+
+    public function removeDataByProjectID($projectId)
+    {
+        $query = $this->getQueryBuilder()
+            ->deleteFrom($this->getTable())
+            ->where('project_id', '=', (int) $projectId);
+
+        $this->db->query($query->build());
+    }
 }

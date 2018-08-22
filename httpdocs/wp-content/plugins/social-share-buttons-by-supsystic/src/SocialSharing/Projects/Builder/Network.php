@@ -59,6 +59,11 @@ class SocialSharing_Projects_Builder_Network
     private $textFormat;
 
     /**
+     * @var int
+     */
+    private $iconImage;
+
+    /**
      * Constructs the network dto.
      * @param array $network Network data
      * @throws InvalidArgumentException
@@ -78,6 +83,11 @@ class SocialSharing_Projects_Builder_Network
             $network
         ) ? $network['name'] : 'Undefined';
 
+        $this->profile_name = array_key_exists(
+            'profile_name',
+            $network
+        ) ? $network['profile_name'] : '';
+
         $this->url = array_key_exists(
             'url',
             $network
@@ -87,6 +97,11 @@ class SocialSharing_Projects_Builder_Network
             'class',
             $network
         ) ? $network['class'] : null;
+
+        $this->iconImage = array_key_exists(
+            'icon_image',
+            $network
+        ) ? $network['icon_image'] : 0;
 
         $this->primaryColor = array_key_exists(
             'brand_primary',
@@ -117,7 +132,7 @@ class SocialSharing_Projects_Builder_Network
             'text',
             $network
         ) ? $network['text'] : null;
-        
+
         $this->textFormat = array_key_exists(
             'text_format',
             $network
@@ -163,23 +178,35 @@ class SocialSharing_Projects_Builder_Network
         return $this;
     }
 
+    public function getProfileName()
+    {
+        return $this->profile_name;
+    }
+
+    public function setProfileName($name)
+    {
+        $this->profile_name = (string)$name;
+
+        return $this;
+    }
+
     /**
      * Returns Url.
      *
      * @param \WP_Post $post Current post
-     *
+     * @param SocialSharing_Projects_Project $project
      * @return string
      */
-    public function getUrl(WP_Post $post = null)
+    public function getUrl(WP_Post $post = null, SocialSharing_Projects_Project $project = null)
     {
         $title = $post ? get_the_title($post) : get_bloginfo('name');
-        $url = $post ? urlencode(get_the_permalink($post)) : urlencode(get_bloginfo('wpurl'));
+        $url = $post ? urlencode(get_the_permalink($post)) : urlencode(home_url());
         $description = $post ? urlencode( wp_trim_words($post->post_content)) : urlencode(get_bloginfo('description '));
 
         if ($this->useShortUrl && $post)
             $url = urlencode(wp_get_shortlink($post->ID));
 
-        if (is_string($this->textFormat) && strlen($this->textFormat)) 
+        if (is_string($this->textFormat) && strlen($this->textFormat))
         {
             $title = str_replace(
                 array(
@@ -212,7 +239,93 @@ class SocialSharing_Projects_Builder_Network
             '{description}' => $description
         );
 
-        return strtr($this->url, $pairs);
+        if(!is_null($project) && $project->isShowAtGridGallery()){
+            $pairs['{url}'] = '{url}';
+            $pairs['{title}'] = '{title}';
+        }
+
+        $data = apply_filters(
+            'sss_network_builder_get_url',
+            array(
+                'url' => $this->url,
+                'params' => $pairs
+            )
+        );
+
+        return strtr($data['url'], $data['params']);
+    }
+
+    /**
+     * Returns Url.
+     *
+     * @param SocialSharing_Projects_Project $project
+     * @return string
+     */
+    public function getUrlCurrentPage(SocialSharing_Projects_Project $project = null)
+    {
+	    global $wp;
+
+		//if there is a category
+	    $categories = get_the_category();
+	    $category = is_array($categories) ? array_shift($categories) : null;
+
+	    if($category) {
+		    $title = $category->name;
+		    $description = $category->description;
+	    }
+	    else {
+		    $title = get_bloginfo('name');
+		    $description = urlencode(get_bloginfo('description '));
+	    }
+        $url = urlencode( home_url( $wp->request ));
+
+        if (is_string($this->textFormat) && strlen($this->textFormat))
+        {
+            $title = str_replace(
+                array(
+                    '[page_title]',
+                    '[page_url]'
+                ),
+                array(
+	                $title,
+                    $url
+                ),
+                $this->textFormat
+            );
+
+            $description = str_replace(
+                array(
+                    '[page_title]',
+                    '[page_url]'
+                ),
+                array(
+	                $title,
+                    $url
+                ),
+                $this->textFormat
+            );
+        }
+
+        $pairs = array(
+            '{url}'   => $url,
+            '{title}' => urlencode($title),
+            '{description}' => $description
+        );
+
+        if(!is_null($project) && $project->isShowAtGridGallery()){
+            $pairs['{url}'] = '{url}';
+            $pairs['{title}'] = '{title}';
+        }
+
+        $data = apply_filters(
+            'sss_network_builder_get_url',
+            array(
+                'url' => $this->url,
+                'params' => $pairs
+            )
+        );
+
+        return strtr($data['url'], $data['params']);
     }
 
     /**
@@ -357,6 +470,9 @@ class SocialSharing_Projects_Builder_Network
             case 'twitter':
                 return 'fa-twitter';
 
+            case 'twitter-follow':
+                return 'fa-twitter';
+
             case 'googleplus':
                 return 'fa-google-plus';
 
@@ -397,7 +513,7 @@ class SocialSharing_Projects_Builder_Network
                 return 'fa-plus';
 
             case 'mail':
-                return 'fa-paper-plane';
+                return 'fa-envelope-o';
 
             case 'evernote':
                 return 'bd-evernote';
@@ -510,6 +626,16 @@ class SocialSharing_Projects_Builder_Network
         $this->textFormat = (string)$textFormat;
 
         return $this;
+    }
+
+    /**
+     * Get parameter 'icon image' value.
+     *
+     * @return int
+     */
+    public function getIconImageID()
+    {
+        return $this->iconImage;
     }
 
     /**

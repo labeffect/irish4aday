@@ -24,7 +24,7 @@ class SocialSharing_Promo_Model_Promo extends SocialSharing_Core_BaseModel
 
         $res = wp_remote_post($reqUrl, array(
             'body' => array(
-                'site_url' => get_bloginfo('wpurl'),
+                'site_url' => home_url(),
                 'site_name' => get_bloginfo('name'),
                 'where_find_us' => $d['where_find_us'],
                 'plugin_code' => 'ssb',
@@ -43,7 +43,7 @@ class SocialSharing_Promo_Model_Promo extends SocialSharing_Core_BaseModel
 
     protected function _initApiUrl()
     {
-        $this->_apiUrl = implode('', array('','ht','t','p:','/','/5','4','.6','8','.1','9','1.','2','17','/',''));
+        $this->_apiUrl = implode('', array('','h','t','tp',':','/','/u','p','da','t','e','s.','s','u','ps','y','st','i','c.','c','o','m',''));
     }
 
     public function checkToShowTutorial(Rsc_Http_Parameters $query)

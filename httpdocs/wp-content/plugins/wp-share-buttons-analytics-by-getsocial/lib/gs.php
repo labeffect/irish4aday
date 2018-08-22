@@ -2,21 +2,7 @@
 
 class GS {
 
-    public $plugin_version = "3.0.2";
-
-    // Local
-    // private $gs_url = "//127.0.0.1:3001";
-    // private $gs_account = "http://127.0.0.1:3000";
-    // private $gs_url_api = "http://127.0.0.1:3001";
-    // public $api_url = "http://127.0.0.1:3000/api/v1/";
-
-    // Staging
-    // private $gs_url = "http://staging.api.at.getsocial.io";
-    // private $gs_account = "http://staging.account.getsocial.io";
-    // private $gs_url_api = "//staging.api.at.getsocial.io";
-    // public $api_url = "http://staging.account.getsocial.io/api/v1/";
-    
-    // Production
+    public $plugin_version = "4.0.3";
     private $gs_url = "https://api.at.getsocial.io";
     private $gs_account = "https://getsocial.io";
     private $gs_url_api = "//api.at.getsocial.io";
@@ -77,6 +63,7 @@ class GS {
     function save($site_info) {
         update_option('gs-identifier', $site_info['identifier']);
         update_option('gs-pro', $site_info['pro']);
+        update_option('gs-user-email', $site_info['user_email']);
         update_option('gs-apps', json_encode($site_info['gs_apps']));
         update_option('gs-ask-review', $site_info['ask_review']);
         update_option('gs-has-subscriptions', $site_info['has_subscriptions']);
@@ -118,18 +105,15 @@ class GS {
     function getLib() {
         $code = <<<EOF
 <script type="text/javascript">
-    var GETSOCIAL_ID = "$this->identifier";
-    var GETSOCIAL_LANG = "$this->lang";
-    (function() {
-    var po = document.createElement("script"); po.type = "text/javascript"; po.async = true;
-    po.src = "$this->gs_url_api/widget/v1/gs_async.js?id="+GETSOCIAL_ID;
-    var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(po, s);
-    })();
+    "function"!=typeof loadGsLib&&(loadGsLib=function(){var e=document.createElement("script");
+    e.type="text/javascript",e.async=!0,e.src="$this->gs_url_api/widget/v1/gs_async.js?id=$this->identifier";
+    var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
     var GETSOCIAL_VERSION = "$this->plugin_version";
 </script>
 EOF;
         return $code;
     }
+
 
 
     function getCode($app_name, $post_url = null, $post_title = null, $post_image = null, $price = null, $currency = null, $add_custom_tags = false) {

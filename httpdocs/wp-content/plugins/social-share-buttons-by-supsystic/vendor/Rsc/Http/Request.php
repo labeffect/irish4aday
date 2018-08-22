@@ -33,7 +33,14 @@ class Rsc_Http_Request
      */
     public function __construct()
     {
-        $this->post = new Rsc_Http_Parameters($_POST);
+		$postTempVar = $_POST;
+		if(!empty($_POST) && is_string($_POST)) {
+			$postTempVar = unserialize($_POST);
+		}
+		if(!is_array($postTempVar)) {
+			$postTempVar = array();
+		}
+		$this->post = new Rsc_Http_Parameters($postTempVar);
         $this->query = new Rsc_Http_Parameters($_GET);
         $this->files = new Rsc_Http_Parameters($_FILES);
         $this->server = new Rsc_Http_ServerParameters($_SERVER);

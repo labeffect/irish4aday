@@ -10,6 +10,8 @@ class WPAdm_GA
     const EMAIL_SUPPORT = 'support@wpadm.com';
 
     const REQUEST_PARAM_NAME = 'wpadm_ga_request';
+	
+	private static $holiday = true;
 
     public static function visitView() {
         self::processingPostRequest();
@@ -21,11 +23,23 @@ class WPAdm_GA
         } else {
             if(WPAdm_GA_Options::gaTokenIsExpired() && !isset($_GET['token'])) {
                 ob_clean();
-                $location =  self::URL_GA_AUTH . '?redirect=' . urlencode(self::getCurUrl());
+                $v = urldecode(self::get_plugin_version());
+                $location =  self::URL_GA_AUTH . '?v='.$v.'&redirect=' . urlencode(self::getCurUrl());
                 header("Location: $location");
             }
             WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'visit.php';
         }
+		
+		if (self::$holiday) {
+			$time = get_option('wpadm_ga_holiday', 0);
+			$end_holiday = get_option('wpadm_ga_end_holiday', 0);
+			if ( !$end_holiday ) {
+				if ($time === 0 || ( $time > 0 && ( $time + 86400 ) < time() ) ) { // 172800 - 2 days
+					$show_holiday = 1;
+				}
+			}
+		}
+		
         require  WPADM_GA__VIEW_LAYOUT;
     }
 
@@ -41,7 +55,8 @@ class WPAdm_GA
         } else {
             if(WPAdm_GA_Options::gaTokenIsExpired()  && !isset($_GET['token'])) {
                 ob_clean();
-                $location = self::URL_GA_AUTH . '?redirect=' . urlencode(self::getCurUrl());
+                $v = urldecode(self::get_plugin_version());
+                $location =  self::URL_GA_AUTH . '?v='.$v.'&redirect=' . urlencode(self::getCurUrl());
                 header("Location: $location");
             }
             WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'users.php';
@@ -56,7 +71,7 @@ class WPAdm_GA
         require  WPADM_GA__VIEW_LAYOUT;
     }
 
-    public function settingsView() {
+    public static function settingsView() {
         self::processingPostRequest();
 
         self::processingPayRequest();
@@ -68,7 +83,8 @@ class WPAdm_GA
         } else {
             if(WPAdm_GA_Options::gaTokenIsExpired()  && !isset($_GET['token'])) {
                 ob_clean();
-                $location = self::URL_GA_AUTH . '?redirect=' . urlencode(self::getCurUrl());
+                $v = urldecode(self::get_plugin_version());
+                $location =  self::URL_GA_AUTH . '?v='.$v.'&redirect=' . urlencode(self::getCurUrl());
                 header("Location: $location");
             }
             WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'settings.php';
@@ -82,11 +98,18 @@ class WPAdm_GA
         $ga_accout_form->setValue('ga-webPropertyId', WPAdm_GA_Options::getGAWebPropertyId());
         $ga_accout_form->setValue('ga-url', WPAdm_GA_Options::getGAUrl());
         $ga_accout_form->setValue('ga-enableCode', WPAdm_GA_Options::getGAEnableCode());
+        $ga_accout_form->setValue('ga-enableAnonymization', WPAdm_GA_Options::getGAEnableAnonymization());
+        $ga_accout_form->setValue('ga-menuOnlyAdmin', WPAdm_GA_Options::getGAMenuOnlyAdmin());
+        
+
 
         if('POST' == strtoupper($_SERVER['REQUEST_METHOD'])
             && isset($_POST['form_name'])
             && 'ga-account' == $_POST['form_name']
         ) {
+            check_admin_referer('wpadm_settings_ga_account');
+
+
 	        if ('disconnect' == filter_input(INPUT_POST, 'ga-disconnect-btn', FILTER_SANITIZE_STRING)) {
 		        self::googleAnalyticsDisconnect();
 		        return;
@@ -96,15 +119,23 @@ class WPAdm_GA
             $webPropertyId = filter_input(INPUT_POST, 'ga-webPropertyId', FILTER_SANITIZE_STRING);
             $enableCode = (int)filter_input(INPUT_POST, 'ga-enableCode', FILTER_SANITIZE_NUMBER_INT);
             $enableCode = ($enableCode) ? 1 : 0;
+            $enableAnonymization = (int)filter_input(INPUT_POST, 'ga-enableAnonymization', FILTER_SANITIZE_NUMBER_INT);
+            $enableAnonymization = ($enableAnonymization) ? 1 : 0;
 
+            $menuOnlyAdmin = (int)filter_input(INPUT_POST, 'ga-menuOnlyAdmin', FILTER_SANITIZE_NUMBER_INT);
+            $menuOnlyAdmin = ($menuOnlyAdmin) ? 1 : 0;
+            
             WPAdm_GA_Options::setGAId($id);
             WPAdm_GA_Options::setGAUrl($url);
             WPAdm_GA_Options::setGAWebPropertyId($webPropertyId);
             WPAdm_GA_Options::setGAEnableCode($enableCode);
-            
+            WPAdm_GA_Options::setGAEnableAnonymization($enableAnonymization);
+            WPAdm_GA_Options::setGAMenuOnlyAdmin($menuOnlyAdmin);
+
             $ga_accout_form->setValue('ga-id', $id);
             $ga_accout_form->setValue('ga-webPropertyId', $webPropertyId);
             $ga_accout_form->setValue('ga-enableCode', $enableCode);
+            $ga_accout_form->setValue('ga-menuOnlyAdmin', $menuOnlyAdmin);
 
             //redirect to stat
             ob_clean();
@@ -126,6 +157,7 @@ class WPAdm_GA
         if ('POST' == strtoupper($_SERVER['REQUEST_METHOD'])
             && isset($_POST['wpadm_ga_manual_tracking_code'])
         ) {
+            check_admin_referer('manual_tracking_code_form');
             $code = trim($_POST['wpadm_ga_manual_tracking_code']);
             if ($code) {
                 update_option('wpadm_ga_manual_tracking_code', $code);
@@ -133,6 +165,13 @@ class WPAdm_GA
                 delete_option('wpadm_ga_manual_tracking_code');
             }
         }
+		if ( 'POST' == strtoupper($_SERVER['REQUEST_METHOD']) && isset($_POST['christmas_later']) ) {
+			update_option('wpadm_ga_holiday', time() );
+		}
+		
+		if ( 'POST' == strtoupper($_SERVER['REQUEST_METHOD']) && isset($_POST['christmas_end']) ) {
+			update_option('wpadm_ga_end_holiday', 1 );
+		}
     }
 
 
@@ -149,7 +188,6 @@ class WPAdm_GA
         ));
 
         if ( is_wp_error( $response ) ) {
-            ////
             $error_message = $response->get_error_message();
         } else {
             preg_match("|(-----BEGIN PUBLIC KEY-----.*-----END PUBLIC KEY-----)|Uis", $response['body'], $m);
@@ -166,6 +204,7 @@ class WPAdm_GA
         //delete_option('wpadm_ga');
         self::cron_deactivation();
         //todo: delete cahce table
+        Wpadm_GA_Cache::clear();
     }
 
     public static function cron_activation() {
@@ -180,6 +219,9 @@ class WPAdm_GA
 
 
     public static function init() {
+
+        load_plugin_textdomain( 'analytics-counter' );
+
         ob_start();
         self::requireFiles();
         self::checkDB();
@@ -197,9 +239,18 @@ class WPAdm_GA
 
     protected static function proccessRequest() {
         $request_name = self::REQUEST_PARAM_NAME;
-        $params = unserialize(base64_decode($_POST[$request_name]));
+        
+        $str = base64_decode($_POST[$request_name]);
+        $params = json_decode($str, true);
 
-        $v = self::verifySignature($params['sign'], get_option('wpadm_ga_pub_key'), md5(serialize($params['data'])));
+        if (!is_array($params) OR !isset($params['sign']) OR !isset($params['data'])){
+            exit;
+        }
+
+        $v = self::verifySignature(base64_decode($params['sign']), get_option('wpadm_ga_pub_key'), md5(json_encode($params['data'])));
+        if (!$v) {
+            exit;
+        }
 
         $request = $params['data'];
 
@@ -255,21 +306,11 @@ class WPAdm_GA
             'refer'=>self::getCurUrl(),
         );
 
-	    
-	    echo '<!-- start dump --><pre><small>' . __FILE__ . "</small>\n";
-	    print_r($url);
-	    echo '</pre><!-- end dump -->';
-	    
         $response = wp_remote_post($url, array(
             'method' => 'POST',
             'timeout' => 45,
             'body' => $req
         ));
-
-//        if ( is_wp_error( $response ) ) {
-//            $error_message = $response->get_error_message();
-//        } else {
-//        }
 
     }
 
@@ -303,16 +344,19 @@ class WPAdm_GA
 
         wp_register_script( 'wpadm-daterangepicker-js', plugins_url(WPADM_GA__PLUGIN_NAME. '/view/scripts/daterangepicker/daterangepicker.js' ) );
         wp_enqueue_script( 'wpadm-daterangepicker-js' );
+
+        wp_register_script( 'google-jsapi', 'https://www.google.com/jsapi', null, null, true );
+        wp_enqueue_script( 'google-jsapi' );
     }
 
     public static function generateMenu() {
         $pages = array();
-
+        $menuOnlyAdmin =  WPAdm_GA_Options::getGAMenuOnlyAdmin();
         $menu_position = '1.9998887770';
         $pages[] = add_menu_page(
             'Analytics Counter',
             'Analytics Counter',
-            'read',
+            ($menuOnlyAdmin) ? 'administrator' : 'manage_options',
             WPADM_GA__MENU_PREFIX . 'visit',
             array('Wpadm_GA', 'visitView'),
             plugins_url('/view/img/icon.png',__FILE__),
@@ -322,7 +366,7 @@ class WPAdm_GA
             WPADM_GA__MENU_PREFIX . 'visit',
             'Audience overview',
             'Audience overview',
-            'read',
+            ($menuOnlyAdmin) ? 'administrator' : 'manage_options',
             WPADM_GA__MENU_PREFIX . 'visit',
             array('Wpadm_GA', 'visitView')
         );
@@ -332,7 +376,7 @@ class WPAdm_GA
             WPADM_GA__MENU_PREFIX . 'visit',
             'Visitors overview',
             'Visitors overview',
-            'read',
+            ($menuOnlyAdmin) ? 'administrator' : 'manage_options',
             WPADM_GA__MENU_PREFIX . 'users',
             array('Wpadm_GA', 'usersView')
         );
@@ -341,7 +385,7 @@ class WPAdm_GA
         $pages[] = add_options_page(
             'Analytics Counter Settings',
             'Analytics Counter',
-            'administrator',
+            ($menuOnlyAdmin) ? 'administrator' : 'manage_options',
             WPADM_GA__MENU_PREFIX . 'settings',
             array('Wpadm_GA', 'settingsView')
         );
@@ -354,6 +398,9 @@ class WPAdm_GA
     }
     
     public static function generateGACodeOnSite() {
+        if (is_user_logged_in()) {
+            return;
+        }
         $token = WPAdm_GA_Options::getGAAccessToken();
         if (empty($token)) {
             $code = get_option('wpadm_ga_manual_tracking_code');
@@ -373,6 +420,14 @@ class WPAdm_GA
 
     protected static function getErrorTemplate() {
 
+        if(isset($_GET['google_oauth2_error'])) {
+            return WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'error_admin_google_error.php';
+        }
+
+        if(isset($_GET['error'])) {
+            return WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'error_admin_wpadm_error.php';
+        }
+
         if(!get_option('wpadm_ga_pub_key')) {
             return WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'error_admin_empty_pub_key.php';
         }
@@ -387,15 +442,6 @@ class WPAdm_GA
         if (empty($site) && $_GET['page'] != 'wpadm-ga-menu-settings') {
             return WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'error_admin_empty_ga_site.php';
         }
-        
-        if(isset($_GET['google_oauth2_error'])) {
-            return WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'error_admin_google_error.php';
-        }
-
-        if(isset($_GET['error'])) {
-            return WPAdm_GA_View::$content_file = WPADM_GA__PLUGIN_DIR . 'view' . DIRECTORY_SEPARATOR . 'error_admin_wpadm_error.php';
-        }
-
         return null;
     }
 
@@ -546,12 +592,23 @@ class WPAdm_GA
 
     public static function sendSupport() {
         if (isset($_POST['message'])) {
+
+            check_ajax_referer('wpadm-ga_support', 'security');
+
+            $mes = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+
+            $plugin_current_version = self::get_plugin_version();
+
+
             $ticket = date('ymdHis') . rand(1000, 9999);
             $subject = "Support [sug:$ticket]: Analytics counter plugin";
             $message = "Client email: " . get_option('admin_email') . "\n";
             $message .= "Client site: " . home_url() . "\n";
-            $message .= "Client suggestion: " . $_POST['message']. "\n\n";
+            $message .= "Plugin: " . WPADM_GA__VIEW_TITLE . ' ' . $plugin_current_version . "\n";
+            $message .= "Client suggestion: " . $mes. "\n\n";
             $message .= "Client ip: " . self::getIp() . "\n";
+
+
             $browser = @$_SERVER['HTTP_USER_AGENT'];
             $message .= "Client useragent: " . $browser . "\n";
             $header[] = "Reply-To: " . get_option('admin_email') . "\r\n";
@@ -570,6 +627,7 @@ class WPAdm_GA
 
     public static function stopNotice5Stars() {
         if (isset($_POST['stop'])) {
+            check_ajax_referer('wpadm_ga_stopNotice5Stars', 'security');
             update_option('wpadm-ga-stopNotice5Stars', true);
 
         }
@@ -578,17 +636,17 @@ class WPAdm_GA
 
     public static function hideGetProDescription() {
         if (isset($_POST['hide'])) {
+            check_ajax_referer( 'wpadm_ga_GetProDescription', 'security' );
             update_option('wpadm-ga-hideGetProDescription', (1 == $_POST['hide']));
         }
         wp_die();
     }
 
-    protected static function getCurUrl() {
+    public static function getCurUrl() {
         return 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . rtrim($_SERVER['HTTP_HOST'], '/')."/" . ltrim($_SERVER['REQUEST_URI'], '/');
     }
 
     protected static function checkProVersion() {
-        $plugin_version = (isset($plugin_info['analytics-counter.php']['Version']) ? $plugin_info['analytics-counter.php']['Version'] : '');
         $data_server =
             array(
                 'actApi' => "proBackupCheck",
@@ -596,9 +654,8 @@ class WPAdm_GA
                 'email' => get_option('admin_email'),
                 'plugin' => 'analytics-counter',
                 'key' => '',
-                'plugin_version' => $plugin_version
+                'plugin_version' => self::get_plugin_version()
             );
-
 
         $url = self::URL_GA_WPADM_SERVER . "api/";
         $response = wp_remote_post($url, array(
@@ -606,6 +663,7 @@ class WPAdm_GA
             'timeout' => 45,
             'body' => $data_server
         ));
+
 
         $data_server = json_decode($response['body'], true);
 
@@ -626,11 +684,34 @@ class WPAdm_GA
             }
         } elseif (isset($_GET['download_pro'])) {
             $data = self::checkProVersion();
+
             if (isset($data['url'])) {
                 header("location:{$data['url']}");
                 exit;
             }
         }
+    }
+
+    public static function get_plugin_version() {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        $slug = WPADM_GA__PLUGIN_NAME . '/' . WPADM_GA__PLUGIN_NAME . '.php';
+
+        $plugins = get_plugins();
+        $info = $plugins[$slug];
+
+        return  $info['Version'];
+
+    }
+
+    public static function get_plugin_version2() {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        $slug = WPADM_GA__PLUGIN_NAME . '/' . WPADM_GA__PLUGIN_NAME . '.php';
+
+        $plugins = get_plugins();
+        $info = $plugins[$slug];
+
+        return  $info['Version'];
+
     }
 }
 

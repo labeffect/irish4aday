@@ -42,7 +42,7 @@ jQuery('#request_api_key').on('click', function(e){
     user_data = jQuery(".account-info .field-input");
     
     url = jQuery(user_data[0]).text().trim();
-    email = jQuery(user_data[1]).text().trim();
+    email = jQuery(user_data[1]).val();
 
     var data = {
             'source': 'wordpress',
@@ -83,7 +83,7 @@ function handleMessage(event){
 
 jQuery(function($){
 
-    jQuery('#contact_us').on('click', function(e){
+    jQuery('.uservoice-contact').on('click', function(e){
         e.stopPropagation();
     });
 
@@ -92,7 +92,7 @@ jQuery(function($){
         jQuery('.notification-bar').hide();
 
 
-        if (validateEmail(jQuery(this).find('#gs-api-key').val())) {
+        if (isEmailFormat(jQuery(this).find('#gs-api-key').val())) {
             jQuery('.notification-bar').hide();
             jQuery('.notification-bar.gs-error').show().find('p').html('API KEY is not an e-mail.');
         } else {
@@ -134,26 +134,40 @@ jQuery(function($){
     jQuery('.create-gs-account').on('click', function(e){
         e.preventDefault();
 
+        if (!validateEmail(jQuery("#gs-user-email").val())) {
+            jQuery('#error-type-3>p')[0].style.visibility = "visible";
+            return;
+        }
+
         jQuery('.notification-bar').hide();
         jQuery('.create-gs-account').hide();
         jQuery('.loading-create').addClass('active');
 
-        jQuery.post(jQuery(this).attr('href'), { source: 'wordpress' }, function(data){
-            if(data.errors != undefined){
-                jQuery('.loading-create').removeClass('active');
-                jQuery('.account-info').hide();
-                jQuery('.notification-bar.gs-error').show().find('p').html(data.errors[0]);
-                jQuery('#error-type-' + data.error_type).show();
-                jQuery('.api-key').show();
-                
-                if (data.error_type == 1) {
-                    $("input[name='save-changes']").hide();
+        jQuery.post(
+            jQuery(this).attr('href'),
+            {   
+                email: jQuery("#gs-user-email").val(), 
+                url: jQuery(".account-info .field-input").text().trim(),
+                source: 'wordpress' 
+            },
+            function(data) {
+                if(data.errors != undefined){
+                    jQuery('.loading-create').removeClass('active');
+                    jQuery('.account-info').hide();
+                    jQuery('.notification-bar.gs-error').show().find('p').html(data.errors[0]);
+                    jQuery('#error-type-' + data.error_type).show();
+                    jQuery('.api-key').show();
+                    
+                    if (data.error_type == 1) {
+                        $("input[name='save-changes']").hide();
+                    }
+                } else {
+                    jQuery('#gs-api-key').attr('value', data.api_key);
+                    jQuery("input[name='gs-user-email']").attr('value', jQuery("#gs-user-email").val());
+                    jQuery('#api-key-form').trigger('submit');
                 }
-            } else {
-                jQuery('#gs-api-key').attr('value', data.api_key);
-                jQuery('#api-key-form').trigger('submit');
             }
-        });
+        );
     });
 
     if(jQuery('.graphs').length > 0){
@@ -185,8 +199,7 @@ jQuery(function($){
 
     jQuery(document).on('click', '.only-activate', function(e){
 
-        if ($(this)[0].pathname == "/auth/mailchimp" || 
-            $(this)[0].pathname == "/auth/infusionsoft") {
+        if ($(this)[0].pathname == "/auth/mailchimp") {
 
             if ($(this).attr('prevent')) {
                 alert("You need to install Hello Buddy, Subscriber Bar or Price Alert to work with this app");
@@ -194,10 +207,6 @@ jQuery(function($){
                 window.open($(this).attr('href'), '_blank')
             }
             return;
-        }
-
-        if ($(this)[0].pathname == "/auth/bitly") {
-            window.open($(this).attr('href'), '_blank')
         }
 
         e.preventDefault();
@@ -290,7 +299,6 @@ jQuery(function($){
     }
 
     function filterApps() {
-
         var filters = [],
             title = '',
             categoryFilter = '';
@@ -302,7 +310,7 @@ jQuery(function($){
             var filter = $(el).data('filter'),
                 filterIsActive = !$(el).hasClass('trans'),
                 isCategoryFilter = $(el).parent().attr('id') === 'app-filter-dropdown',
-                filter_name = filter === 'two' ? 'starter' : filter;
+                filter_name = filter === 'two' ? 'tools' : filter;
 
             if(typeof(filter) === 'undefined') return;
 
@@ -310,7 +318,7 @@ jQuery(function($){
                 filters.push('filter-' + filter);
 
                 if(title.length > 0) title += '<i class="fa fa-plus"></i>';
-
+                
                 if(isCategoryFilter) {
                     categoryFilter = filter;
 
@@ -339,8 +347,7 @@ jQuery(function($){
         }
 
         $.each($('.app-group'), function(i, group){
-
-            var selectedApps = $(group).find('.app-link-wrapper').filter(function () { 
+            var selectedApps = $(group).find('.app-link-wrapper').filter(function () {
                 return this.style.display == 'block'; 
             });
             
@@ -439,15 +446,11 @@ jQuery(function($){
     
     modal('#settings');
 
-    modal('#install-ga-analytics');
+    modal('#install-ga_integration');
 
     modal('#install-copy-and-share');
 
     modal('#install-mailchimp');
-
-    modal('#install-bitly');
-
-    modal('#install-infusionsoft');
 
     modal('#thankyou');
 
@@ -464,10 +467,29 @@ jQuery(function($){
         });
     });
 
-    setInterval('forceUpdateWithValues()', 5000);
+    setInterval('forceUpdateWithValues()', 10000);
 
     function validateEmail(email) {
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        // if mail is valid, test for local domains
+        if (re.test(email)) {
+            var domain = email.replace(/.*@/, "");
+            var sub_level = domain.split(".")[0];
+            var top_level = domain.split(".")[1];
+            
+            if (sub_level == "localhost" || sub_level == "local" || sub_level == "localdomain"
+                || top_level == "localhost" || top_level == "local" || top_level == "localdomain") {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    function isEmailFormat(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
         return re.test(email);
     }
 });
