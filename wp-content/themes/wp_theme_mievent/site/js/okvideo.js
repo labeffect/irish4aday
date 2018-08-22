@@ -75,7 +75,7 @@ var player, OKEvents, options;
 			$('#okplayer').replaceWith(function() {
 				return '<iframe src="//player.vimeo.com/video/' + base.options.video.id + '?api=1&title=0&byline=0&portrait=0&playbar=0&loop=' + base.options.loop + '&autoplay=' + (base.options.autoplay === 1 ? 1 : 0) + '&player_id=okplayer" frameborder="0" style="' + $(this).attr('style') + 'visibility:hidden;background-color:black;" id="' + $(this).attr('id') + '"></iframe>';
 			});
-			base.insertJS('//origin-assets.vimeo.com/js/froogaloop2.min.js', function(){
+			base.insertJS('//f.vimeocdn.com/js/froogaloop2.min.js', function(){
 				vimeoPlayerReady();
 			});
 		};
@@ -193,7 +193,7 @@ function onYouTubePlayerAPIReady() {
 		videoId: options.video ? options.video.id : null,
 		playerVars: {
 			'autohide': 1,
-			'autoplay': 0, 
+			'autoplay': 0,
 			'disablekb': options.keyControls,
 			'cc_load_policy': options.captions,
 			'controls': options.controls,
