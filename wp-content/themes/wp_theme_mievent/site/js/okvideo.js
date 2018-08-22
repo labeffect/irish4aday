@@ -183,7 +183,9 @@ function vimeoPlayerReady() {
 			player.on('pause', OKEvents.v.onPause);
 			player.on('ended', OKEvents.v.onFinish);
 		}
-        player.play().catch(function(error) {
+        player.play().then(function(){
+        	console.log("video played");
+		}).catch(function(error) {
             console.error('error playing the video:', error.name);
         });
 	});
