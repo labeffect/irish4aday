@@ -59,6 +59,10 @@ $config = array (
 				'slug' => 'main_menu',
 				'name' => __('Main Menu', 'mtheme'),
 			),
+            array(
+                'slug' => 'social_menu',
+                'name' => __('Social Menu', 'mtheme')
+            )
 		),
 		
 		/*Editor styles*/

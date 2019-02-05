@@ -1168,6 +1168,7 @@ class MthemeInterface {
 		$locations = get_nav_menu_locations();	
 		if( isset($locations[$slug])) {
 			$menu=wp_get_nav_menu_object($locations[$slug]);
+			$social_menu = wp_get_nav_menu_object($locations['social_menu']);
 			
 			if(isset($menu->term_id)) {		
 				$menu_items=wp_get_nav_menu_items($menu->term_id);
@@ -1244,20 +1245,24 @@ class MthemeInterface {
 				}
 
 				$out.='</li>';
+
 				//social
-				$out .= '
-				<li class="social-icons">
-					<a data-toggle="tooltip" data-placement="bottom"  title="SDZC Fan Page" href="https://www.facebook.com/SanDiegoZombieCrawl/">
-						<i class="fa fa-facebook"></i>
-					</a>
-					<a data-toggle="tooltip" data-placement="bottom"  title="Club VIP SD" href="https://www.facebook.com/ClubVIPSD/">
-						<i class="fa fa-facebook"></i>
-					</a>
-					<a data-toggle="tooltip" data-placement="bottom"  title="SDZC Event Page" href="https://www.facebook.com/events/864704556917325/">
-						<i class="fa fa-calendar"></i>
-					</a>
-				</li>
-				';
+                if(isset($social_menu->term_id)) {
+                    $social_menu_items = wp_get_nav_menu_object($social_menu->term_id);
+
+
+                    $out .= '<li class="social-icons">';
+                    foreach((array)$social_menu_items as $k => $social_menu_item){
+                        $out.='<a data-toggle="tooltip" data-placement="bottom"  title="'.$social_menu_item->title.'" href="'.$social_menu_item->url.'">';
+                        $out.='<i class="fa fa-'.$social_menu_item->faicon.'"></i>';
+                        $out.='</a>';
+                    }
+                    $out .= '</li>';
+
+                }
+
+
+
 				$out.='</ul>';
 				
 				echo mtheme_html($out);			
