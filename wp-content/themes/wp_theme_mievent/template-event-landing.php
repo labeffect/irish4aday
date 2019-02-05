@@ -433,14 +433,13 @@ $out=$outContainer6.$outContainer1.$outContainer2.$outContainer3.$outContainer4.
 $events['external_link']=mtheme_filter(MthemeCore::getPostMeta($event_id, $post_pre.'external_link'));
 
 if(count($events['external_link'])) {
-    $menu .= '<ul class="social-icons">';
+    $menu .= '<li class="social-icons">';
     foreach($events['external_link'] as $ID => $event) {
         if(isset($event['el_link_title']) && !empty($event['el_link_title']))
         {
             if(isset($event['el_link_url']) && empty($event['el_link_url']))
                 $event['el_link_url']="#";
-            $menu.='<li><a href="'.$event['el_link_url'].'" target="_blank">'.$event['el_link_title'].'</a></li>';
-            $menu.='<a data-toggle="tooltip" data-placement="bottom"  href="'.$event['el_link_url'].'" title="'.$event['el_link_title'].'" target="_blank">';
+            $menu.='<a data-toggle="tooltip" data-placement="bottom" href="'.$event['el_link_url'].'" title="'.$event['el_link_title'].'" target="_blank">';
             $menu.='<span class="fa-stack">';
 			$menu.='<i class="fa fa-circle fa-stack-2x"></i>';
 			$menu.='<i class="fa fa-'.$event['el_link_icon'].' fa-stack-1x fa-inverse"></i>';
@@ -448,7 +447,7 @@ if(count($events['external_link'])) {
 	        $menu.='</a>';
         }
     }
-    $menu .= "</ul>";
+    $menu .= "</li>";
 }
 if(!empty($event_slider) && $menu!=''){
 	$menu.='<li class="hidden"><a href="#home_slider">Home</a></li>';	
