@@ -1072,6 +1072,19 @@ class MthemeInterface {
 						'group' => 'multiple',
 						'description' => 'External Link URL'
 					));
+
+                    $out.=MthemeInterface::renderOption(array(
+                        'name' => __('External Link Icon', 'mtheme'),
+                        'id' => $option['id'].'['.$key.'][el_link_icon]',
+                        'type' => 'text',
+                        'value' => htmlspecialchars(mtheme_value($field, 'el_link_icon')),
+                        'wrap' => true,
+                        'attributes' => array(
+                            'placeholder' => __('External Link Icon', 'mtheme'),
+                        ),
+                        'group' => 'multiple',
+                        'description' => 'External Link Icon'
+                    ));
 					
 					
 					$out.='</div>';
