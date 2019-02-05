@@ -65,7 +65,7 @@ class le_custom_menu {
      * @since       1.0
      * @return      void
      */
-    function rc_scm_edit_walker($walker,$menu_id) {
+    function le_cm_edit_walker($walker,$menu_id) {
 
         return 'Walker_Nav_Menu_Edit_Custom';
 
