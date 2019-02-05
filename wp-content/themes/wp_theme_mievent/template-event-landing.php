@@ -433,7 +433,7 @@ $out=$outContainer6.$outContainer1.$outContainer2.$outContainer3.$outContainer4.
 $events['external_link']=mtheme_filter(MthemeCore::getPostMeta($event_id, $post_pre.'external_link'));
 
 if(count($events['external_link'])) {
-    $menu .= '<li class="social-icons">';
+    $menu .= '<ul class="social-icons">';
     foreach($events['external_link'] as $ID => $event) {
         if(isset($event['el_link_title']) && !empty($event['el_link_title']))
         {
@@ -448,36 +448,8 @@ if(count($events['external_link'])) {
 	        $menu.='</a>';
         }
     }
-    $menu .= "</li>";
+    $menu .= "</ul>";
 }
-
-$facebookEvent=get_the_title(994);
-//social
-$menu .= "
-<li class='social-icons'>
-	<a data-toggle='tooltip' data-placement='bottom'  title='Club VIP SD' target='_blank'
-	href='https://www.facebook.com/ClubVIPSD/'>
-		<span class='fa-stack'>
-			<i class='fa fa-circle fa-stack-2x'></i>
-			<i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
-		</span>
-	</a>
-	<a data-toggle='tooltip' data-placement='bottom'  title='Irish4ADay Fan Page' target='_blank'
-href='https://www.facebook.com/Irish4ADay'>
-	 	<span class='fa-stack'>
-			<i class='fa fa-circle fa-stack-2x'></i>
-			<i class='fa fa-facebook fa-stack-1x fa-inverse'></i>
-		</span>
-	</a>
-<a data-toggle='tooltip' data-placement='bottom' title=''' target='_blank'
-href='{$facebookEvent}' data-original-title='Irish4ADay Event Page'>
-		<span class='fa-stack'>
-			<i class='fa fa-circle fa-stack-2x'></i>
-			<i class='fa fa-calendar fa-stack-1x fa-inverse'></i>
-		</span>
-	</a>
-</li>
-";
 if(!empty($event_slider) && $menu!=''){
 	$menu.='<li class="hidden"><a href="#home_slider">Home</a></li>';	
 }
